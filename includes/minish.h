@@ -5,9 +5,9 @@
 # include <stdio.h>
 # include "libft/libft.h"
 
-typedef struct  s_env {
-    char        *key;
-    char        *value;
-}               t_env;
+typedef struct	s_env {
+	char		*key;
+	char		*value;
+}				t_env;
 
 #endif
