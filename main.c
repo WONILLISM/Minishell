@@ -7,7 +7,7 @@ void    get_input(char **input)
         int             cnt;
         char    buf;
 
-        i = 0;
+        idx = 0;
         cnt = 1;
         *input = malloc(1);     // malloc error 처리
 
@@ -21,7 +21,7 @@ void    get_input(char **input)
                 *input = realloc(*input, cnt + 1);
                 cnt++;
         }
-        *(*input + i) = '\0';
+        *(*input + idx) = '\0';
         return (0);
 }
 
