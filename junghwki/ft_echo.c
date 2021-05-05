@@ -1,6 +1,5 @@
 #include "../includes/minish.h"
 
-
 int			ft_strcmp(const char *s1, const char *s2)
 {
 	int		idx;
@@ -14,7 +13,6 @@ int			ft_strcmp(const char *s1, const char *s2)
 	}
 	return (0);
 }
-
 
 void		ft_echo(char **str)
 {
@@ -38,13 +36,15 @@ void		ft_echo(char **str)
 			printf("\n");
 	}
 }
-
+/*
+**	junghwki
+*/
 int			main(void)
 {
-	char **str;
+	char	**str;
 
 	str[0] = "echo";
-	str[1] = "-na";
+	str[1] = "-n";
 	str[2] = "hi";
 	str[3] = "hi_im_echo";
 	str[4] = "fuck_you_minishell";

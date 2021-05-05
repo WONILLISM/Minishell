@@ -1,16 +1,17 @@
 #include "../includes/minish.h"
-#include <limits.h>
-
-// char *getcwd(char *buf, size_t size);
 
 void		ft_pwd()
 {
-	char buff[1000];
+	char	*buff;
+	char	*path;
 
-	getcwd(buff, 1000);
-	printf("%s",buff);
+	path = getcwd(buff, 1);
+	printf("%s",path);
+	free(path);
 }
-
+/*
+**	junghwki
+*/
 int			main(void)
 {
 	ft_pwd();
