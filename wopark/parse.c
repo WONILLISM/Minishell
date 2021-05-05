@@ -19,11 +19,5 @@ int		parse_line(char *input)
 	char	*line;
 
 	parse_init(input, &data, &root);
-	int i = 0;
-	while (data.cmd->argv[i])
-	{
-		printf("%s\n", data.cmd->argv[i]);
-		i++;
-	}
 	return (0);
 }
