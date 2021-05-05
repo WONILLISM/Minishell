@@ -46,6 +46,7 @@ int		main(int argc, char **argv, char **envv)
 	while (1)
 	{
 		get_input(&input);
+		parse_line(input);
 	}
 	return (0);
 }

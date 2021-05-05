@@ -3,6 +3,7 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h>
+# include <string.h>
 # include "libft/libft.h"
 
 typedef struct	s_env
@@ -20,12 +21,22 @@ typedef struct	s_cmd
 
 typedef struct	s_data
 {
-	t_list		*lst;
+	t_list		*last_node;
 	t_cmd		*cmd;
 	char		*buf;
 	int			input_idx;
 	int			buf_idx;
 	int			cmd_idx;
 }				t_data;
+
+/*
+** ************ wopark **************
+*/
+
+/*
+** ************ parse.c *************
+*/
+int		parse_line(char *input);
+
 
 #endif
