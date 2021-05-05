@@ -38,7 +38,8 @@ FILES = ft_memset \
 		ft_putchar_fd \
 		ft_putstr_fd \
 		ft_putendl_fd \
-		ft_putnbr_fd
+		ft_putnbr_fd \
+		ft_realloc
 
 FILES_B = 	ft_lstnew \
 	  		ft_lstadd_front \
