@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/05 17:18:39 by wopark            #+#    #+#             */
-/*   Updated: 2021/05/05 15:41:37 by wopark           ###   ########.fr       */
+/*   Updated: 2021/05/05 16:08:12 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,5 @@ void				ft_lstdelone(t_list *lst, void (*del)(void *));
 void				ft_lstclear(t_list **lst, void (*del)(void *));
 void				ft_lstiter(t_list *lst, void (*f)(void *));
 t_list				*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
-
-void				*ft_realloc(void *ptr, size_t size);
 
 #endif
