@@ -47,7 +47,7 @@ int			main(void)
 	str[1] = "-n";
 	str[2] = "hi";
 	str[3] = "hi_im_echo";
-	str[4] = "fuck_you_minishell";
+	str[4] = "fuck_you_minishellaasdasdasdasd";
 	str[5] = NULL;
 	ft_echo(str);
 	return (0);
