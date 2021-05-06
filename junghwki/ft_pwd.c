@@ -2,18 +2,24 @@
 
 void		ft_pwd()
 {
-	char	*buff;
-	char	*path;
+	char	buf[4096];
 
-	path = getcwd(buff, 1);
-	printf("%s",path);
-	free(path);
+	getcwd(buf, 4096);
+	printf("%s\n",buf);
 }
-/*
-**	junghwki
-*/
-int			main(void)
-{
-	ft_pwd();
-	return (0);
-}
+
+// void		ft_pwd()
+// {
+// 	char	*buff;
+// 	char	*path;
+
+// 	path = getcwd(buff, 1);
+// 	printf("%s",path);
+// 	free(path);
+// }
+
+// int			main(void)
+// {
+// 	ft_pwd();
+// 	return (0);
+// }

@@ -1,32 +1,20 @@
 #include "../includes/minish.h"
 
-void		ft_pwd()
+void		ft_cd(t_cmd *cmd)
 {
-	char	buf[4096];
+	int		ret_value;
 
-	getcwd(buf, 4096);
-	printf("%s\n",buf);
+	ret_value = chdir(cmd->argv[1]);
+	if (ret_value < 0)
+		printf("minishell: cd: %s: No such file or directory\n",cmd->argv[1]);
 }
 
-// void		ft_pwd()
+// int			main(void)
 // {
-	// char	*buff;
-	// char	*path;
+// 	char	**str;
 
-	// path = getcwd(buff, 1);
-	// printf("%s\n",path);
-	// free(path);
+// 	str[0] = "cd";
+// 	str[1] = "~";
+// 	ft_cd(str);
+// 	return (0);
 // }
-
-void		ft_cd(char *path)
-{
-	chdir(path);
-}
-
-int			main(void)
-{
-	ft_pwd();
-	// write(1, "\n", 1);
-	ft_cd("abc/");
-	return (0);
-}

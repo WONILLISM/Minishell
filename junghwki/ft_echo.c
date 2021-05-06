@@ -1,53 +1,36 @@
 #include "../includes/minish.h"
 
-int			ft_strcmp(const char *s1, const char *s2)
-{
-	int		idx;
-
-	idx = 0;
-	while (s1[idx] || s2[idx])
-	{
-		if ((s1[idx] != s2[idx]) || (s1[idx] == '\0') || (s2[idx] == '\0'))
-			return ((unsigned char)s1[idx] - (unsigned char)s2[idx]);
-		idx++;
-	}
-	return (0);
-}
-
-void		ft_echo(char **str)
+void		ft_echo(t_cmd *cmd)
 {
 	int		idx;
 	int		n_flag;
 
 	idx = 1;
 	n_flag = 0;
-	while (!(ft_strcmp(str[idx], "-n")))
+	while (ft_strcmp(cmd->argv[idx], "-n") == 0)
 	{
 		n_flag = 1;
 		idx++;
 	}
-	while (str[idx])
+	while (cmd->argv[idx])
 	{
-		printf("%s", str[idx]);
+		printf("%s", cmd->argv[idx]);
 		idx++;
-		if (str[idx])
+		if (cmd->argv[idx])
 			printf(" ");
-		else if (!(str[idx]) && !n_flag)
+		else if (!n_flag)
 			printf("\n");
 	}
 }
-/*
-**	junghwki
-*/
 int			main(void)
 {
 	char	**str;
 
 	str[0] = "echo";
-	str[1] = "-n";
+	str[1] = "-na";
 	str[2] = "hi";
 	str[3] = "hi_im_echo";
-	str[4] = "fuck_you_minishellaasdasdasdasd";
+	str[4] = "fuck_you_minishell";
 	str[5] = NULL;
 	ft_echo(str);
 	return (0);
