@@ -6,6 +6,12 @@
 # include <string.h>
 # include "libft/libft.h"
 
+# define SEMICOLON	0
+# define PIPE		1
+# define READ_ERR	-1
+# define READ_SUC	0
+
+
 typedef struct	s_env
 {
 	char		*key;
@@ -36,7 +42,7 @@ typedef struct	s_data
 /*
 ** ************ parse.c *************
 */
-int		parse_line(char *input);
+int		parse_input(char *input);
 
 
 #endif

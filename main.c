@@ -11,7 +11,8 @@ char	*realloc_input(char *ptr, size_t size)
 	free(ptr);
 	return (ret);
 }
-void	get_input(char **input)
+
+int		get_input(char **input)
 {
 	int		r_nbr;
 	int		idx;
@@ -21,22 +22,22 @@ void	get_input(char **input)
 	idx = 0;
 	cnt = 1;
 	*input = malloc(1);
-
+	if (*input == NULL)
+		return (READ_ERR);
 	while (1)
 	{
 		r_nbr = read(0, &buf, 1);
 		if (r_nbr == 0 || buf == '\n')
-			break;
-		if (idx && *(*input + idx - 1) == ' ')
 		{
-			if (buf == ' ')
-				continue ;
+			*(*input + idx) = 0;
+			return (READ_SUC);
 		}
 		*(*input + idx) = buf;
 		idx++;
 		*input = realloc_input(*input, cnt + 1);
 		cnt++;
 	}
+	return (READ_ERR);
 }
 
 int		main(int argc, char **argv, char **envv)
@@ -45,8 +46,10 @@ int		main(int argc, char **argv, char **envv)
 
 	while (1)
 	{
-		get_input(&input);
-		parse_line(input);
+		if (get_input(&input) == READ_ERR)
+			printf("Error");
+		parse_input(input);
+		free(input);
 	}
 	return (0);
 }
