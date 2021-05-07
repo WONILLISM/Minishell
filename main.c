@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
+/*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:07:54 by wopark            #+#    #+#             */
-/*   Updated: 2021/05/07 13:07:55 by wopark           ###   ########.fr       */
+/*   Updated: 2021/05/07 19:48:37 by junghwki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ int		main(int argc, char **argv, char **envv)
 {
 	char	*input;
 
+	envv_lst_make(envv);
 	while (1)
 	{
 		if (get_input(&input) == READ_ERR)
