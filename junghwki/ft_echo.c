@@ -14,24 +14,11 @@ void		ft_echo(t_cmd *cmd)
 	}
 	while (cmd->argv[idx])
 	{
-		printf("%s", cmd->argv[idx]);
+		write(1, cmd->argv[idx], ft_strlen(cmd->argv[idx]));
 		idx++;
 		if (cmd->argv[idx])
-			printf(" ");
+			write(1, " ", 1);
 		else if (!n_flag)
-			printf("\n");
+			write(1, "\n", 1);
 	}
-}
-int			main(void)
-{
-	char	**str;
-
-	str[0] = "echo";
-	str[1] = "-na";
-	str[2] = "hi";
-	str[3] = "hi_im_echo";
-	str[4] = "fuck_you_minishell";
-	str[5] = NULL;
-	ft_echo(str);
-	return (0);
 }
