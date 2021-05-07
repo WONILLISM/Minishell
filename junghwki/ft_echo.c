@@ -22,16 +22,3 @@ void		ft_echo(t_cmd *cmd)
 			printf("\n");
 	}
 }
-int			main(void)
-{
-	char	**str;
-
-	str[0] = "echo";
-	str[1] = "-na";
-	str[2] = "hi";
-	str[3] = "hi_im_echo";
-	str[4] = "fuck_you_minishell";
-	str[5] = NULL;
-	ft_echo(str);
-	return (0);
-}

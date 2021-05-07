@@ -81,16 +81,8 @@ int		parse_input(char *input)
 		get_parse_data(input_tmp, &data, cmd_root);
 	}
 	free(input_tmp);
-	lst_add_cmd(&data, cmd_root, 0);
+	if (*(data.buf))
+		lst_add_cmd(&data, cmd_root, 0);
 
-	while (cmd_root->next)
-	{
-		cmd_root = cmd_root->next;
-		t_cmd *tmp = cmd_root->content;
-		for (int i = 0; tmp->argv[i]; i++)
-		{
-			printf("%s\n", tmp->argv[i]);
-		}
-	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/05/07 13:09:45 by wopark           ###   ########.fr       */
+/*   Updated: 2021/05/07 21:02:55 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ typedef struct	s_data
 	int			cmd_idx;
 }				t_data;
 
+t_list	*g_envv_lst;
 /*
 ** ************ wopark **************
 */
@@ -56,5 +57,6 @@ typedef struct	s_data
 */
 int		parse_input(char *input);
 
+int		ft_strcmp(const char *s1, const char *s2);
 
 #endif
