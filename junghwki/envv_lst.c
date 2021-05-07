@@ -1,21 +1,12 @@
 #include "../includes/minish.h"
 
-t_list			*envv_lst_find(char *key_value)
+void		env_swap(t_env *a, t_env *b)
 {
-	t_list		*temp;
-	t_env		*temp_env;
+	t_env	temp;
 
-	temp = g_envv_lst->next;
-	temp_env = temp->content;
-	while(temp)
-	{
-		if (ft_strcmp(temp_env->key, key_value) == 0)
-			return (temp);
-		temp = temp->next;
-		if (temp)
-			temp_env = temp->content;
-	}
-	return (NULL);
+	temp = *a;
+	*a = *b;
+	*b = temp;
 }
 
 static t_env	*envv_sep(char *envv)
