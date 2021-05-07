@@ -27,14 +27,12 @@ t_list			*envv_lst_find(char *key_value)
 	t_env		*temp_env;
 
 	temp = g_envv_lst->next;
-	temp_env = temp->content;
-	while(temp)
+	while (temp)
 	{
+		temp_env = temp->content;
 		if (ft_strcmp(temp_env->key, key_value) == 0)
 			return (temp);
 		temp = temp->next;
-		if (temp)
-			temp_env = temp->content;
 	}
 	return (NULL);
 }

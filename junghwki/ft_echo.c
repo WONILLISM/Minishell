@@ -14,11 +14,11 @@ void		ft_echo(t_cmd *cmd)
 	}
 	while (cmd->argv[idx])
 	{
-		printf("%s", cmd->argv[idx]);
+		write(1, cmd->argv[idx], ft_strlen(cmd->argv[idx]));
 		idx++;
 		if (cmd->argv[idx])
-			printf(" ");
+			write(1, " ", 1);
 		else if (!n_flag)
-			printf("\n");
+			write(1, "\n", 1);
 	}
 }

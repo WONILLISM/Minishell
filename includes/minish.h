@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minish.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
+/*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/05/07 21:02:55 by wopark           ###   ########.fr       */
+/*   Updated: 2021/05/07 21:20:54 by junghwki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@
 # define PIPE		1
 # define READ_ERR	-1
 # define READ_SUC	0
-
 
 typedef struct	s_env
 {
@@ -59,4 +58,16 @@ int		parse_input(char *input);
 
 int		ft_strcmp(const char *s1, const char *s2);
 
+void			ft_pwd();
+void			ft_cd(t_cmd *cmd);
+void			ft_echo(t_cmd *cmd);
+void			envv_lst_make(char **envv);
+/*				utils			*/
+int				ft_strcmp(const char *s1, const char *s2);
+void			env_swap(t_env *a, t_env *b);
+t_list			*envv_lst_find(char *key_value);
+/*				utils			*/
+void			envv_lst_del(t_env *content);
+void	execute_builtin(t_list *cmd_root);
+void		export_lst_print();
 #endif

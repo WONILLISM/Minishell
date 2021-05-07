@@ -84,5 +84,8 @@ int		parse_input(char *input)
 	if (*(data.buf))
 		lst_add_cmd(&data, cmd_root, 0);
 
+	if (data.cmd->quote)
+		return (0);
+	execute_builtin(cmd_root);
 	return (0);
 }
