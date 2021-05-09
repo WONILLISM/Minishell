@@ -21,18 +21,37 @@ void	envv_lst_del(t_env *content)
 	free(content);
 }
 
+//t_list			*envv_lst_find(char *key_value)
+//{
+//	t_list		*temp;
+//	t_env		*temp_env;
+
+//	temp = g_envv_lst->next;
+//	while (temp)
+//	{
+//		temp_env = temp->content;
+//		if (ft_strcmp(temp_env->key, key_value) == 0)
+//			return (temp);
+//		temp = temp->next;
+//	}
+//	return (NULL);
+//}
+
 t_list			*envv_lst_find(char *key_value)
 {
+	t_list		*ret;
 	t_list		*temp;
 	t_env		*temp_env;
 
 	temp = g_envv_lst->next;
+	ret = g_envv_lst;
 	while (temp)
 	{
 		temp_env = temp->content;
 		if (ft_strcmp(temp_env->key, key_value) == 0)
-			return (temp);
+			return (ret);
 		temp = temp->next;
+		ret = ret->next;
 	}
 	return (NULL);
 }
