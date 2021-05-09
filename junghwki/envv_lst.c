@@ -9,7 +9,7 @@ void		env_swap(t_env *a, t_env *b)
 	*b = temp;
 }
 
-static t_env	*envv_sep(char *envv)
+t_env			*envv_sep(char *envv)
 {
 	int			idx;
 	t_env		*ret;
@@ -48,29 +48,3 @@ void			envv_lst_make(char **envv)
 		idx++;
 	}
 }
-	// t_env *a;
-	// t_list *temp;
-
-	// temp = g_envv_lst->next;
-	// while(temp)
-	// {
-	// 	a = (t_env *)(temp->content);
-	// 	printf("%s=%s\n", a->key, a->value);
-	// 	temp = temp->next;
-	// }
-
-// 	int				main(int argc, char **argv, char **envv)
-// {
-// 	char			*input;
-// 	t_list			*temp;
-// 	t_env			*a;
-
-// 	envv_lst_make(envv);
-// 	temp = envv_lst_find("aaa");
-// 	if (temp)
-// 	{
-// 		a = temp->content;
-// 		printf("%s\n",a->value);
-// 	}
-// 	return (0);
-// }
