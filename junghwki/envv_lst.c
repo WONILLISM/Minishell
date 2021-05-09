@@ -9,10 +9,10 @@ void		env_swap(t_env *a, t_env *b)
 	*b = temp;
 }
 
-t_env			*envv_sep(char *envv)
+t_env		*envv_sep(char *envv)
 {
-	int			idx;
-	t_env		*ret;
+	int		idx;
+	t_env	*ret;
 
 	idx = 0;
 	ret = (t_env *)malloc(sizeof(t_env));//free
@@ -34,10 +34,10 @@ t_env			*envv_sep(char *envv)
 	return (ret);
 }
 
-void			envv_lst_make(char **envv)
+void		envv_lst_make(char **envv)
 {
-	int			idx;
-	t_env		*content;
+	int		idx;
+	t_env	*content;
 
 	idx = 0;
 	g_envv_lst = ft_lstnew(0);
@@ -46,5 +46,28 @@ void			envv_lst_make(char **envv)
 		content = envv_sep(envv[idx]);
 		ft_lstadd_back(&g_envv_lst, ft_lstnew(content));//free
 		idx++;
+	}
+}
+
+void		env_lst_print()
+{
+	t_list	*temp;
+	t_env	*temp_env;
+
+	temp = g_envv_lst->next;
+	while (temp)
+	{
+		temp_env = temp->content;
+		if (temp_env->value)
+		{
+			if (temp_env->value[0] != '\0')
+			{
+				write(1, temp_env->key, ft_strlen(temp_env->key));
+				write(1, "=", 1);
+				write(1, temp_env->value, ft_strlen(temp_env->value));
+			}
+		}
+		write(1, "\n", 1);
+		temp = temp->next;
 	}
 }
