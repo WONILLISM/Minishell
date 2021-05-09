@@ -65,9 +65,9 @@ void		env_lst_print()
 				write(1, temp_env->key, ft_strlen(temp_env->key));
 				write(1, "=", 1);
 				write(1, temp_env->value, ft_strlen(temp_env->value));
+				write(1, "\n", 1);
 			}
 		}
-		write(1, "\n", 1);
 		temp = temp->next;
 	}
 }
