@@ -20,7 +20,10 @@ t_env	*env_dup(t_env *content)
 
 	ret = (t_env *)malloc(sizeof(t_env));//free
 	ret->key = ft_strdup(content->key);//free
-	ret->value = ft_strdup(content->value);//free
+	if (content->value)
+		ret->value = ft_strdup(content->value);//free
+	else
+		ret->value = NULL;
 	return (ret);
 }
 
@@ -80,13 +83,10 @@ void		export_lst_print()
 		write(1, temp_env->key, ft_strlen(temp_env->key));
 		if (temp_env->value)
 		{
-			if (temp_env->value[0] != '\0')
-			{
-				write(1, "=", 1);
-				write(1, "\"", 1);
-				write(1, temp_env->value, ft_strlen(temp_env->value));
-				write(1, "\"", 1);
-			}
+			write(1, "=", 1);
+			write(1, "\"", 1);
+			write(1, temp_env->value, ft_strlen(temp_env->value));
+			write(1, "\"", 1);
 		}
 		write(1, "\n", 1);
 		temp = temp->next;
@@ -97,45 +97,27 @@ void		export_add(t_cmd *cmd)
 {
 	t_list	*temp;
 	t_env	*content;
+	int		idx;
 
-	content = envv_sep(cmd->argv[1]);
-	if (ft_isdigit(content->key[0]))
+	idx = 1;
+	while (cmd->argv[idx])
 	{
-		write(1, ": not a valid identifier\n", 25);
-		return ;
-	}
-	temp = envv_lst_find(content->key);
-	if (temp)
-	{
-		temp = temp->next;////find_lst수정
-		temp->content = content;
-	}
-	else
-	{
-		ft_lstadd_back(&g_envv_lst, ft_lstnew(content));//free
+		content = envv_sep(cmd->argv[idx]);
+		if (ft_isdigit(content->key[0]))
+		{
+			write(1, ": not a valid identifier\n", 25);
+			return ;
+		}
+		temp = envv_lst_find(content->key);
+		if (temp)
+		{
+			temp = temp->next;
+			temp->content = content;
+		}
+		else
+		{
+			ft_lstadd_back(&g_envv_lst, ft_lstnew(content));//free
+		}
+		idx++;
 	}
 }
-
-//void		export_add(t_cmd *cmd)
-//{
-//	t_list	*temp;
-//	t_env	*content;
-
-//	content = envv_sep(cmd->argv[1]);
-//	if (ft_isdigit(content->key[0]))
-//	{
-//		write(1, ": not a valid identifier\n", 25);
-//		return ;
-//	}
-//	temp = envv_lst_find(content->key);
-//	if (temp)
-//		temp = temp->next;////find_lst수정
-//	if (!temp)
-//	{
-//		ft_lstadd_back(&g_envv_lst, ft_lstnew(content));//free
-//	}
-//	else
-//	{
-//		temp->content = content;
-//	}
-//}
