@@ -29,6 +29,7 @@ JUNGHWKI_SRCS = \
 			ft_echo.c \
 			ft_export.c \
 			ft_pwd.c \
+			ft_unset.c \
 			utils.c
 
 MANDATORY =	\
