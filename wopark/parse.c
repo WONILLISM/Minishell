@@ -15,32 +15,37 @@ void	parse_init(char *input, t_data *data, t_list **cmd_root)
 	data->buf_idx = 0;
 }
 
-// static char		**ft_free_malloc_error(char **ret)
-// {
-// 	size_t	i;
+void	chk_space_flag(char **strs)
+{
+	int		i;
+	int		j;
 
-// 	i = 0;
-// 	while (ret[i])
-// 	{
-// 		free(ret[i]);
-// 		i++;
-// 	}
-// 	free(ret);
-// 	return (NULL);
-// }
+	i = 0;
+	while (strs[i])
+	{
+		j = 0;
+		while (strs[i][j])
+		{
+			if (strs[i][j] == -1)
+				strs[i][j] = ' ';
+			j++;
+		}
+		i++;
+	}
+}
 
 void	lst_add_cmd(t_data *data, t_list *cmd_root, int flag)
 {
 	char	*buf_tmp;
 
 	buf_tmp = ft_strtrim(data->buf, " ");
-	data->buf = ft_calloc(1, ft_strlen(data->buf));
+	while (*(data->buf))
+		*(data->buf) = 0;
 	data->cmd->argv = ft_split(buf_tmp, ' ');
+	chk_space_flag(data->cmd->argv);
 	data->cmd->flag = flag;
-	if (data->cmd->quote)
-		printf("error");
 	if (!(data->cmd->argv)[0] && flag >= 0)
-		printf("error\n");
+		write(1,"error\n", 1);
 	else
 	{
 		ft_lstadd_back(&cmd_root, ft_lstnew(data->cmd));
@@ -55,24 +60,25 @@ void	lst_add_cmd(t_data *data, t_list *cmd_root, int flag)
 void	get_parse_data(char *input, t_data *data, t_list *cmd_root)
 {
 	if (data->cmd->quote == input[data->input_idx])
-	{
 		data->cmd->quote = 0;
-		if (input[data->input_idx] == '\'')
-			data->buf[data->buf_idx++] = input[data->input_idx];
-	}
-	else if (!data->cmd->quote && input[data->input_idx] == '\"')
+	else if (data->cmd->quote == 0 && input[data->input_idx] == '\"')
 		data->cmd->quote = input[data->input_idx];
-	else if (!data->cmd->quote && input[data->input_idx] == '\'')
-	{
+	else if (data->cmd->quote == 0 && input[data->input_idx] == '\'')
 		data->cmd->quote = input[data->input_idx];
-		data->buf[data->buf_idx++] = input[data->input_idx];
-	}
-	else if (data->cmd->quote && input[data->input_idx] == ' ')
-		input[data->input_idx] = -1;
-	else if (!data->cmd->quote && input[data->input_idx] == ';')
+	else if (data->cmd->quote != 0 && input[data->input_idx] == ' ')
+		data->buf[data->buf_idx++] = -1;
+	else if (data->cmd->quote == 0 && input[data->input_idx] == ';')
 		lst_add_cmd(data, cmd_root, 0);
+	else if (data->cmd->quote == 0 && input[data->input_idx] == '|')
+		lst_add_cmd(data, cmd_root, 1);
 	else
 	{
+		if (data->cmd->quote != '\'' && input[data->input_idx] == '\\' && input[data->input_idx + 1])
+		{
+			if (input[data->input_idx + 1] == ' ')
+				input[data->input_idx + 1] = -1;
+			data->input_idx++;
+		}
 		data->buf[data->buf_idx++] = input[data->input_idx];
 	}
 }
