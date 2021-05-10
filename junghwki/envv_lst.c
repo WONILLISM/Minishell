@@ -29,7 +29,7 @@ t_env		*envv_sep(char *envv)
 	if (envv[idx] == '\0')
 	{
 		ret->key = ft_substr(envv, 0, idx);
-		ret->value = ft_strdup("");
+		ret->value = NULL;
 	}
 	return (ret);
 }
@@ -60,13 +60,10 @@ void		env_lst_print()
 		temp_env = temp->content;
 		if (temp_env->value)
 		{
-			if (temp_env->value[0] != '\0')
-			{
-				write(1, temp_env->key, ft_strlen(temp_env->key));
-				write(1, "=", 1);
-				write(1, temp_env->value, ft_strlen(temp_env->value));
-				write(1, "\n", 1);
-			}
+			write(1, temp_env->key, ft_strlen(temp_env->key));
+			write(1, "=", 1);
+			write(1, temp_env->value, ft_strlen(temp_env->value));
+			write(1, "\n", 1);
 		}
 		temp = temp->next;
 	}
