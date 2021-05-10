@@ -9,10 +9,7 @@ int			env_key_check(char *key)
 		return (-1);
 	while (key[idx])
 	{
-		if ((key[idx] == '_') ||
-		(key[idx] >= 'a' && key[idx] <= 'z') ||
-		(key[idx] >= 'A' && key[idx] <= 'Z') ||
-		(key[idx] >= '0' && key[idx] <= '9'))
+		if (key[idx] == '_' || ft_isalnum(key[idx]))
 			idx++;
 		else
 			return (-1);
@@ -123,22 +120,24 @@ void		export_add(t_cmd *cmd)
 	while (cmd->argv[idx])
 	{
 		content = envv_sep(cmd->argv[idx]);
-		if (env_key_check(content->key) == -1)
+		if (env_key_check(content->key) < 0)
 		{
 			write(1, "export: `", 9);
 			write(1, content->key, ft_strlen(content->key));
 			write(1, "': not a valid identifier\n", 26);
-			return ;
-		}
-		temp = envv_lst_find(content->key);
-		if (temp)
-		{
-			temp = temp->next;
-			temp->content = content;
 		}
 		else
 		{
-			ft_lstadd_back(&g_envv_lst, ft_lstnew(content));//free
+			temp = envv_lst_find(content->key);
+			if (temp)
+			{
+				temp = temp->next;
+				temp->content = content;
+			}
+			else
+			{
+				ft_lstadd_back(&g_envv_lst, ft_lstnew(content));//free
+			}
 		}
 		idx++;
 	}
