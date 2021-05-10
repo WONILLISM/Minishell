@@ -15,19 +15,20 @@ void	parse_init(char *input, t_data *data, t_list **cmd_root)
 	data->buf_idx = 0;
 }
 
-static char		**ft_free_malloc_error(char **ret)
-{
-	size_t	i;
+// static char		**ft_free_malloc_error(char **ret)
+// {
+// 	size_t	i;
 
-	i = 0;
-	while (ret[i])
-	{
-		free(ret[i]);
-		i++;
-	}
-	free(ret);
-	return (NULL);
-}
+// 	i = 0;
+// 	while (ret[i])
+// 	{
+// 		free(ret[i]);
+// 		i++;
+// 	}
+// 	free(ret);
+// 	return (NULL);
+// }
+
 void	lst_add_cmd(t_data *data, t_list *cmd_root, int flag)
 {
 	char	*buf_tmp;
@@ -36,6 +37,8 @@ void	lst_add_cmd(t_data *data, t_list *cmd_root, int flag)
 	data->buf = ft_calloc(1, ft_strlen(data->buf));
 	data->cmd->argv = ft_split(buf_tmp, ' ');
 	data->cmd->flag = flag;
+	if (data->cmd->quote)
+		printf("error");
 	if (!(data->cmd->argv)[0] && flag >= 0)
 		printf("error\n");
 	else
@@ -52,11 +55,18 @@ void	lst_add_cmd(t_data *data, t_list *cmd_root, int flag)
 void	get_parse_data(char *input, t_data *data, t_list *cmd_root)
 {
 	if (data->cmd->quote == input[data->input_idx])
+	{
 		data->cmd->quote = 0;
+		if (input[data->input_idx] == '\'')
+			data->buf[data->buf_idx++] = input[data->input_idx];
+	}
 	else if (!data->cmd->quote && input[data->input_idx] == '\"')
 		data->cmd->quote = input[data->input_idx];
 	else if (!data->cmd->quote && input[data->input_idx] == '\'')
+	{
 		data->cmd->quote = input[data->input_idx];
+		data->buf[data->buf_idx++] = input[data->input_idx];
+	}
 	else if (data->cmd->quote && input[data->input_idx] == ' ')
 		input[data->input_idx] = -1;
 	else if (!data->cmd->quote && input[data->input_idx] == ';')
@@ -71,7 +81,6 @@ int		parse_input(char *input)
 {
 	t_data	data;
 	t_list	*cmd_root;
-	char	*line;
 	char	*input_tmp;
 
 	input_tmp = ft_strtrim(input, " ");
@@ -83,9 +92,6 @@ int		parse_input(char *input)
 	free(input_tmp);
 	if (*(data.buf))
 		lst_add_cmd(&data, cmd_root, 0);
-
-	if (data.cmd->quote)
-		return (0);
 	execute_builtin(cmd_root);
 	return (0);
 }
