@@ -22,7 +22,7 @@ t_env		*envv_sep(char *envv)
 		{
 			ret->key = ft_substr(envv, 0, idx);//free
 			ret->value = ft_strdup(&envv[idx + 1]);//free
-			break;
+			break ;
 		}
 		idx++;
 	}
