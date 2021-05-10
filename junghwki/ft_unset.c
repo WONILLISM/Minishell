@@ -4,7 +4,6 @@ void	ft_unset(t_cmd *cmd)
 {
 	t_list	*temp;
 	t_list	*del_lst;
-	// t_env	*temp_env;
 	void	(*del)();
 	int		idx;
 
