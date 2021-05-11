@@ -6,4 +6,5 @@ void		ft_pwd()
 
 	getcwd(buf, 4096);
 	write(1, buf, ft_strlen(buf));
+	write(1, "\n", 1);
 }
