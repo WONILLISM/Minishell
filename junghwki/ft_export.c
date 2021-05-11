@@ -1,5 +1,25 @@
 #include "../includes/minish.h"
 
+int			env_key_check(char *key)
+{
+	int		idx;
+
+	idx = 0;
+	if (ft_isdigit(key[idx]))
+		return (-1);
+	while (key[idx])
+	{
+		if ((key[idx] == '_') ||
+		(key[idx] >= 'a' && key[idx] <= 'z') ||
+		(key[idx] >= 'A' && key[idx] <= 'Z') ||
+		(key[idx] >= '0' && key[idx] <= '9'))
+			idx++;
+		else
+			return (-1);
+	}
+	return (0);
+}
+
 int			env_lst_cmp(char *s1, char *s2)
 {
 	int		idx;
@@ -103,9 +123,11 @@ void		export_add(t_cmd *cmd)
 	while (cmd->argv[idx])
 	{
 		content = envv_sep(cmd->argv[idx]);
-		if (ft_isdigit(content->key[0]))
+		if (env_key_check(content->key) == -1)
 		{
-			write(1, ": not a valid identifier\n", 25);
+			write(1, "export: `", 9);
+			write(1, content->key, ft_strlen(content->key));
+			write(1, "': not a valid identifier\n", 26);
 			return ;
 		}
 		temp = envv_lst_find(content->key);
