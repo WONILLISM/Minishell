@@ -27,7 +27,7 @@ void	chk_space_flag(char **strs)
 		while (strs[i][j])
 		{
 			if (strs[i][j] == -1)
-				strs[i][j] = '!';
+				strs[i][j] = '@';
 			j++;
 		}
 		i++;
@@ -36,12 +36,9 @@ void	chk_space_flag(char **strs)
 
 void	lst_add_cmd(t_data *data, t_list *cmd_root, int flag)
 {
-	char	*buf_tmp;
-
-	buf_tmp = ft_strtrim(data->buf, " ");
-	while (*(data->buf))
-		*(data->buf)++ = 0;
-	data->cmd->argv = ft_\split(buf_tmp, ' ');
+	if (data->buf[0] == ' ')
+		data->buf++;
+	data->cmd->argv = ft_split(data->buf, ' ');
 	chk_space_flag(data->cmd->argv);
 	data->cmd->flag = flag;
 	if (!(data->cmd->argv)[0] && flag >= 0)
@@ -54,7 +51,7 @@ void	lst_add_cmd(t_data *data, t_list *cmd_root, int flag)
 		data->last_node->next = 0;
 	}
 	data->buf_idx = 0;
-	free(buf_tmp);
+	//free(buf_tmp);
 }
 
 // "" 안에서 살아야할 기능\`'"$
