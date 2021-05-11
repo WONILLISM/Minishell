@@ -36,6 +36,10 @@ void	execute_builtin(t_list *cmd_root)
 		{
 			env_lst_print();
 		}
+		else if (ft_strcmp(temp_cmd->argv[0], "ls") == 0)
+		{
+			ft_execve(temp_cmd);
+		}
 		else
 		{
 			write(1, temp_cmd->argv[0], ft_strlen(temp_cmd->argv[0]));

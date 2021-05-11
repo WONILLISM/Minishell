@@ -6,7 +6,7 @@
 /*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/05/07 21:20:54 by junghwki         ###   ########.fr       */
+/*   Updated: 2021/05/11 19:52:05 by junghwki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,4 +74,5 @@ void		export_lst_print();
 void		export_add(t_cmd *cmd);
 void		env_lst_print();
 void	ft_unset(t_cmd *cmd);
+void	ft_execve(t_cmd *cmd);
 #endif
