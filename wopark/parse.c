@@ -41,7 +41,7 @@ void	lst_add_cmd(t_data *data, t_list *cmd_root, int flag)
 	buf_tmp = ft_strtrim(data->buf, " ");
 	while (*(data->buf))
 		*(data->buf)++ = 0;
-	data->cmd->argv = ft_split(buf_tmp, ' ');
+	data->cmd->argv = ft_\split(buf_tmp, ' ');
 	chk_space_flag(data->cmd->argv);
 	data->cmd->flag = flag;
 	if (!(data->cmd->argv)[0] && flag >= 0)
