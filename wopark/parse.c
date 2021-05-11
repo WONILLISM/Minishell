@@ -27,7 +27,7 @@ void	chk_space_flag(char **strs)
 		while (strs[i][j])
 		{
 			if (strs[i][j] == -1)
-				strs[i][j] = ' ';
+				strs[i][j] = '!';
 			j++;
 		}
 		i++;
@@ -40,7 +40,7 @@ void	lst_add_cmd(t_data *data, t_list *cmd_root, int flag)
 
 	buf_tmp = ft_strtrim(data->buf, " ");
 	while (*(data->buf))
-		*(data->buf) = 0;
+		*(data->buf)++ = 0;
 	data->cmd->argv = ft_split(buf_tmp, ' ');
 	chk_space_flag(data->cmd->argv);
 	data->cmd->flag = flag;
@@ -57,6 +57,9 @@ void	lst_add_cmd(t_data *data, t_list *cmd_root, int flag)
 	free(buf_tmp);
 }
 
+// "" 안에서 살아야할 기능\`'"$
+// '' 모두 문자열로 치환
+// 따옴표 없을때 \뒤의 문자만 출력
 void	get_parse_data(char *input, t_data *data, t_list *cmd_root)
 {
 	if (data->cmd->quote == input[data->input_idx])
