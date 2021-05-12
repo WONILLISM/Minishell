@@ -27,14 +27,14 @@ void	chk_space_flag(char **strs)
 		while (strs[i][j])
 		{
 			if (strs[i][j] == -1)
-				strs[i][j] = '@';
+				strs[i][j] = ' ';
 			j++;
 		}
 		i++;
 	}
 }
 
-void	lst_add_cmd(t_data *data, t_list *cmd_root, int flag)
+void	lst_add_cmd(t_data *data, t_list *cmd_root, int flag, char *input)
 {
 	if (data->buf[0] == ' ')
 		data->buf++;
@@ -51,11 +51,35 @@ void	lst_add_cmd(t_data *data, t_list *cmd_root, int flag)
 		data->last_node->next = 0;
 	}
 	data->buf_idx = 0;
+	free(data->buf);
+	data->buf = ft_calloc(ft_strlen(input), sizeof(char));
 }
 
-// "" 안에서 살아야할 기능\`'"$
-// '' 모두 문자열로 치환
-// 따옴표 없을때 \뒤의 문자만 출력
+int		chk_val_name(char c)
+{
+	if (c == '_')
+		return (1);
+	return ft_isalnum((int)c);
+}
+
+void	envv_handler(t_data *data, char *input)
+{
+	char	*tmp;
+	int		idx;
+	int		len;
+
+	idx = data->input_idx + 1;
+	len = 0;
+	while (chk_val_name(input[idx]))
+	{
+		idx++;
+		len++;
+	}
+	tmp = ft_strndup(input + data->input_idx, len);
+	// tmp[len] = 0;
+	printf("!!!%s!!!\n", tmp);
+}
+
 void	get_parse_data(char *input, t_data *data, t_list *cmd_root)
 {
 	if (data->cmd->quote == input[data->input_idx])
@@ -67,16 +91,21 @@ void	get_parse_data(char *input, t_data *data, t_list *cmd_root)
 	else if (data->cmd->quote != 0 && input[data->input_idx] == ' ')
 		data->buf[data->buf_idx++] = -1;
 	else if (data->cmd->quote == 0 && input[data->input_idx] == ';')
-		lst_add_cmd(data, cmd_root, 0);
+		lst_add_cmd(data, cmd_root, 0, input);
 	else if (data->cmd->quote == 0 && input[data->input_idx] == '|')
-		lst_add_cmd(data, cmd_root, 1);
+		lst_add_cmd(data, cmd_root, 1, input);
+	else if (data->cmd->quote != '\'' && input[data->input_idx] == '$')
+		envv_handler(data, input);
 	else
 	{
 		if (data->cmd->quote != '\'' && input[data->input_idx] == '\\' && input[data->input_idx + 1])
 		{
+			if (data->cmd->quote == '\"' && ft_strchr("$`\"\\", input[data->input_idx + 1]))
+				data->input_idx++;
+			if (data->cmd->quote == 0 && ft_strchr("$`\"\\\'", input[data->input_idx + 1]))
+				data->input_idx++;
 			if (input[data->input_idx + 1] == ' ')
 				input[data->input_idx + 1] = -1;
-			data->input_idx++;
 		}
 		data->buf[data->buf_idx++] = input[data->input_idx];
 	}
@@ -96,7 +125,7 @@ int		parse_input(char *input)
 	}
 	free(input_tmp);
 	if (*(data.buf))
-		lst_add_cmd(&data, cmd_root, 0);
+		lst_add_cmd(&data, cmd_root, 0, input_tmp);
 	execute_builtin(cmd_root);
 	return (0);
 }
