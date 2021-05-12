@@ -1,15 +1,5 @@
 #include "../includes/minish.h"
 
-void		convert_env(char *s)
-{
-	t_list	*res;
-	t_env	*tmp;
-
-	res = envv_lst_find(s)->next;
-	tmp = res->content;
-	write(1, tmp->value,ft_strlen(tmp->value));
-}
-
 void		ft_echo(t_cmd *cmd)
 {
 	int		idx;
@@ -24,10 +14,7 @@ void		ft_echo(t_cmd *cmd)
 	}
 	while (cmd->argv[idx])
 	{
-		if (cmd->argv[idx][0] == '$')
-			convert_env(&cmd->argv[idx][1]);
-		else
-			write(1, cmd->argv[idx], ft_strlen(cmd->argv[idx]));
+		write(1, cmd->argv[idx], ft_strlen(cmd->argv[idx]));
 		idx++;
 		if (cmd->argv[idx])
 			write(1, " ", 1);
