@@ -51,7 +51,6 @@ void	lst_add_cmd(t_data *data, t_list *cmd_root, int flag)
 		data->last_node->next = 0;
 	}
 	data->buf_idx = 0;
-	//free(buf_tmp);
 }
 
 // "" 안에서 살아야할 기능\`'"$
