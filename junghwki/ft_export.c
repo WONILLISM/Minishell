@@ -128,10 +128,9 @@ void		export_add(t_cmd *cmd)
 		}
 		else
 		{
-			temp = envv_lst_find(content->key);
+			temp = get_curr_envv_lst(content->key);
 			if (temp)
 			{
-				temp = temp->next;
 				temp->content = content;
 			}
 			else
