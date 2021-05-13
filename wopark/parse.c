@@ -62,7 +62,7 @@ int		chk_var_name(char c)
 	return ft_isalnum((int)c);
 }
 
-void	envv_handler(t_data *data, char *input)
+void	parse_envv_handler(t_data *data, char *input)
 {
 	t_env	*content;
 	char	*tmp;
@@ -102,14 +102,14 @@ void	get_parse_data(char *input, t_data *data, t_list *cmd_root)
 	else if (data->cmd->quote == 0 && input[data->input_idx] == '|')
 		lst_add_cmd(data, cmd_root, 1);
 	else if (data->cmd->quote != '\'' && input[data->input_idx] == '$')
-		envv_handler(data, input);
+		parse_envv_handler(data, input);
 	else
 	{
 		if (data->cmd->quote != '\'' && input[data->input_idx] == '\\' && input[data->input_idx + 1])
 		{
 			if (data->cmd->quote == '\"' && ft_strchr("$`\"\\", input[data->input_idx + 1]))
 				data->input_idx++;
-			if (data->cmd->quote == 0 && ft_strchr("$`\"\\\'", input[data->input_idx + 1]))
+			if (data->cmd->quote == 0)
 				data->input_idx++;
 			if (input[data->input_idx + 1] == ' ')
 				input[data->input_idx + 1] = -1;
