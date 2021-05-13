@@ -6,7 +6,7 @@
 /*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/05/11 19:52:05 by junghwki         ###   ########.fr       */
+/*   Updated: 2021/05/13 16:39:55 by junghwki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,14 +65,15 @@ void			envv_lst_make(char **envv);
 /*				utils			*/
 int				ft_strcmp(const char *s1, const char *s2);
 void			env_swap(t_env *a, t_env *b);
-t_list			*envv_lst_find(char *key_value);
+t_list			*get_curr_envv_lst(char *key_value);
+t_list			*get_prev_envv_lst(char *key_value);
 t_env			*envv_sep(char *envv);
 /*				utils			*/
 void			envv_lst_del(t_env *content);
-void	execute_builtin(t_list *cmd_root);
-void		export_lst_print();
-void		export_add(t_cmd *cmd);
-void		env_lst_print();
-void	ft_unset(t_cmd *cmd);
-void	ft_execve(t_cmd *cmd);
+void			execute_builtin(t_list *cmd_root);
+void			export_lst_print();
+void			export_add(t_cmd *cmd);
+void			env_lst_print();
+void			ft_unset(t_cmd *cmd);
+int				ft_execve(t_cmd *cmd);
 #endif
