@@ -8,8 +8,8 @@ void	parse_init(char *input, t_data *data, t_list **cmd_root)
 	data->cmd->argv = 0;
 	data->cmd->flag = 0;
 	data->cmd->quote = 0;
-	data->buf = ft_calloc(ft_strlen(input)+ 1, sizeof(char));
-
+	data->buf_size = ft_strlen(input) + 1;
+	data->buf = ft_calloc(data->buf_size, sizeof(char));
 	data->input_idx = -1;
 	data->cmd_idx = 0;
 	data->buf_idx = 0;
@@ -34,7 +34,7 @@ void	chk_space_flag(char **strs)
 	}
 }
 
-void	lst_add_cmd(t_data *data, t_list *cmd_root, int flag, char *input)
+void	lst_add_cmd(t_data *data, t_list *cmd_root, int flag)
 {
 	if (data->buf[0] == ' ')
 		data->buf++;
@@ -52,10 +52,10 @@ void	lst_add_cmd(t_data *data, t_list *cmd_root, int flag, char *input)
 	}
 	data->buf_idx = 0;
 	free(data->buf);
-	data->buf = ft_calloc(ft_strlen(input), sizeof(char));
+	data->buf = ft_calloc(data->buf_size, sizeof(char));
 }
 
-int		chk_val_name(char c)
+int		chk_var_name(char c)
 {
 	if (c == '_')
 		return (1);
@@ -64,22 +64,27 @@ int		chk_val_name(char c)
 
 void	envv_handler(t_data *data, char *input)
 {
+	t_env	*content;
 	char	*tmp;
-	int		idx;
+	char	*buf_tmp;
 	int		len;
 
-	idx = data->input_idx + 1;
+	data->input_idx++;
 	len = 0;
-	while (chk_val_name(input[idx]))
-	{
-		printf("%d: %c\n", len, input[idx]);
-		idx++;
+	while (chk_var_name(*(input + data->input_idx + len)))
 		len++;
-	}
-	printf("len: %d\n", len);
-	tmp = ft_strndup(input + data->input_idx + 1, len - 1);
-	tmp[len] = 0;
-	printf("!!!%s!!!\n", tmp);
+	tmp = ft_strndup(input + data->input_idx, len);
+	data->input_idx += len - 1;
+	content = envv_lst_find(tmp)->next->content;
+	if (!content)
+		printf("ERROR\n");
+	len = ft_strlen(content->value);
+	if ((int)ft_strlen(tmp) < len)
+		data->buf_size += len;
+	buf_tmp = ft_strjoin(data->buf, content->value);
+	free(data->buf);
+	data->buf = buf_tmp;
+	data->buf_idx = ft_strlen(buf_tmp);
 }
 
 void	get_parse_data(char *input, t_data *data, t_list *cmd_root)
@@ -93,9 +98,9 @@ void	get_parse_data(char *input, t_data *data, t_list *cmd_root)
 	else if (data->cmd->quote != 0 && input[data->input_idx] == ' ')
 		data->buf[data->buf_idx++] = -1;
 	else if (data->cmd->quote == 0 && input[data->input_idx] == ';')
-		lst_add_cmd(data, cmd_root, 0, input);
+		lst_add_cmd(data, cmd_root, 0);
 	else if (data->cmd->quote == 0 && input[data->input_idx] == '|')
-		lst_add_cmd(data, cmd_root, 1, input);
+		lst_add_cmd(data, cmd_root, 1);
 	else if (data->cmd->quote != '\'' && input[data->input_idx] == '$')
 		envv_handler(data, input);
 	else
@@ -127,7 +132,7 @@ int		parse_input(char *input)
 	}
 	free(input_tmp);
 	if (*(data.buf))
-		lst_add_cmd(&data, cmd_root, 0, input_tmp);
+		lst_add_cmd(&data, cmd_root, 0);
 	execute_builtin(cmd_root);
 	return (0);
 }
