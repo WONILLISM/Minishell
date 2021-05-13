@@ -72,11 +72,13 @@ void	envv_handler(t_data *data, char *input)
 	len = 0;
 	while (chk_val_name(input[idx]))
 	{
+		printf("%d: %c\n", len, input[idx]);
 		idx++;
 		len++;
 	}
-	tmp = ft_strndup(input + data->input_idx, len);
-	// tmp[len] = 0;
+	printf("len: %d\n", len);
+	tmp = ft_strndup(input + data->input_idx + 1, len - 1);
+	tmp[len] = 0;
 	printf("!!!%s!!!\n", tmp);
 }
 
