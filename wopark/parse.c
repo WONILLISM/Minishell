@@ -46,6 +46,8 @@ void	lst_add_cmd(t_data *data, t_list *cmd_root, int flag)
 	else
 	{
 		ft_lstadd_back(&cmd_root, ft_lstnew(data->cmd));
+		if (data->cmd->quote)
+			printf("ERROR\n");
 		data->cmd = ft_calloc(1, sizeof(t_cmd));
 		data->last_node = ft_lstlast(cmd_root);
 		data->last_node->next = 0;
