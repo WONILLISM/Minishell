@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   minish.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2021/05/13 16:39:55 by junghwki         ###   ########.fr       */
+=======
+/*   Updated: 2021/05/13 13:37:32 by wopark           ###   ########.fr       */
+>>>>>>> wopark
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +45,7 @@ typedef struct	s_data
 	t_list		*last_node;
 	t_cmd		*cmd;
 	char		*buf;
+	int			buf_size;
 	int			input_idx;
 	int			buf_idx;
 	int			cmd_idx;

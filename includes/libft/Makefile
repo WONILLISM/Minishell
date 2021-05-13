@@ -29,6 +29,7 @@ FILES = ft_memset \
 		ft_tolower \
 		ft_calloc \
 		ft_strdup \
+		ft_strndup \
 		ft_substr \
 		ft_strjoin \
 		ft_strtrim \
