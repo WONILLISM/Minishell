@@ -36,9 +36,11 @@ void	chk_space_flag(char **strs)
 
 void	lst_add_cmd(t_data *data, t_list *cmd_root, int flag)
 {
-	// ltrim 만들자
-	if (data->buf[0] == ' ')
-		data->buf++;
+	char	*tmp;
+
+	tmp = ft_strltrim(data->buf, " ");
+	free(data->buf);
+	data->buf = tmp;
 	data->cmd->argv = ft_split(data->buf, ' ');
 	chk_space_flag(data->cmd->argv);
 	data->cmd->flag = flag;
@@ -127,7 +129,7 @@ int		parse_input(char *input)
 	t_list	*cmd_root;
 	char	*input_tmp;
 
-	input_tmp = ft_strtrim(input, " ");
+	input_tmp = ft_strltrim(input, " ");
 	parse_init(input_tmp, &data, &cmd_root);
 	while (input_tmp[++data.input_idx])
 	{
