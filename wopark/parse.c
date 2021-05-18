@@ -135,8 +135,8 @@ void	get_parse_data(char *input, t_data *data, t_list *cmd_root)
 				data->input_idx++;
 			if (data->cmd->quote == 0)
 				data->input_idx++;
-			if (input[data->input_idx + 1] == ' ')
-				input[data->input_idx + 1] = -1;
+			if (input[data->input_idx] == ' ')
+				input[data->input_idx] = -1;
 		}
 		data->buf[data->buf_idx++] = input[data->input_idx];
 	}
