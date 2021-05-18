@@ -36,8 +36,11 @@ void	chk_space_flag(char **strs)
 
 void	lst_add_cmd(t_data *data, t_list *cmd_root, int flag)
 {
-	if (data->buf[0] == ' ')
-		data->buf++;
+	char	*tmp;
+
+	tmp = ft_strltrim(data->buf, " ");
+	free(data->buf);
+	data->buf = tmp;
 	data->cmd->argv = ft_split(data->buf, ' ');
 	chk_space_flag(data->cmd->argv);
 	data->cmd->flag = flag;
@@ -47,7 +50,7 @@ void	lst_add_cmd(t_data *data, t_list *cmd_root, int flag)
 	{
 		ft_lstadd_back(&cmd_root, ft_lstnew(data->cmd));
 		if (data->cmd->quote)
-			printf("ERROR\n");
+			printf("!!!ERROR\n");
 		data->cmd = ft_calloc(1, sizeof(t_cmd));
 		data->last_node = ft_lstlast(cmd_root);
 		data->last_node->next = 0;
@@ -57,33 +60,50 @@ void	lst_add_cmd(t_data *data, t_list *cmd_root, int flag)
 	data->buf = ft_calloc(data->buf_size, sizeof(char));
 }
 
-int		chk_var_name(char c)
+int		chk_var_name(t_data *data, char *input)
 {
-	if (c == '_')
+	int		ret;
+	char	c;
+
+	ret = 0;
+	c = *(input + data->input_idx);
+	if (ret == 0 && ft_isdigit(c))
+	{
 		return (1);
-	return ft_isalnum((int)c);
+	}
+	while (c == '_' || ft_isalnum(c))
+	{
+		ret++;
+		c = *(input + data->input_idx + ret);
+	}
+	return (ret);
 }
 
 void	parse_envv_handler(t_data *data, char *input)
 {
-	t_env	*content;
+	t_list	*envlst;
+	t_env	*env_content;
 	char	*tmp;
 	char	*buf_tmp;
 	int		len;
 
 	data->input_idx++;
-	len = 0;
-	while (chk_var_name(*(input + data->input_idx + len)))
-		len++;
+	len = chk_var_name(data, input);
+	if (!len)
+	{
+		data->buf[data->buf_idx++] = input[--(data->input_idx)];
+		return ;
+	}
 	tmp = ft_strndup(input + data->input_idx, len);
 	data->input_idx += len - 1;
-	content = get_curr_envv_lst(tmp)->content;
-	if (!content)
-		printf("ERROR\n");
-	len = ft_strlen(content->value);
+	envlst = get_curr_envv_lst(tmp);
+	if (!envlst)
+		return ;
+	env_content = envlst->content;
+	len = ft_strlen(env_content->value);
 	if ((int)ft_strlen(tmp) < len)
 		data->buf_size += len;
-	buf_tmp = ft_strjoin(data->buf, content->value);
+	buf_tmp = ft_strjoin(data->buf, env_content->value);
 	free(data->buf);
 	data->buf = buf_tmp;
 	data->buf_idx = ft_strlen(buf_tmp);
@@ -107,7 +127,9 @@ void	get_parse_data(char *input, t_data *data, t_list *cmd_root)
 		parse_envv_handler(data, input);
 	else
 	{
-		if (data->cmd->quote != '\'' && input[data->input_idx] == '\\' && input[data->input_idx + 1])
+		if (data->cmd->quote == 0 && ft_strchr("><", input[data->input_idx]))
+			data->cmd->redir = 1;
+		else if (data->cmd->quote != '\'' && input[data->input_idx] == '\\' && input[data->input_idx + 1])
 		{
 			if (data->cmd->quote == '\"' && ft_strchr("$`\"\\", input[data->input_idx + 1]))
 				data->input_idx++;
@@ -126,7 +148,7 @@ int		parse_input(char *input)
 	t_list	*cmd_root;
 	char	*input_tmp;
 
-	input_tmp = ft_strtrim(input, " ");
+	input_tmp = ft_strltrim(input, " ");
 	parse_init(input_tmp, &data, &cmd_root);
 	while (input_tmp[++data.input_idx])
 	{
