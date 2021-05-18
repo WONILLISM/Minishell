@@ -60,11 +60,21 @@ void	lst_add_cmd(t_data *data, t_list *cmd_root, int flag)
 	data->buf = ft_calloc(data->buf_size, sizeof(char));
 }
 
-int		chk_var_name(char c)
+int		chk_var_name(t_data *data, char *input)
 {
-	if (c == '_')
+	int		ret;
+	char	c;
+
+	ret = 0;
+	c = *(input + data->input_idx);
+	if (ret == 0 && ft_isdigit(c))
 		return (1);
-	return ft_isalnum((int)c);
+	while (c == '_' || ft_isalnum(c))
+	{
+		ret++;
+		c = *(input + data->input_idx + ret);
+	}
+	return (ret);
 }
 
 void	parse_envv_handler(t_data *data, char *input)
@@ -76,9 +86,7 @@ void	parse_envv_handler(t_data *data, char *input)
 	int		len;
 
 	data->input_idx++;
-	len = 0;
-	while (chk_var_name(*(input + data->input_idx + len)))
-		len++;
+	len = chk_var_name(data, input);
 	tmp = ft_strndup(input + data->input_idx, len);
 	data->input_idx += len - 1;
 	envlst = get_curr_envv_lst(tmp);
