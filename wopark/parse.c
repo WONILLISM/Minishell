@@ -68,7 +68,9 @@ int		chk_var_name(t_data *data, char *input)
 	ret = 0;
 	c = *(input + data->input_idx);
 	if (ret == 0 && ft_isdigit(c))
+	{
 		return (1);
+	}
 	while (c == '_' || ft_isalnum(c))
 	{
 		ret++;
@@ -120,7 +122,9 @@ void	get_parse_data(char *input, t_data *data, t_list *cmd_root)
 		parse_envv_handler(data, input);
 	else
 	{
-		if (data->cmd->quote != '\'' && input[data->input_idx] == '\\' && input[data->input_idx + 1])
+		if (data->cmd->quote == 0 && ft_strchr("><", input[data->input_idx]))
+			data->cmd->redir = 1;
+		else if (data->cmd->quote != '\'' && input[data->input_idx] == '\\' && input[data->input_idx + 1])
 		{
 			if (data->cmd->quote == '\"' && ft_strchr("$`\"\\", input[data->input_idx + 1]))
 				data->input_idx++;
