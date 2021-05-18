@@ -77,7 +77,7 @@ void	parse_envv_handler(t_data *data, char *input)
 		len++;
 	tmp = ft_strndup(input + data->input_idx, len);
 	data->input_idx += len - 1;
-	content = envv_lst_find(tmp)->next->content;
+	content = get_curr_envv_lst(tmp)->content;
 	if (!content)
 		printf("ERROR\n");
 	len = ft_strlen(content->value);
