@@ -1,5 +1,19 @@
 #include "../includes/minish.h"
 
+void		env_value_print(char *str)
+{
+	int		idx;
+
+	idx = 0;
+	while(str[idx])
+	{
+		if (ft_strchr("$`\\\"", str[idx]))
+			write(1, "\\", 1);
+		write(1, &str[idx], 1);
+		idx++;
+	}
+}
+
 int			env_key_check(char *key)
 {
 	int		idx;
@@ -102,7 +116,7 @@ void		export_lst_print()
 		{
 			write(1, "=", 1);
 			write(1, "\"", 1);
-			write(1, temp_env->value, ft_strlen(temp_env->value));
+			env_value_print(temp_env->value);
 			write(1, "\"", 1);
 		}
 		write(1, "\n", 1);
