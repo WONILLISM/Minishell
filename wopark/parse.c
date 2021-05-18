@@ -50,7 +50,7 @@ void	lst_add_cmd(t_data *data, t_list *cmd_root, int flag)
 	{
 		ft_lstadd_back(&cmd_root, ft_lstnew(data->cmd));
 		if (data->cmd->quote)
-			printf("ERROR\n");
+			printf("!!!ERROR\n");
 		data->cmd = ft_calloc(1, sizeof(t_cmd));
 		data->last_node = ft_lstlast(cmd_root);
 		data->last_node->next = 0;
@@ -89,6 +89,11 @@ void	parse_envv_handler(t_data *data, char *input)
 
 	data->input_idx++;
 	len = chk_var_name(data, input);
+	if (!len)
+	{
+		data->buf[data->buf_idx++] = input[--(data->input_idx)];
+		return ;
+	}
 	tmp = ft_strndup(input + data->input_idx, len);
 	data->input_idx += len - 1;
 	envlst = get_curr_envv_lst(tmp);
