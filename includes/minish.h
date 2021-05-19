@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/05/18 17:32:40 by wopark           ###   ########.fr       */
+/*   Updated: 2021/05/19 13:25:34 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,22 @@
 # define MINISH_H
 # include <unistd.h>
 # include <stdlib.h>
+# include <signal.h>
 # include <stdio.h>
 # include <string.h>
+# include <errno.h>
+# include <fcntl.h>
+# include <sys/types.h>
+# include <sys/stat.h>
 # include "libft/libft.h"
 
 # define SEMICOLON	0
 # define PIPE		1
+
+# define STDIN		0
+# define STDOUT		1
+# define STDERR		2
+
 # define READ_ERR	-1
 # define READ_SUC	0
 
@@ -52,6 +62,13 @@ t_list	*g_envv_lst;
 /*
 ** ************ wopark **************
 */
+
+/*
+** ************ parse_utils.c*************
+*/
+void	chk_space_flag(char **strs);
+int		chk_var_name(t_data *data, char *input);
+void	lst_add_cmd(t_data *data, t_list *cmd_root, int flag);
 
 /*
 ** ************ parse.c *************
