@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/05/19 13:25:34 by wopark           ###   ########.fr       */
+/*   Updated: 2021/05/24 21:16:15 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,15 +23,16 @@
 # include <sys/stat.h>
 # include "libft/libft.h"
 
-# define SEMICOLON	0
-# define PIPE		1
-
-# define STDIN		0
-# define STDOUT		1
-# define STDERR		2
-
-# define READ_ERR	-1
-# define READ_SUC	0
+# define SEMICOLON			0
+# define PIPE				1
+# define ERROR				-1
+# define SUCCESS			1
+# define STDIN				0
+# define STDOUT				1
+# define STDERR				2
+# define READ_ERR			-1
+# define READ_SUC			0
+# define SYNTAX_ERROR_MSG	"Syntax Error"
 
 typedef struct	s_env
 {
@@ -45,6 +46,7 @@ typedef struct	s_cmd
 	int			flag;		// 0: ; or NULL	1: pipe
 	int			redir;
 	char		quote;		// stack for ' or "
+	int			fd[2];
 }				t_cmd;
 
 typedef struct	s_data
@@ -58,7 +60,14 @@ typedef struct	s_data
 	int			cmd_idx;
 }				t_data;
 
-t_list	*g_envv_lst;
+typedef struct	s_archive
+{
+	t_list	*envv_lst;
+	int		exit_stat;
+	int		parse_error;
+}				t_archive;
+
+t_archive	g_archive;
 /*
 ** ************ wopark **************
 */
@@ -68,7 +77,9 @@ t_list	*g_envv_lst;
 */
 void	chk_space_flag(char **strs);
 int		chk_var_name(t_data *data, char *input);
-void	lst_add_cmd(t_data *data, t_list *cmd_root, int flag);
+int		lst_add_cmd(t_data *data, t_list *cmd_root, int flag);
+
+int		parse_error_msg(char *msg);
 
 /*
 ** ************ parse.c *************

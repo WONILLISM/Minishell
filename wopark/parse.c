@@ -8,6 +8,8 @@ void	parse_init(char *input, t_data *data, t_list **cmd_root)
 	data->cmd->argv = 0;
 	data->cmd->flag = 0;
 	data->cmd->quote = 0;
+	data->cmd->fd[0] = 0;
+	data->cmd->fd[1] = 0;
 	data->buf_size = ft_strlen(input) + 1;
 	data->buf = ft_calloc(data->buf_size, sizeof(char));
 	data->input_idx = -1;
@@ -56,9 +58,9 @@ void	parse_get_data(char *input, t_data *data, t_list *cmd_root)
 	else if (data->cmd->quote != 0 && input[data->input_idx] == ' ')
 		data->buf[data->buf_idx++] = -1;
 	else if (data->cmd->quote == 0 && input[data->input_idx] == ';')
-		lst_add_cmd(data, cmd_root, 0);
+		g_archive.parse_error = lst_add_cmd(data, cmd_root, 0);
 	else if (data->cmd->quote == 0 && input[data->input_idx] == '|')
-		lst_add_cmd(data, cmd_root, 1);
+		g_archive.parse_error = lst_add_cmd(data, cmd_root, 1);
 	else if (data->cmd->quote != '\'' && input[data->input_idx] == '$')
 		parse_envv_handler(data, input);
 	else
@@ -84,15 +86,21 @@ int		parse_input(char *input)
 	t_list	*cmd_root;
 	char	*input_tmp;
 
+	g_archive.parse_error = 1;
 	input_tmp = ft_strltrim(input, " ");
 	parse_init(input_tmp, &data, &cmd_root);
 	while (input_tmp[++data.input_idx])
 	{
 		parse_get_data(input_tmp, &data, cmd_root);
+		if (g_archive.parse_error < 1)
+			return (ERROR);
 	}
 	free(input_tmp);
 	if (*(data.buf))
-		lst_add_cmd(&data, cmd_root, 0);
-	execute_builtin(cmd_root);
-	return (0);
+		g_archive.parse_error = lst_add_cmd(&data, cmd_root, 0);
+	if (g_archive.parse_error == 1)
+		execute_builtin(cmd_root);
+	else if (g_archive.parse_error < 0)
+		return (ERROR);
+	return (SUCCESS);
 }
