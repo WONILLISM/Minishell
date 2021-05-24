@@ -6,13 +6,13 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:07:54 by wopark            #+#    #+#             */
-/*   Updated: 2021/05/24 13:45:46 by wopark           ###   ########.fr       */
+/*   Updated: 2021/05/24 16:29:22 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minish.h"
 
-void		handle_signal(int signo)
+void		signal_handler(int signo)
 {
 	pid_t	pid;
 	int		status;
@@ -37,10 +37,10 @@ void		handle_signal(int signo)
 	}
 }
 
-void		set_signal(void)
+void		signal_init(void)
 {
-	signal(SIGINT, handle_signal);
-	signal(SIGQUIT, handle_signal);
+	signal(SIGINT, signal_handler);
+	signal(SIGQUIT, signal_handler);
 }
 
 char	*realloc_input(char *ptr, size_t size)
@@ -89,7 +89,7 @@ int		main(int argc, char **argv, char **envv)
 
 	argc = 0;
 	argv = 0;
-	set_signal();
+	signal_init();
 	envv_lst_make(envv);
 	while (1)
 	{
