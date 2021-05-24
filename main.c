@@ -6,11 +6,42 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:07:54 by wopark            #+#    #+#             */
-/*   Updated: 2021/05/19 18:00:55 by wopark           ###   ########.fr       */
+/*   Updated: 2021/05/24 13:45:46 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minish.h"
+
+void		handle_signal(int signo)
+{
+	pid_t	pid;
+	int		status;
+
+	pid = waitpid(-1, &status, WNOHANG);
+	if (signo == SIGINT)
+	{
+		if (pid == -1)
+		{
+			ft_putstr_fd("\b\b  \b\b\n", STDOUT);
+			write(1, "minish $> ", 10);
+		}
+		else
+			ft_putchar_fd('\n', STDOUT);
+	}
+	else if (signo == SIGQUIT)
+	{
+		if (pid == -1)
+			ft_putstr_fd("\b\b  \b\b", STDOUT);
+		else
+			ft_putstr_fd("Quit: 3\n", STDOUT);
+	}
+}
+
+void		set_signal(void)
+{
+	signal(SIGINT, handle_signal);
+	signal(SIGQUIT, handle_signal);
+}
 
 char	*realloc_input(char *ptr, size_t size)
 {
@@ -58,6 +89,7 @@ int		main(int argc, char **argv, char **envv)
 
 	argc = 0;
 	argv = 0;
+	set_signal();
 	envv_lst_make(envv);
 	while (1)
 	{
