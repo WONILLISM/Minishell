@@ -40,11 +40,12 @@ void		envv_lst_make(char **envv)
 	t_env	*content;
 
 	idx = 0;
-	g_envv_lst = ft_lstnew(0);
+	g_archive.envv_lst = ft_lstnew(0);
+	// g_envv_lst = ft_lstnew(0);
 	while (envv[idx])
 	{
 		content = envv_sep(envv[idx]);
-		ft_lstadd_back(&g_envv_lst, ft_lstnew(content));//free
+		ft_lstadd_back(&g_archive.envv_lst, ft_lstnew(content));//free
 		idx++;
 	}
 }
@@ -54,7 +55,7 @@ void		env_lst_print()
 	t_list	*temp;
 	t_env	*temp_env;
 
-	temp = g_envv_lst->next;
+	temp = g_archive.envv_lst->next;
 	while (temp)
 	{
 		temp_env = temp->content;

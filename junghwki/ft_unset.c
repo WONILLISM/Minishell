@@ -6,8 +6,9 @@ t_list			*get_prev_envv_lst(char *key_value)
 	t_list		*temp;
 	t_env		*temp_env;
 
-	temp = g_envv_lst->next;
-	ret = g_envv_lst;
+	// temp = g_envv_lst->next;
+	temp = g_archive.envv_lst->next;
+	ret = g_archive.envv_lst;
 	while (temp)
 	{
 		temp_env = temp->content;
