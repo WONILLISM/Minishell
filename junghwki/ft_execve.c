@@ -49,13 +49,7 @@ void	child_process(t_cmd *cmd)
 int ft_execve(t_cmd *cmd)
 {
 	pid_t	pid;
-	int		*fd_p;
-	int		*fd_c;
 
-	fd_p = malloc(sizeof(int) * 2);
-	fd_c = malloc(sizeof(int) * 2);
-	if (pipe(fd_p) < 0 || pipe(fd_c) < 0)
-		write(1, "Error\n", 6);
 	pid = fork();
 	if (pid < 0)
 	{
@@ -63,17 +57,11 @@ int ft_execve(t_cmd *cmd)
 	}
 	else if (pid == 0)
 	{
-		close(fd_p[WRITE]);
-		close(fd_c[READ]);
 		child_process(cmd);
 	}
 	else
 	{
-		close(fd_p[READ]);
-		close(fd_c[WRITE]);
 		wait(NULL);
 	}
-	free(fd_p);
-	free(fd_c);
 	return (0);
 }
