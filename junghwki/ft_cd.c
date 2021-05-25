@@ -10,6 +10,7 @@ void		ft_cd(t_cmd *cmd)
 	ret_value = chdir(cmd->argv[1]);
 	if (ret_value < 0)
 	{
+		g_archive.exit_stat = 1;
 		write(1, "minish: cd: ", 12);
 		if (cmd->argv[1])
 			write(1, cmd->argv[1], ft_strlen(cmd->argv[1]));
