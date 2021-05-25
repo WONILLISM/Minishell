@@ -36,3 +36,16 @@ t_list			*get_curr_envv_lst(char *key_value)
 	}
 	return (NULL);
 }
+
+void		free_array(char **array)
+{
+	int		idx;
+
+	idx = 0;
+	while (array[idx])
+	{
+		free(array[idx]);
+		idx++;
+	}
+	free(array);
+}
