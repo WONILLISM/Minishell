@@ -1,44 +1,31 @@
 #include "../includes/minish.h"
 
-void		builtin(t_cmd *cmd)
+void		builtin(t_cmd *cmd, int pipe_flag)
 {
 	if (ft_strcmp(cmd->argv[0], "cd") == 0)
-	{
 		ft_cd(cmd);
-	}
 	else if (ft_strcmp(cmd->argv[0], "echo") == 0)
-	{
 		ft_echo(cmd);
-	}
 	else if (ft_strcmp(cmd->argv[0], "pwd") == 0)
-	{
 		ft_pwd();
-	}
 	else if (ft_strcmp(cmd->argv[0], "export") == 0)
-	{
 		if (!cmd->argv[1])
 			export_lst_print();
 		else
 			export_add(cmd);
-	}
 	else if (ft_strcmp(cmd->argv[0], "unset") == 0)
-	{
 		ft_unset(cmd);
-	}
 	else if (ft_strcmp(cmd->argv[0], "env") == 0)
-	{
 		env_lst_print();
-	}
 	else if (ft_strcmp(cmd->argv[0], "exit") == 0)
-	{
 		exit(0);
-	}
 	else
-	{
-		ft_execve(cmd);
-		// write(1, temp_cmd->argv[0], ft_strlen(temp_cmd->argv[0]));
+		if (pipe_flag)
+			child_process(cmd);
+		else
+			ft_execve(cmd);
+		// write(1, cmd->argv[0], ft_strlen(cmd->argv[0]));
 		// write(1, ": command not found\n", 20);
-	}
 }
 
 void		execute_builtin(t_list *cmd_root)
@@ -48,27 +35,26 @@ void		execute_builtin(t_list *cmd_root)
 	t_cmd	*temp_next_cmd;
 	int		pid;
 	int		pipe_flag;
-	// int		status;
 
-	pid = 1;
 	pipe_flag = 0;
 	temp = cmd_root->next;
 	while (temp)
 	{
 		temp_cmd = temp->content;
-		if (temp_cmd->flag || pipe_flag)
+		if (pipe_flag || temp_cmd->flag)
 		{
 			if (!pipe_flag)
 			{
 				pipe(temp_cmd->fd);
 				pipe_flag = 1;
 			}
-			// if (temp_cmd->flag)
 			if (temp->next)
 			{
 				temp_next_cmd = temp->next->content;
 				pipe(temp_next_cmd->fd);
 			}
+			else if (!temp->next && temp_cmd->flag)
+				write(1, "Error\n", 6);
 			pid = fork();
 			if (pid < 0)
 				write(1, "Error\n", 6);
@@ -84,19 +70,23 @@ void		execute_builtin(t_list *cmd_root)
 				{
 					dup2(temp_cmd->fd[0], 0);
 				}
-				builtin(temp_cmd);
-				exit(1);
+				printf("child flag = %d\n",pipe_flag);
+				builtin(temp_cmd, pipe_flag);
+				exit(0);
 			}
 			else
 			{
 				close(temp_cmd->fd[0]);
 				close(temp_next_cmd->fd[1]);
-				wait(NULL);
-				// waitpid(pid, &status ,WNOHANG);
+				waitpid(pid, &g_archive.exit_stat, WNOHANG);
+				// waitpid(pid, &g_archive.exit_stat, 0);
 			}
 		}
 		else
-			builtin(temp_cmd);
+		{
+			printf("parents flag = %d\n",pipe_flag);
+			builtin(temp_cmd, pipe_flag);
+		}
 		temp = temp->next;
 	}
 }

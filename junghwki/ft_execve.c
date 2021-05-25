@@ -42,26 +42,35 @@ void	child_process(t_cmd *cmd)
 			execve(path[idx], cmd->argv, NULL);
 			idx++;
 		}
+		free_array(path);
 	}
+	else
+		g_archive.exit_stat = 127;
 	run_in_current_path(cmd);
 }
 
 int ft_execve(t_cmd *cmd)
 {
 	pid_t	pid;
+	int		status;
 
 	pid = fork();
 	if (pid < 0)
 	{
+		write(1, "fork Error\n", 11);
 		return (-1);
 	}
 	else if (pid == 0)
 	{
+		// printf("child = %d\n",getpid());
 		child_process(cmd);
+		exit(0);
 	}
 	else
 	{
-		wait(NULL);
+		// waitpid(pid, &status ,WNOHANG);
+		waitpid(pid, &status, 0);
+		// printf("execve : %d\n",status);
 	}
 	return (0);
 }
