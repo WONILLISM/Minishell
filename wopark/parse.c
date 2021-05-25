@@ -26,12 +26,11 @@ void	parse_envv_handler(t_data *data, char *input)
 	int		len;
 
 	data->input_idx++;
+	// if (input[data->input_idx] == '?')
+	// 	printf("!!!\n");
 	len = chk_var_name(data, input);
 	if (!len)
-	{
-		data->buf[data->buf_idx++] = input[--(data->input_idx)];
 		return ;
-	}
 	tmp = ft_strndup(input + data->input_idx, len);
 	data->input_idx += len - 1;
 	envlst = get_curr_envv_lst(tmp);
@@ -45,6 +44,22 @@ void	parse_envv_handler(t_data *data, char *input)
 	free(data->buf);
 	data->buf = buf_tmp;
 	data->buf_idx = ft_strlen(buf_tmp);
+}
+
+void	parse_get_data2(char *input, t_data *data)
+{
+	if (data->cmd->quote == 0 && ft_strchr("><", input[data->input_idx]))
+			data->cmd->redir = 1;
+		else if (data->cmd->quote != '\'' && input[data->input_idx] == '\\' && input[data->input_idx + 1])
+		{
+			if (data->cmd->quote == '\"' && ft_strchr("$`\"\\", input[data->input_idx + 1]))
+				data->input_idx++;
+			if (data->cmd->quote == 0)
+				data->input_idx++;
+			if (input[data->input_idx] == ' ')
+				input[data->input_idx] = -1;
+		}
+		data->buf[data->buf_idx++] = input[data->input_idx];
 }
 
 void	parse_get_data(char *input, t_data *data, t_list *cmd_root)
@@ -64,20 +79,7 @@ void	parse_get_data(char *input, t_data *data, t_list *cmd_root)
 	else if (data->cmd->quote != '\'' && input[data->input_idx] == '$')
 		parse_envv_handler(data, input);
 	else
-	{
-		if (data->cmd->quote == 0 && ft_strchr("><", input[data->input_idx]))
-			data->cmd->redir = 1;
-		else if (data->cmd->quote != '\'' && input[data->input_idx] == '\\' && input[data->input_idx + 1])
-		{
-			if (data->cmd->quote == '\"' && ft_strchr("$`\"\\", input[data->input_idx + 1]))
-				data->input_idx++;
-			if (data->cmd->quote == 0)
-				data->input_idx++;
-			if (input[data->input_idx] == ' ')
-				input[data->input_idx] = -1;
-		}
-		data->buf[data->buf_idx++] = input[data->input_idx];
-	}
+		parse_get_data2(input, data);
 }
 
 int		parse_input(char *input)
@@ -87,13 +89,17 @@ int		parse_input(char *input)
 	char	*input_tmp;
 
 	g_archive.parse_error = 1;
+	g_archive.buf = data.buf;
 	input_tmp = ft_strltrim(input, " ");
 	parse_init(input_tmp, &data, &cmd_root);
 	while (input_tmp[++data.input_idx])
 	{
 		parse_get_data(input_tmp, &data, cmd_root);
 		if (g_archive.parse_error < 1)
+		{
+			free(input_tmp);
 			return (ERROR);
+		}
 	}
 	free(input_tmp);
 	if (*(data.buf))

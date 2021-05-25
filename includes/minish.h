@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/05/25 14:15:22 by wopark           ###   ########.fr       */
+/*   Updated: 2021/05/25 18:19:15 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ typedef struct	s_data
 typedef struct	s_archive
 {
 	t_list	*envv_lst;
+	char	*buf;
 	int		exit_stat;
 	int		parse_error;
 }				t_archive;

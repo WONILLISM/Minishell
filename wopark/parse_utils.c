@@ -1,6 +1,6 @@
 #include "../includes/minish.h"
 
-void chk_space_flag(char **strs)
+void	chk_space_flag(char **strs)
 {
 	int i;
 	int j;
@@ -19,7 +19,7 @@ void chk_space_flag(char **strs)
 	}
 }
 
-int chk_var_name(t_data *data, char *input)
+int		chk_var_name(t_data *data, char *input)
 {
 	int ret;
 	char c;
@@ -27,18 +27,18 @@ int chk_var_name(t_data *data, char *input)
 	ret = 0;
 	c = *(input + data->input_idx);
 	if (ret == 0 && ft_isdigit(c))
-	{
 		return (1);
-	}
 	while (c == '_' || ft_isalnum(c))
 	{
 		ret++;
 		c = *(input + data->input_idx + ret);
 	}
+	if (!ret)
+		data->buf[data->buf_idx++] = input[--(data->input_idx)];
 	return (ret);
 }
 
-int lst_add_cmd(t_data *data, t_list *cmd_root, int flag)
+int		lst_add_cmd(t_data *data, t_list *cmd_root, int flag)
 {
 	char *tmp;
 

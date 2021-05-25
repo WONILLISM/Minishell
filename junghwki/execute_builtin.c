@@ -91,8 +91,8 @@ void		execute_builtin(t_list *cmd_root)
 			{
 				close(temp_cmd->fd[0]);
 				close(temp_next_cmd->fd[1]);
-				wait(NULL);
-				// waitpid(pid, &status ,WNOHANG);
+				// wait(NULL);
+				waitpid(pid, &g_archive.exit_stat ,WNOHANG);
 			}
 		}
 		else
