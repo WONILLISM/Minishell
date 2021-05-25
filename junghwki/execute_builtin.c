@@ -48,11 +48,9 @@ void		execute_builtin(t_list *cmd_root)
 	t_cmd	*temp_next_cmd;
 	int		pid;
 	int		pipe_flag;
-	int		start;
-	int		status;
+	// int		status;
 
 	pid = 1;
-	start = 0;
 	pipe_flag = 0;
 	temp = cmd_root->next;
 	while (temp)
@@ -60,13 +58,13 @@ void		execute_builtin(t_list *cmd_root)
 		temp_cmd = temp->content;
 		if (temp_cmd->flag || pipe_flag)
 		{
-			pipe_flag = 1;
-			if (!start)
+			if (!pipe_flag)
 			{
 				pipe(temp_cmd->fd);
-				start = 1;
+				pipe_flag = 1;
 			}
-			if (temp_cmd->flag)
+			// if (temp_cmd->flag)
+			if (temp->next)
 			{
 				temp_next_cmd = temp->next->content;
 				pipe(temp_next_cmd->fd);
@@ -93,7 +91,8 @@ void		execute_builtin(t_list *cmd_root)
 			{
 				close(temp_cmd->fd[0]);
 				close(temp_next_cmd->fd[1]);
-				waitpid(pid, &status ,WNOHANG);
+				wait(NULL);
+				// waitpid(pid, &status ,WNOHANG);
 			}
 		}
 		else
