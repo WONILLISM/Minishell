@@ -26,7 +26,7 @@ t_list			*get_curr_envv_lst(char *key_value)
 	t_list		*temp;
 	t_env		*temp_env;
 
-	temp = g_envv_lst->next;
+	temp = g_archive.envv_lst->next;
 	while (temp)
 	{
 		temp_env = temp->content;

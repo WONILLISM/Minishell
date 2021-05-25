@@ -3,14 +3,45 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:07:54 by wopark            #+#    #+#             */
-/*   Updated: 2021/05/24 16:04:37 by junghwki         ###   ########.fr       */
+/*   Updated: 2021/05/25 14:15:15 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minish.h"
+
+void		signal_handler(int signo)
+{
+	pid_t	pid;
+	int		status;
+
+	pid = waitpid(-1, &status, WNOHANG);
+	if (signo == SIGINT)
+	{
+		if (pid == -1)
+		{
+			ft_putstr_fd("\b\b  \b\b\n", STDOUT);
+			write(1, "minish $> ", 10);
+		}
+		else
+			ft_putchar_fd('\n', STDOUT);
+	}
+	else if (signo == SIGQUIT)
+	{
+		if (pid == -1)
+			ft_putstr_fd("\b\b  \b\b", STDOUT);
+		else
+			ft_putstr_fd("Quit: 3\n", STDOUT);
+	}
+}
+
+void		signal_init(void)
+{
+	signal(SIGINT, signal_handler);
+	signal(SIGQUIT, signal_handler);
+}
 
 char	*realloc_input(char *ptr, size_t size)
 {
@@ -58,13 +89,15 @@ int		main(int argc, char **argv, char **envv)
 
 	argc = 0;
 	argv = 0;
+	signal_init();
 	envv_lst_make(envv);
 	while (1)
 	{
-		write(1,"minish $> ", 10);
+		write(1, "minish $> ", 10);
 		if (get_input(&input) == READ_ERR)
 			printf("Error");
-		parse_input(input);
+		if (parse_input(input) == ERROR)
+			parse_error_msg(SYNTAX_ERROR_MSG);
 		free(input);
 	}
 	return (0);

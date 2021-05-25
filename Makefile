@@ -19,7 +19,9 @@ MAIN_SRCS = \
 
 WOPARK_DIR =	./wopark/
 WOPARK_SRCS = \
-			parse.c
+			parse.c \
+			parse_utils.c \
+			parse_error.c
 
 JUNGHWKI_DIR =	./junghwki/
 JUNGHWKI_SRCS = \

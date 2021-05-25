@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minish.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/05/24 18:31:21 by junghwki         ###   ########.fr       */
+/*   Updated: 2021/05/25 14:15:22 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,25 @@
 # define MINISH_H
 # include <unistd.h>
 # include <stdlib.h>
+# include <signal.h>
 # include <stdio.h>
 # include <string.h>
+# include <errno.h>
+# include <fcntl.h>
+# include <sys/types.h>
+# include <sys/stat.h>
 # include "libft/libft.h"
 
-# define SEMICOLON	0
-# define PIPE		1
-# define READ_ERR	-1
-# define READ_SUC	0
+# define SEMICOLON			0
+# define PIPE				1
+# define ERROR				-1
+# define SUCCESS			1
+# define STDIN				0
+# define STDOUT				1
+# define STDERR				2
+# define READ_ERR			-1
+# define READ_SUC			0
+# define SYNTAX_ERROR_MSG	"Syntax Error"
 
 typedef struct	s_env
 {
@@ -49,10 +60,26 @@ typedef struct	s_data
 	int			cmd_idx;
 }				t_data;
 
-t_list	*g_envv_lst;
+typedef struct	s_archive
+{
+	t_list	*envv_lst;
+	int		exit_stat;
+	int		parse_error;
+}				t_archive;
+
+t_archive	g_archive;
 /*
 ** ************ wopark **************
 */
+
+/*
+** ************ parse_utils.c*************
+*/
+void	chk_space_flag(char **strs);
+int		chk_var_name(t_data *data, char *input);
+int		lst_add_cmd(t_data *data, t_list *cmd_root, int flag);
+
+int		parse_error_msg(char *msg);
 
 /*
 ** ************ parse.c *************

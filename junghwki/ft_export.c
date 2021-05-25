@@ -88,7 +88,8 @@ t_list			*export_lst_make()
 	t_list		*temp;
 
 	export_head = ft_lstnew(0);
-	temp = g_envv_lst->next;
+	temp = g_archive.envv_lst->next;
+	// temp = g_envv_lst->next;
 	while (temp)
 	{
 		content = env_dup(temp->content);
@@ -149,7 +150,7 @@ void		export_add(t_cmd *cmd)
 			}
 			else
 			{
-				ft_lstadd_back(&g_envv_lst, ft_lstnew(content));//free
+				ft_lstadd_back(&g_archive.envv_lst, ft_lstnew(content));//free
 			}
 		}
 		idx++;
