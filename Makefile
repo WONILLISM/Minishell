@@ -21,7 +21,8 @@ WOPARK_DIR =	./wopark/
 WOPARK_SRCS = \
 			parse.c \
 			parse_utils.c \
-			parse_error.c
+			parse_error.c \
+			signal.c
 
 JUNGHWKI_DIR =	./junghwki/
 JUNGHWKI_SRCS = \
