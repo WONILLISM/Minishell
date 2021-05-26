@@ -48,7 +48,6 @@ void		execute_builtin(t_list *cmd_root)
 	t_cmd	*temp_next_cmd;
 	int		pid;
 	int		pipe_flag;
-	// int		status;
 
 	pid = 1;
 	pipe_flag = 0;

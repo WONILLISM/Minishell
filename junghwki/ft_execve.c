@@ -61,7 +61,8 @@ int ft_execve(t_cmd *cmd)
 	}
 	else
 	{
-		wait(NULL);
+		waitpid(pid, &g_archive.exit_stat, 0);
+		// wait(NULL);
 	}
 	return (0);
 }
