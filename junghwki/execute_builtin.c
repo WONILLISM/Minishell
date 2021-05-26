@@ -33,9 +33,11 @@ void		execute_builtin(t_list *cmd_root)
 	t_list	*temp;
 	t_cmd	*temp_cmd;
 	t_cmd	*temp_next_cmd;
-	int		pid;
+	int		pid[10];
 	int		pipe_flag;
+	int		idx;
 
+	idx = -1;
 	pipe_flag = 0;
 	temp = cmd_root->next;
 	while (temp)
@@ -46,6 +48,7 @@ void		execute_builtin(t_list *cmd_root)
 			if (!pipe_flag)
 			{
 				pipe(temp_cmd->fd);
+				close(temp_cmd->fd[1]);
 				pipe_flag = 1;
 			}
 			if (temp->next)
@@ -55,22 +58,26 @@ void		execute_builtin(t_list *cmd_root)
 			}
 			else if (!temp->next && temp_cmd->flag)
 				write(1, "Error\n", 6);
-			pid = fork();
-			if (pid < 0)
+			idx++;
+			pid[idx] = fork();
+			if (pid[idx] < 0)
 				write(1, "Error\n", 6);
-			else if (pid == 0)
+			else if (pid[idx] == 0)
 			{
 				if (temp_cmd->flag)
 				{
+					// close(temp_cmd->fd[0]);
 					close(temp_next_cmd->fd[0]);
-					dup2(temp_cmd->fd[0], 0);
+					if (idx != 0)
+					{
+						dup2(temp_cmd->fd[0], 0);
+					}
 					dup2(temp_next_cmd->fd[1], 1);
 				}
 				else
 				{
 					dup2(temp_cmd->fd[0], 0);
 				}
-				printf("child flag = %d\n",pipe_flag);
 				builtin(temp_cmd, pipe_flag);
 				exit(0);
 			}
@@ -78,15 +85,19 @@ void		execute_builtin(t_list *cmd_root)
 			{
 				close(temp_cmd->fd[0]);
 				close(temp_next_cmd->fd[1]);
-				waitpid(pid, &g_archive.exit_stat, WNOHANG);
+				// waitpid(pid, &g_archive.exit_stat, WNOHANG);
 				// waitpid(pid, &g_archive.exit_stat, 0);
 			}
 		}
 		else
 		{
-			printf("parents flag = %d\n",pipe_flag);
 			builtin(temp_cmd, pipe_flag);
 		}
 		temp = temp->next;
+	}
+	while (idx >= 0)
+	{
+		waitpid(pid[idx], &g_archive.exit_stat, 0);
+		idx--;
 	}
 }
