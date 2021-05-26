@@ -26,8 +26,8 @@ void	parse_envv_handler(t_data *data, char *input)
 	int		len;
 
 	data->input_idx++;
-	// if (input[data->input_idx] == '?')
-	// 	printf("!!!\n");
+	if (chk_question_mark(data, input))
+		return ;
 	len = chk_var_name(data, input);
 	if (!len)
 		return ;
@@ -49,17 +49,19 @@ void	parse_envv_handler(t_data *data, char *input)
 void	parse_get_data2(char *input, t_data *data)
 {
 	if (data->cmd->quote == 0 && ft_strchr("><", input[data->input_idx]))
-			data->cmd->redir = 1;
-		else if (data->cmd->quote != '\'' && input[data->input_idx] == '\\' && input[data->input_idx + 1])
-		{
-			if (data->cmd->quote == '\"' && ft_strchr("$`\"\\", input[data->input_idx + 1]))
-				data->input_idx++;
-			if (data->cmd->quote == 0)
-				data->input_idx++;
-			if (input[data->input_idx] == ' ')
-				input[data->input_idx] = -1;
-		}
-		data->buf[data->buf_idx++] = input[data->input_idx];
+		data->cmd->redir = 1;
+	else if (data->cmd->quote != '\''
+	&& input[data->input_idx] == '\\' && input[data->input_idx + 1])
+	{
+		if (data->cmd->quote == '\"'
+		&& ft_strchr("$`\"\\", input[data->input_idx + 1]))
+			data->input_idx++;
+		if (data->cmd->quote == 0)
+			data->input_idx++;
+		if (input[data->input_idx] == ' ')
+			input[data->input_idx] = -1;
+	}
+	data->buf[data->buf_idx++] = input[data->input_idx];
 }
 
 void	parse_get_data(char *input, t_data *data, t_list *cmd_root)

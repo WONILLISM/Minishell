@@ -19,10 +19,26 @@ void	chk_space_flag(char **strs)
 	}
 }
 
+int		chk_question_mark(t_data *data, char *input)
+{
+	char	*buf_tmp;
+	char	*tmp;
+
+	if (input[data->input_idx] != '?')
+		return (0);
+	tmp = ft_itoa(g_archive.exit_stat);
+	buf_tmp = ft_strjoin(data->buf, tmp);
+	free(tmp);
+	free(data->buf);
+	data->buf = buf_tmp;
+	data->buf_idx = ft_strlen(buf_tmp);
+	return (1);
+}
+
 int		chk_var_name(t_data *data, char *input)
 {
-	int ret;
-	char c;
+	int		ret;
+	char	c;
 
 	ret = 0;
 	c = *(input + data->input_idx);

@@ -6,51 +6,11 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:07:54 by wopark            #+#    #+#             */
-/*   Updated: 2021/05/25 18:28:34 by wopark           ###   ########.fr       */
+/*   Updated: 2021/05/26 14:32:21 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minish.h"
-
-void		signal_handler(int signo)
-{
-	pid_t	pid;
-
-	pid = waitpid(-1, &g_archive.exit_stat, WNOHANG);
-	if (signo == SIGINT)
-	{
-		if (pid == -1)
-		{
-			ft_putstr_fd("\b\b  \b\b\n", STDOUT);
-			ft_putstr_fd("minish $> ", STDOUT);
-			if (g_archive.buf)
-				free(g_archive.buf);
-			g_archive.buf = 0;
-			g_archive.exit_stat = 1;
-		}
-		else
-		{
-			g_archive.exit_stat = 130;
-			ft_putchar_fd('\n', STDOUT);
-		}
-	}
-	else if (signo == SIGQUIT)
-	{
-		if (pid == -1)
-			ft_putstr_fd("\b\b  \b\b", STDOUT);
-		else
-		{
-			g_archive.exit_stat = 131;
-			ft_putstr_fd("Quit: 3\n", STDOUT);
-		}
-	}
-}
-
-void		signal_init(void)
-{
-	signal(SIGINT, signal_handler);
-	signal(SIGQUIT, signal_handler);
-}
 
 char	*realloc_input(char *ptr, size_t size)
 {
@@ -98,6 +58,7 @@ int		main(int argc, char **argv, char **envv)
 
 	argc = 0;
 	argv = 0;
+	g_archive.buf = 0;
 	signal_init();
 	envv_lst_make(envv);
 	while (1)
