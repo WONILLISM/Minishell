@@ -8,13 +8,18 @@ void	run_in_current_path(t_cmd *cmd)
 	char	*free_me;
 
 	path = getcwd(NULL, 0);
-	free_me = path;
-	path = ft_strjoin(path, "/");
-	free(free_me);
-	free_me = path;
-	path = ft_strjoin(path, cmd->argv[0]);
-	free(free_me);
-	execve(path, cmd->argv, NULL);
+	if (path == NULL)
+		printf("path Error\n");
+	else
+	{
+		free_me = path;
+		path = ft_strjoin(path, "/");
+		free(free_me);
+		free_me = path;
+		path = ft_strjoin(path, cmd->argv[0]);
+		free(free_me);
+		execve(path, cmd->argv, NULL);
+	}
 }
 
 void	child_process(t_cmd *cmd)
@@ -62,14 +67,12 @@ int ft_execve(t_cmd *cmd)
 	}
 	else if (pid == 0)
 	{
-		// printf("child = %d\n",getpid());
 		child_process(cmd);
-		exit(0);
 	}
 	else
 	{
 		// waitpid(pid, &status ,WNOHANG);
-		waitpid(pid, &status, 0);
+		waitpid(pid, &g_archive.exit_stat, 0);
 		// printf("execve : %d\n",status);
 	}
 	return (0);
