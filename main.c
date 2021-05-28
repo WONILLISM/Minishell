@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:07:54 by wopark            #+#    #+#             */
-/*   Updated: 2021/05/28 21:07:46 by wopark           ###   ########.fr       */
+/*   Updated: 2021/05/28 21:15:42 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int		get_input(char **input)
 	{
 		ip.buf = 0;
 		ip.r_nbr = read(STDIN_FILENO, &ip.buf, sizeof(ip.buf));
-		if (!term_key_handler(&ip.key_pos, &ip.buf, &ip.len))
+		if (!term_key_handler(&ip, *input))
 		{
 			*(*input + ip.idx) = 0;
 			return (READ_SUC);
