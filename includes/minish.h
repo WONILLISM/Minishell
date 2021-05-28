@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/05/28 19:21:36 by wopark           ###   ########.fr       */
+/*   Updated: 2021/05/28 19:24:06 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,8 @@ int		parse_error_msg(char *msg);
 int		chk_question_mark(t_data *data, char *input);
 
 void		signal_init(int argc, char **argv);
+
+void	term_init(struct termios *term, struct termios *backup);
 
 /*
 ** ************ parse.c *************
