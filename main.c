@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:07:54 by wopark            #+#    #+#             */
-/*   Updated: 2021/05/28 19:22:54 by wopark           ###   ########.fr       */
+/*   Updated: 2021/05/28 19:23:41 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ int		main(int argc, char **argv, char **envv)
 	while (1)
 	{
 		write(1, "minish $> ", 10);
+		term_init(&term, &term_backup);
 		if (get_input(&input) == READ_ERR)
 			printf("Error");
 		if (parse_input(input) == ERROR)
