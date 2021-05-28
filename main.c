@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:07:54 by wopark            #+#    #+#             */
-/*   Updated: 2021/05/28 19:23:41 by wopark           ###   ########.fr       */
+/*   Updated: 2021/05/28 19:25:57 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,6 @@ int		main(int argc, char **argv, char **envv)
 	struct	termios term_backup;
 	char	*input;
 
-	argc = 0;
-	argv = 0;
 	g_archive.buf = 0;
 	signal_init(argc, argv);
 	envv_lst_make(envv);
@@ -71,6 +69,7 @@ int		main(int argc, char **argv, char **envv)
 			printf("Error");
 		if (parse_input(input) == ERROR)
 			parse_error_msg(SYNTAX_ERROR_MSG);
+		tcsetattr(STDIN_FILENO, TCSANOW, &term_backup);
 		free(input);
 	}
 	return (0);
