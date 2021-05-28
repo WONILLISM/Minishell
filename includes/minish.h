@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/05/28 19:24:06 by wopark           ###   ########.fr       */
+/*   Updated: 2021/05/28 19:27:52 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,15 @@
 # define READ_ERR			-1
 # define READ_SUC			0
 # define SYNTAX_ERROR_MSG	"Syntax Error"
+
+typedef struct	s_term
+{
+	int		r_nbr;
+	int		idx;
+	int		buf;
+	int		key_pos;
+	int		len;
+}				t_term;
 
 typedef struct	s_env
 {
@@ -85,7 +94,7 @@ int		lst_add_cmd(t_data *data, t_list *cmd_root, int flag);
 int		parse_error_msg(char *msg);
 int		chk_question_mark(t_data *data, char *input);
 
-void		signal_init(int argc, char **argv);
+void	signal_init(int argc, char **argv);
 
 void	term_init(struct termios *term, struct termios *backup);
 
