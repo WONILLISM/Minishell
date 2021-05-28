@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/05/28 19:27:52 by wopark           ###   ########.fr       */
+/*   Updated: 2021/05/28 19:29:03 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,14 @@
 # define READ_SUC			0
 # define SYNTAX_ERROR_MSG	"Syntax Error"
 
-typedef struct	s_term
+typedef struct	input_var
 {
 	int		r_nbr;
 	int		idx;
 	int		buf;
 	int		key_pos;
 	int		len;
-}				t_term;
+}				t_input_var;
 
 typedef struct	s_env
 {
