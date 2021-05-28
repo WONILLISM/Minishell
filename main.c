@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:07:54 by wopark            #+#    #+#             */
-/*   Updated: 2021/05/26 14:32:21 by wopark           ###   ########.fr       */
+/*   Updated: 2021/05/28 19:21:57 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int		main(int argc, char **argv, char **envv)
 	argc = 0;
 	argv = 0;
 	g_archive.buf = 0;
-	signal_init();
+	signal_init(argc, argv);
 	envv_lst_make(envv);
 	while (1)
 	{

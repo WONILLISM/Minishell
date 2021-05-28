@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/05/28 19:14:50 by wopark           ###   ########.fr       */
+/*   Updated: 2021/05/28 19:21:36 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ int		lst_add_cmd(t_data *data, t_list *cmd_root, int flag);
 int		parse_error_msg(char *msg);
 int		chk_question_mark(t_data *data, char *input);
 
-void		signal_init(void);
+void		signal_init(int argc, char **argv);
 
 /*
 ** ************ parse.c *************
