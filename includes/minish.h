@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/05/28 10:31:37 by wopark           ###   ########.fr       */
+/*   Updated: 2021/05/28 19:14:50 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <errno.h>
 # include <fcntl.h>
 # include <termios.h>
+# include <termcap.h>
 # include <sys/types.h>
 # include <sys/stat.h>
 # include "libft/libft.h"
