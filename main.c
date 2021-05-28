@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:07:54 by wopark            #+#    #+#             */
-/*   Updated: 2021/05/28 19:25:57 by wopark           ###   ########.fr       */
+/*   Updated: 2021/05/28 21:07:46 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,28 +26,24 @@ char	*realloc_input(char *ptr, size_t size)
 
 int		get_input(char **input)
 {
-	int		r_nbr;
-	int		idx;
-	int		cnt;
-	char	buf;
+	t_input_var	ip;
 
-	idx = 0;
-	cnt = 1;
+	ip.idx = 0;
 	*input = malloc(1);
 	if (*input == NULL)
 		return (READ_ERR);
 	while (1)
 	{
-		r_nbr = read(0, &buf, 1);
-		if (r_nbr == 0 || buf == '\n')
+		ip.buf = 0;
+		ip.r_nbr = read(STDIN_FILENO, &ip.buf, sizeof(ip.buf));
+		if (!term_key_handler(&ip.key_pos, &ip.buf, &ip.len))
 		{
-			*(*input + idx) = 0;
+			*(*input + ip.idx) = 0;
 			return (READ_SUC);
 		}
-		*(*input + idx) = buf;
-		idx++;
-		*input = realloc_input(*input, cnt + 1);
-		cnt++;
+		*(*input + ip.idx) = ip.buf;
+		ip.idx++;
+		*input = realloc_input(*input, ip.idx + 2);
 	}
 	return (READ_ERR);
 }

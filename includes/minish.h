@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/05/28 19:29:03 by wopark           ###   ########.fr       */
+/*   Updated: 2021/05/28 21:07:34 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,13 @@
 # include <sys/types.h>
 # include <sys/stat.h>
 # include "libft/libft.h"
+
+# define KEY_LEFT			4479771
+# define KEY_RIGHT			4414235
+# define KEY_UP				4283163
+# define KEY_DOWN			4348699
+# define KEY_BACKSPACE		127
+# define CTRL_D				4
 
 # define SEMICOLON			0
 # define PIPE				1
@@ -96,7 +103,11 @@ int		chk_question_mark(t_data *data, char *input);
 
 void	signal_init(int argc, char **argv);
 
+/*
+** ************ terminal_handle.c ******************
+*/
 void	term_init(struct termios *term, struct termios *backup);
+int		term_key_handler(int *key_pos, int *buf, int *len);
 
 /*
 ** ************ parse.c *************
