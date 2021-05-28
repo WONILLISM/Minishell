@@ -6,7 +6,7 @@ RM =		rm -f
 
 # compile option
 CC =		gcc
-CFLAGS =	-Wall -Wextra -Werror -lncurses
+CFLAGS =	-Wall -Wextra -Werror
 
 # library
 LIBFT_DIR =	./includes/libft/
@@ -52,7 +52,7 @@ all :	$(NAME)
 # library :	$(LIBFT)
 
 $(NAME) :	$(LIBFT) $(OBJS)
-			$(CC) $(CFLAGS) $< -o $(NAME) $(LIBFT) $(OBJS)
+			$(CC) $(CFLAGS) $< -o $(NAME) $(LIBFT) $(OBJS) -lncurses
 
 $(LIBFT) :
 			make -C $(LIBFT_DIR)
