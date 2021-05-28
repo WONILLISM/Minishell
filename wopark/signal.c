@@ -34,8 +34,10 @@ void		signal_handler(int signo)
 	}
 }
 
-void		signal_init(void)
+void		signal_init(int argc, char **argv)
 {
+	(void)argc;
+	(void)argv;
 	signal(SIGINT, signal_handler);
 	signal(SIGQUIT, signal_handler);
 }
