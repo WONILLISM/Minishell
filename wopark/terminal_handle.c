@@ -11,44 +11,44 @@ void	term_init(struct termios *term, struct termios *backup)
 	tcsetattr(STDIN_FILENO, TCSANOW, term);
 }
 
-int		term_key_handler(int *key_pos, int *buf, int *len)
+int		term_key_handler(t_input_var *ip_var, char *input)
 {
-	if (*buf == KEY_LEFT && (*key_pos) > 0)
+	if (ip_var->buf == KEY_LEFT && (ip_var->key_pos) > 0)
 	{
 		tputs(tgetstr("le", NULL), 1, ft_putchar);
-		(*key_pos)--;
+		(ip_var->key_pos)--;
 	}
-	else if (*buf == KEY_RIGHT && (*key_pos) < *len)
+	else if (ip_var->buf == KEY_RIGHT && (ip_var->key_pos) < ip_var->len)
 	{
 		tputs(tgetstr("nd", NULL), 1, ft_putchar);
-		(*key_pos)++;
+		(ip_var->key_pos)++;
 	}
-	else if (*buf == KEY_BACKSPACE && (*key_pos) > 0)
+	else if (ip_var->buf == KEY_BACKSPACE && (ip_var->key_pos) > 0)
 	{
 		tputs(tgetstr("le", NULL), 1, ft_putchar);
 		tputs(tgetstr("dm", NULL), 1, ft_putchar);
 		tputs(tgetstr("dc", NULL), 1, ft_putchar);
 		tputs(tgetstr("ed", NULL), 1, ft_putchar);
-		(*key_pos)--;
-		(*len)--;
+		(ip_var->key_pos)--;
+		(ip_var->len)--;
 	}
-	else if (ft_isprint(*buf) || *buf == '\n')
+	else if (ft_isprint(ip_var->buf) || ip_var->buf == '\n')
 	{
 		tputs(tgetstr("im", NULL), 1, ft_putchar);
 		tputs(tgetstr("ic", NULL), 1, ft_putchar);
-		ft_putchar(*buf);
+		ft_putchar(ip_var->buf);
 		tputs(tgetstr("ip", NULL), 1, ft_putchar);
 		tputs(tgetstr("ei", NULL), 1, ft_putchar);
-		(*key_pos)++;
-		(*len)++;
-		if (*buf == '\n')
+		(ip_var->key_pos)++;
+		(ip_var->len)++;
+		if (ip_var->buf == '\n')
 		{
-			*key_pos = 0;
-			*len = 0;
+			ip_var->key_pos = 0;
+			ip_var->len = 0;
 			return (0);
 		}
 	}
-	else if (*buf == CTRL_D)
+	else if (ip_var->buf == CTRL_D)
 		return (0);
 	return (1);
 }

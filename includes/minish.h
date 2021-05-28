@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/05/28 21:07:34 by wopark           ###   ########.fr       */
+/*   Updated: 2021/05/28 21:10:51 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ void	signal_init(int argc, char **argv);
 ** ************ terminal_handle.c ******************
 */
 void	term_init(struct termios *term, struct termios *backup);
-int		term_key_handler(int *key_pos, int *buf, int *len);
+int		term_key_handler(t_input_var *ip_var);
 
 /*
 ** ************ parse.c *************
