@@ -56,7 +56,7 @@ int		chk_var_name(t_data *data, char *input)
 
 int		lst_add_cmd(t_data *data, t_list *cmd_root, int flag)
 {
-	char *tmp;
+	char	*tmp;
 
 	tmp = ft_strltrim(data->buf, " ");
 	free(data->buf);

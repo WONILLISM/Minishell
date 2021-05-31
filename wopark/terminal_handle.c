@@ -1,7 +1,11 @@
 #include "../includes/minish.h"
 
-void	term_init(struct termios *term, struct termios *backup)
+void	term_init(struct termios *term, struct termios *backup, t_input_var *ip)
 {
+	ip->buf = 0;
+	ip->idx = 0;
+	ip->len = 0;
+	ip->key_pos = 0;
 	tgetent(NULL, "xterm");
 	tcgetattr(STDIN_FILENO, term);
 	tcgetattr(STDIN_FILENO, backup);
@@ -13,6 +17,8 @@ void	term_init(struct termios *term, struct termios *backup)
 
 int		term_key_handler(t_input_var *ip_var, char *input)
 {
+	(void)input;
+	// printf("key_pos: %d\nidx: %d\nlen: %d\ninput: %s\n", ip_var->key_pos, ip_var->idx, ip_var->len, input);
 	if (ip_var->buf == KEY_LEFT && (ip_var->key_pos) > 0)
 	{
 		tputs(tgetstr("le", NULL), 1, ft_putchar);
@@ -30,6 +36,7 @@ int		term_key_handler(t_input_var *ip_var, char *input)
 		tputs(tgetstr("dc", NULL), 1, ft_putchar);
 		tputs(tgetstr("ed", NULL), 1, ft_putchar);
 		(ip_var->key_pos)--;
+		(ip_var->idx)--;
 		(ip_var->len)--;
 	}
 	else if (ft_isprint(ip_var->buf) || ip_var->buf == '\n')
@@ -42,11 +49,7 @@ int		term_key_handler(t_input_var *ip_var, char *input)
 		(ip_var->key_pos)++;
 		(ip_var->len)++;
 		if (ip_var->buf == '\n')
-		{
-			ip_var->key_pos = 0;
-			ip_var->len = 0;
 			return (0);
-		}
 	}
 	else if (ip_var->buf == CTRL_D)
 		return (0);

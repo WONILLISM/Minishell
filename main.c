@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:07:54 by wopark            #+#    #+#             */
-/*   Updated: 2021/05/28 21:15:42 by wopark           ###   ########.fr       */
+/*   Updated: 2021/05/31 19:43:06 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,34 +24,39 @@ char	*realloc_input(char *ptr, size_t size)
 	return (ret);
 }
 
-int		get_input(char **input)
+int		get_input(char *input)
 {
-	t_input_var	ip;
+	t_input_var		ip;
+	struct	termios	term;
+	struct	termios	term_backup;
 
-	ip.idx = 0;
-	*input = malloc(1);
-	if (*input == NULL)
+	input = malloc(1);
+	if (input == NULL)
 		return (READ_ERR);
+	term_init(&term, &term_backup, &ip);
 	while (1)
 	{
 		ip.buf = 0;
 		ip.r_nbr = read(STDIN_FILENO, &ip.buf, sizeof(ip.buf));
-		if (!term_key_handler(&ip, *input))
+		if (!term_key_handler(&ip, input))
 		{
-			*(*input + ip.idx) = 0;
+
+			// *(input + ip.idx) = 0;
+			input[ip.idx] = 0;
+			tcsetattr(STDIN_FILENO, TCSANOW, &term_backup);
 			return (READ_SUC);
 		}
-		*(*input + ip.idx) = ip.buf;
+		input[ip.idx] = ip.buf;
+		// *(*input + ip.idx) = ip.buf;
 		ip.idx++;
 		*input = realloc_input(*input, ip.idx + 2);
 	}
+	tcsetattr(STDIN_FILENO, TCSANOW, &term_backup);
 	return (READ_ERR);
 }
 
 int		main(int argc, char **argv, char **envv)
 {
-	struct	termios term;
-	struct	termios term_backup;
 	char	*input;
 
 	g_archive.buf = 0;
@@ -60,12 +65,10 @@ int		main(int argc, char **argv, char **envv)
 	while (1)
 	{
 		write(1, "minish $> ", 10);
-		term_init(&term, &term_backup);
 		if (get_input(&input) == READ_ERR)
 			printf("Error");
 		if (parse_input(input) == ERROR)
 			parse_error_msg(SYNTAX_ERROR_MSG);
-		tcsetattr(STDIN_FILENO, TCSANOW, &term_backup);
 		free(input);
 	}
 	return (0);
