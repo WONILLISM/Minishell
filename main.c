@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:07:54 by wopark            #+#    #+#             */
-/*   Updated: 2021/05/31 19:43:06 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/01 14:08:23 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,13 @@ char	*realloc_input(char *ptr, size_t size)
 	return (ret);
 }
 
-int		get_input(char *input)
+int		get_input(char **input)
 {
 	t_input_var		ip;
 	struct	termios	term;
 	struct	termios	term_backup;
 
-	input = malloc(1);
+	*input = malloc(1);
 	if (input == NULL)
 		return (READ_ERR);
 	term_init(&term, &term_backup, &ip);
@@ -40,15 +40,11 @@ int		get_input(char *input)
 		ip.r_nbr = read(STDIN_FILENO, &ip.buf, sizeof(ip.buf));
 		if (!term_key_handler(&ip, input))
 		{
-
-			// *(input + ip.idx) = 0;
-			input[ip.idx] = 0;
+			write(1, "\n", 1);
+			*(*input + ip.idx) = 0;
 			tcsetattr(STDIN_FILENO, TCSANOW, &term_backup);
 			return (READ_SUC);
 		}
-		input[ip.idx] = ip.buf;
-		// *(*input + ip.idx) = ip.buf;
-		ip.idx++;
 		*input = realloc_input(*input, ip.idx + 2);
 	}
 	tcsetattr(STDIN_FILENO, TCSANOW, &term_backup);

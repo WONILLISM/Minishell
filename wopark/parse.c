@@ -92,7 +92,9 @@ int		parse_input(char *input)
 
 	g_archive.parse_error = 1;
 	g_archive.buf = data.buf;
-	input_tmp = ft_strltrim(input, " ");
+	input_tmp = NULL;
+	if (input)
+		input_tmp = ft_strltrim(input, " ");
 	parse_init(input_tmp, &data, &cmd_root);
 	while (input_tmp[++data.input_idx])
 	{

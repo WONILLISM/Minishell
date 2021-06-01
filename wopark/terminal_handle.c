@@ -15,10 +15,8 @@ void	term_init(struct termios *term, struct termios *backup, t_input_var *ip)
 	tcsetattr(STDIN_FILENO, TCSANOW, term);
 }
 
-int		term_key_handler(t_input_var *ip_var, char *input)
+int		term_key_handler(t_input_var *ip_var, char **input)
 {
-	(void)input;
-	// printf("key_pos: %d\nidx: %d\nlen: %d\ninput: %s\n", ip_var->key_pos, ip_var->idx, ip_var->len, input);
 	if (ip_var->buf == KEY_LEFT && (ip_var->key_pos) > 0)
 	{
 		tputs(tgetstr("le", NULL), 1, ft_putchar);
@@ -43,13 +41,15 @@ int		term_key_handler(t_input_var *ip_var, char *input)
 	{
 		tputs(tgetstr("im", NULL), 1, ft_putchar);
 		tputs(tgetstr("ic", NULL), 1, ft_putchar);
+		if (ip_var->buf == '\n')
+			return (0);
 		ft_putchar(ip_var->buf);
+		*(*input + ip_var->idx) = ip_var->buf;
 		tputs(tgetstr("ip", NULL), 1, ft_putchar);
 		tputs(tgetstr("ei", NULL), 1, ft_putchar);
 		(ip_var->key_pos)++;
+		(ip_var->idx)++;
 		(ip_var->len)++;
-		if (ip_var->buf == '\n')
-			return (0);
 	}
 	else if (ip_var->buf == CTRL_D)
 		return (0);
