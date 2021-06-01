@@ -57,7 +57,6 @@ void	child_process(t_cmd *cmd)
 int ft_execve(t_cmd *cmd)
 {
 	pid_t	pid;
-	int		status;
 
 	pid = fork();
 	if (pid < 0)
