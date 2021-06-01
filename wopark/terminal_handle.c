@@ -1,45 +1,4 @@
 #include "../includes/minish.h"
-int	nbr_length(int n)
-{
-	int	i = 0;
-
-	if (n <= 0)
-		i++;
-	while (n != 0)
-	{
-		n /= 10;
-		i++;
-	}
-	return (i);
-}
-void	get_cursor_position(int *col, int *rows)
-{
-	int		a = 0;
-	int		i = 1;
-	char	buf[255];
-	int		ret;
-	int		temp;
-
-	write(0, "\033[6n", 4);  //report cursor location
-	ret = read(0, buf, 254);
-	buf[ret] = '\0';
-	while (buf[i])
-	{
-		if (buf[i] >= '0' && buf[i] <= '9')
-		{
-			if (a == 0)
-				*rows = atoi(&buf[i]) - 1;
-			else
-			{
-				temp = atoi(&buf[i]);
-				*col = temp - 1;
-			}
-			a++;
-			i += nbr_length(temp) - 1;
-		}
-		i++;
-	}
-}
 
 void	term_init(struct termios *term, struct termios *backup, t_cursor *cursor)
 {
@@ -93,8 +52,6 @@ int		term_key_handler(t_cursor *cursor, char **input)
 	else if (ft_isprint(cursor->buf) || cursor->buf == '\n')
 	{
 		set_printable_key(cursor);
-		get_cursor_position(&cursor->col, &cursor->row);
-			printf("%d %d\n", cursor->col, cursor->row);
 		if (cursor->buf == '\n')
 			return (0);
 		*(*input + cursor->key_pos) = cursor->buf;
