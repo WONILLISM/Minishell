@@ -52,6 +52,7 @@ void	child_process(t_cmd *cmd)
 	else
 		g_archive.exit_stat = 127;
 	run_in_current_path(cmd);
+	exit(0);
 }
 
 int ft_execve(t_cmd *cmd)
