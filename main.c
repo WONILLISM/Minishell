@@ -6,42 +6,15 @@
 /*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:07:54 by wopark            #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2021/05/26 14:07:02 by junghwki         ###   ########.fr       */
+=======
+/*   Updated: 2021/06/01 14:08:23 by wopark           ###   ########.fr       */
+>>>>>>> wopark
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minish.h"
-
-void		signal_handler(int signo)
-{
-	pid_t	pid;
-	int		status;
-
-	pid = waitpid(-1, &status, WNOHANG);
-	if (signo == SIGINT)
-	{
-		if (pid == -1)
-		{
-			ft_putstr_fd("\b\b  \b\b\n", STDOUT);
-			write(1, "minish $> ", 10);
-		}
-		else
-			ft_putchar_fd('\n', STDOUT);
-	}
-	else if (signo == SIGQUIT)
-	{
-		if (pid == -1)
-			ft_putstr_fd("\b\b  \b\b", STDOUT);
-		else
-			ft_putstr_fd("Quit: 3\n", STDOUT);
-	}
-}
-
-void		signal_init(void)
-{
-	signal(SIGINT, signal_handler);
-	signal(SIGQUIT, signal_handler);
-}
 
 char	*realloc_input(char *ptr, size_t size)
 {
@@ -57,29 +30,28 @@ char	*realloc_input(char *ptr, size_t size)
 
 int		get_input(char **input)
 {
-	int		r_nbr;
-	int		idx;
-	int		cnt;
-	char	buf;
+	t_input_var		ip;
+	struct	termios	term;
+	struct	termios	term_backup;
 
-	idx = 0;
-	cnt = 1;
 	*input = malloc(1);
-	if (*input == NULL)
+	if (input == NULL)
 		return (READ_ERR);
+	term_init(&term, &term_backup, &ip);
 	while (1)
 	{
-		r_nbr = read(0, &buf, 1);
-		if (r_nbr == 0 || buf == '\n')
+		ip.buf = 0;
+		ip.r_nbr = read(STDIN_FILENO, &ip.buf, sizeof(ip.buf));
+		if (!term_key_handler(&ip, input))
 		{
-			*(*input + idx) = 0;
+			write(1, "\n", 1);
+			*(*input + ip.idx) = 0;
+			tcsetattr(STDIN_FILENO, TCSANOW, &term_backup);
 			return (READ_SUC);
 		}
-		*(*input + idx) = buf;
-		idx++;
-		*input = realloc_input(*input, cnt + 1);
-		cnt++;
+		*input = realloc_input(*input, ip.idx + 2);
 	}
+	tcsetattr(STDIN_FILENO, TCSANOW, &term_backup);
 	return (READ_ERR);
 }
 
@@ -87,9 +59,8 @@ int		main(int argc, char **argv, char **envv)
 {
 	char	*input;
 
-	argc = 0;
-	argv = 0;
-	signal_init();
+	g_archive.buf = 0;
+	signal_init(argc, argv);
 	envv_lst_make(envv);
 	while (1)
 	{

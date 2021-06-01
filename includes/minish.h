@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minish.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/05/26 15:04:19 by junghwki         ###   ########.fr       */
+/*   Updated: 2021/06/01 14:12:23 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,18 @@
 # include <string.h>
 # include <errno.h>
 # include <fcntl.h>
+# include <termios.h>
+# include <termcap.h>
 # include <sys/types.h>
 # include <sys/stat.h>
 # include "libft/libft.h"
+
+# define KEY_LEFT			4479771
+# define KEY_RIGHT			4414235
+# define KEY_UP				4283163
+# define KEY_DOWN			4348699
+# define KEY_BACKSPACE		127
+# define CTRL_D				4
 
 # define SEMICOLON			0
 # define PIPE				1
@@ -33,6 +42,15 @@
 # define READ_ERR			-1
 # define READ_SUC			0
 # define SYNTAX_ERROR_MSG	"Syntax Error"
+
+typedef struct	input_var
+{
+	int		r_nbr;
+	int		idx;
+	int		buf;
+	int		key_pos;
+	int		len;
+}				t_input_var;
 
 typedef struct	s_env
 {
@@ -62,9 +80,10 @@ typedef struct	s_data
 
 typedef struct	s_archive
 {
-	t_list		*envv_lst;
-	int			exit_stat;
-	int			parse_error;
+	t_list	*envv_lst;
+	char	*buf;
+	int		exit_stat;
+	int		parse_error;
 }				t_archive;
 
 t_archive	g_archive;
@@ -80,6 +99,15 @@ int		chk_var_name(t_data *data, char *input);
 int		lst_add_cmd(t_data *data, t_list *cmd_root, int flag);
 
 int		parse_error_msg(char *msg);
+int		chk_question_mark(t_data *data, char *input);
+
+void	signal_init(int argc, char **argv);
+
+/*
+** ************ terminal_handle.c ******************
+*/
+void	term_init(struct termios *term, struct termios *backup, t_input_var *ip);
+int		term_key_handler(t_input_var *ip_var, char **input);
 
 /*
 ** ************ parse.c *************

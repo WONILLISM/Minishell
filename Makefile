@@ -21,7 +21,11 @@ WOPARK_DIR =	./wopark/
 WOPARK_SRCS = \
 			parse.c \
 			parse_utils.c \
-			parse_error.c
+			parse_error.c \
+			signal.c \
+			terminal_handle.c
+			# ft_exit.c
+			# execute_proc.c
 
 JUNGHWKI_DIR =	./junghwki/
 JUNGHWKI_SRCS = \
@@ -48,7 +52,7 @@ all :	$(NAME)
 # library :	$(LIBFT)
 
 $(NAME) :	$(LIBFT) $(OBJS)
-			$(CC) $(CFLAGS) $< -o $(NAME) $(LIBFT) $(OBJS)
+			$(CC) $(CFLAGS) $< -o $(NAME) $(LIBFT) $(OBJS) -lncurses
 
 $(LIBFT) :
 			make -C $(LIBFT_DIR)
