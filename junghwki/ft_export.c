@@ -125,6 +125,25 @@ void		export_lst_print()
 	}
 }
 
+// void		export_add_value(t_env *content)
+// {
+// 	t_env	*temp_content;
+// 	t_list	*temp;
+// 	// char	*free_me;
+
+// 	content->key[ft_strlen(content->key) - 1] = '\0';
+// 	temp = get_curr_envv_lst(content->key);
+// 	if (temp)
+// 	{
+// 		temp_content = temp->content;
+// 		temp_content->value = ft_strjoin(temp_content->value, content->value);
+// 	}
+// 	else
+// 	{
+// 		ft_lstadd_back(&g_archive.envv_lst, ft_lstnew(content)); //free
+// 	}
+// }
+
 void		export_add(t_cmd *cmd)
 {
 	t_list	*temp;
