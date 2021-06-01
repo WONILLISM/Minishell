@@ -3,14 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:07:54 by wopark            #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2021/05/26 14:07:02 by junghwki         ###   ########.fr       */
-=======
-/*   Updated: 2021/06/01 14:08:23 by wopark           ###   ########.fr       */
->>>>>>> wopark
+/*   Updated: 2021/06/01 14:30:13 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,30 +26,57 @@ char	*realloc_input(char *ptr, size_t size)
 
 int		get_input(char **input)
 {
-	t_input_var		ip;
-	struct	termios	term;
-	struct	termios	term_backup;
+	int		r_nbr;
+	int		idx;
+	int		cnt;
+	char	buf;
 
+	idx = 0;
+	cnt = 1;
 	*input = malloc(1);
-	if (input == NULL)
+	if (*input == NULL)
 		return (READ_ERR);
-	term_init(&term, &term_backup, &ip);
 	while (1)
 	{
-		ip.buf = 0;
-		ip.r_nbr = read(STDIN_FILENO, &ip.buf, sizeof(ip.buf));
-		if (!term_key_handler(&ip, input))
+		r_nbr = read(0, &buf, 1);
+		if (r_nbr == 0 || buf == '\n')
 		{
-			write(1, "\n", 1);
-			*(*input + ip.idx) = 0;
-			tcsetattr(STDIN_FILENO, TCSANOW, &term_backup);
+			*(*input + idx) = 0;
 			return (READ_SUC);
 		}
-		*input = realloc_input(*input, ip.idx + 2);
+		*(*input + idx) = buf;
+		idx++;
+		*input = realloc_input(*input, cnt + 1);
+		cnt++;
 	}
-	tcsetattr(STDIN_FILENO, TCSANOW, &term_backup);
 	return (READ_ERR);
 }
+// int		get_input(char **input)
+// {
+// 	t_input_var		ip;
+// 	struct	termios	term;
+// 	struct	termios	term_backup;
+
+// 	*input = malloc(1);
+// 	if (input == NULL)
+// 		return (READ_ERR);
+// 	term_init(&term, &term_backup, &ip);
+// 	while (1)
+// 	{
+// 		ip.buf = 0;
+// 		ip.r_nbr = read(STDIN_FILENO, &ip.buf, sizeof(ip.buf));
+// 		if (!term_key_handler(&ip, input))
+// 		{
+// 			write(1, "\n", 1);
+// 			*(*input + ip.idx) = 0;
+// 			// tcsetattr(STDIN_FILENO, TCSANOW, &term_backup);
+// 			return (READ_SUC);
+// 		}
+// 		*input = realloc_input(*input, ip.idx + 2);
+// 	}
+// 	// tcsetattr(STDIN_FILENO, TCSANOW, &term_backup);
+// 	return (READ_ERR);
+// }
 
 int		main(int argc, char **argv, char **envv)
 {
