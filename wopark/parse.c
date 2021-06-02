@@ -93,7 +93,10 @@ int		parse_input(char *input)
 
 	g_archive.parse_error = 1;
 	g_archive.buf = data.buf;
-	input_tmp = ft_strltrim(input, " ");
+	if (*input)
+		input_tmp = ft_strltrim(input, " ");
+	else
+		return (SUCCESS);
 	parse_init(input_tmp, &data, &cmd_root);
 	while (input_tmp && input_tmp[++data.input_idx])
 	{
@@ -104,9 +107,6 @@ int		parse_input(char *input)
 	free(input_tmp);
 	if (*(data.buf))
 		g_archive.parse_error = lst_add_cmd(&data, cmd_root, 0);
-	t_cmd *t = cmd_root->next->content;
-	for(int i = 0; t->argv[i]; i++)
-		printf("%s\n", t->argv[i]);
 	if (parse_error_check(&data) == ERROR)
 		return (ERROR);
 	else
