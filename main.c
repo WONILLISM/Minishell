@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:07:54 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/02 12:26:00 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/02 15:29:37 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,35 +67,64 @@ void	get_cursor_position(int *col, int *rows)
 	}
 }
 
+// int		get_input(char **input)
+// {
+// 	t_cursor		cursor;
+// 	struct	termios	term;
+// 	struct	termios	term_backup;
+
+// 	*input = malloc(1);
+// 	if (input == NULL)
+// 		return (READ_ERR);
+// 	term_init(&term, &term_backup, &cursor);
+// 	while (1)
+// 	{
+// 		cursor.buf = 0;
+// 		cursor.r_nbr = read(STDIN_FILENO, &cursor.buf, sizeof(cursor.buf));
+// 		if (!term_key_handler(&cursor, input))
+// 		{
+// 			*(*input + cursor.key_pos) = 0;
+// 			// printf("input : %s\n", *input);
+// 			cursor.idx = 0;
+// 			cursor.key_pos = 0;
+// 			cursor.len = 0;
+// 			// tcsetattr(STDIN_FILENO, TCSANOW, &term_backup);
+// 			get_cursor_position(&cursor.col, &cursor.row);
+// 			printf("%d %d\n", cursor.col, cursor.row);
+// 			return (READ_SUC);
+// 		}
+// 		*input = realloc_input(*input, cursor.key_pos + 2);
+// 	}
+// 	// tcsetattr(STDIN_FILENO, TCSANOW, &term_backup);
+// 	return (READ_ERR);
+// }
+
 int		get_input(char **input)
 {
-	t_cursor		cursor;
-	struct	termios	term;
-	struct	termios	term_backup;
+	int		r_nbr;
+	int		idx;
+	int		cnt;
+	char	buf;
 
+	idx = 0;
+	cnt = 1;
 	*input = malloc(1);
-	if (input == NULL)
+	if (*input == NULL)
 		return (READ_ERR);
-	term_init(&term, &term_backup, &cursor);
 	while (1)
 	{
-		cursor.buf = 0;
-		cursor.r_nbr = read(STDIN_FILENO, &cursor.buf, sizeof(cursor.buf));
-		if (!term_key_handler(&cursor, input))
+		buf = 0;
+		r_nbr = read(0, &buf, 1);
+		if (r_nbr == 0 || buf == '\n')
 		{
-			*(*input + cursor.key_pos) = 0;
-			// printf("input : %s\n", *input);
-			cursor.idx = 0;
-			cursor.key_pos = 0;
-			cursor.len = 0;
-			// tcsetattr(STDIN_FILENO, TCSANOW, &term_backup);
-			get_cursor_position(&cursor.col, &cursor.row);
-			printf("%d %d\n", cursor.col, cursor.row);
+			*(*input + idx) = 0;
 			return (READ_SUC);
 		}
-		*input = realloc_input(*input, cursor.key_pos + 2);
+		*(*input + idx) = buf;
+		idx++;
+		*input = realloc_input(*input, cnt + 1);
+		cnt++;
 	}
-	// tcsetattr(STDIN_FILENO, TCSANOW, &term_backup);
 	return (READ_ERR);
 }
 
@@ -103,7 +132,7 @@ int		main(int argc, char **argv, char **envv)
 {
 	char	*input;
 
-	g_archive.buf = 0;
+	// g_archive.buf = 0;
 	signal_init(argc, argv);
 	envv_lst_make(envv);
 	while (1)
@@ -119,30 +148,4 @@ int		main(int argc, char **argv, char **envv)
 }
 
 
-// int		get_input(char **input)
-// {
-// 	int		r_nbr;
-// 	int		idx;
-// 	int		cnt;
-// 	char	buf;
 
-// 	idx = 0;
-// 	cnt = 1;
-// 	*input = malloc(1);
-// 	if (*input == NULL)
-// 		return (READ_ERR);
-// 	while (1)
-// 	{
-// 		r_nbr = read(0, &buf, 1);
-// 		if (r_nbr == 0 || buf == '\n')
-// 		{
-// 			*(*input + idx) = 0;
-// 			return (READ_SUC);
-// 		}
-// 		*(*input + idx) = buf;
-// 		idx++;
-// 		*input = realloc_input(*input, cnt + 1);
-// 		cnt++;
-// 	}
-// 	return (READ_ERR);
-// }

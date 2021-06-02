@@ -64,7 +64,7 @@ int		lst_add_cmd(t_data *data, t_list *cmd_root, int flag)
 	data->cmd->argv = ft_split(data->buf, ' ');
 	chk_space_flag(data->cmd->argv);
 	data->cmd->flag = flag;
-	if (!(data->cmd->argv)[0] && flag >= 0)
+	if (!(data->cmd->argv)[0] && flag >= 1)
 		return (ERROR);
 	else
 	{

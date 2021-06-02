@@ -7,6 +7,7 @@ void	parse_init(char *input, t_data *data, t_list **cmd_root)
 	data->cmd = malloc(sizeof(t_cmd));
 	data->cmd->argv = 0;
 	data->cmd->flag = 0;
+	data->cmd->redir = 0;
 	data->cmd->quote = 0;
 	data->cmd->fd[0] = 0;
 	data->cmd->fd[1] = 0;
@@ -92,25 +93,23 @@ int		parse_input(char *input)
 
 	g_archive.parse_error = 1;
 	g_archive.buf = data.buf;
-	input_tmp = NULL;
-	if (input)
-		input_tmp = ft_strltrim(input, " ");
+	input_tmp = ft_strltrim(input, " ");
 	parse_init(input_tmp, &data, &cmd_root);
-	while (input_tmp[++data.input_idx])
+	while (input_tmp && input_tmp[++data.input_idx])
 	{
 		parse_get_data(input_tmp, &data, cmd_root);
-		if (g_archive.parse_error < 1)
-		{
-			free(input_tmp);
-			return (ERROR);
-		}
+		if (g_archive.parse_error == -1)
+			break;
 	}
 	free(input_tmp);
 	if (*(data.buf))
 		g_archive.parse_error = lst_add_cmd(&data, cmd_root, 0);
-	if (g_archive.parse_error == 1)
-		execute_builtin(cmd_root);
-	else if (g_archive.parse_error < 0)
+	t_cmd *t = cmd_root->next->content;
+	for(int i = 0; t->argv[i]; i++)
+		printf("%s\n", t->argv[i]);
+	if (parse_error_check(&data) == ERROR)
 		return (ERROR);
+	else
+		execute_builtin(cmd_root);
 	return (SUCCESS);
 }

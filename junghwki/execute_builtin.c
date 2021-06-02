@@ -103,11 +103,11 @@ void		execute_builtin(t_list *cmd_root)
 					temp_next_cmd = temp->next->content;
 					pipe(temp_next_cmd->fd);
 				}
-				else if (!temp->next && temp_cmd->flag)
-				{
-					write(1, "Pipe Error\n", 11);
-					break;
-				}
+				// else if (!temp->next && temp_cmd->flag)
+				// {
+				// 	write(1, "Pipe Error\n", 11);
+				// 	break;
+				// }
 				idx++;
 				lets_fork(&pid[idx], temp_cmd, temp_next_cmd, idx);
 				temp = temp->next;

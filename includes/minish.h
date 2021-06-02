@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/02 12:26:53 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/02 14:20:22 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ void	chk_space_flag(char **strs);
 int		chk_var_name(t_data *data, char *input);
 int		lst_add_cmd(t_data *data, t_list *cmd_root, int flag);
 
+int		parse_error_check(t_data *data);
 int		parse_error_msg(char *msg);
 int		chk_question_mark(t_data *data, char *input);
 
