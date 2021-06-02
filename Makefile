@@ -7,6 +7,7 @@ RM =		rm -f
 # compile option
 CC =		gcc
 CFLAGS =	-Wall -Wextra -Werror
+CFSANITIZE = -fsanitize=address
 
 # library
 LIBFT_DIR =	./includes/libft/
