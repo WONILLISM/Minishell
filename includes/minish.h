@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/01 14:12:23 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/02 12:26:53 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,14 +43,16 @@
 # define READ_SUC			0
 # define SYNTAX_ERROR_MSG	"Syntax Error"
 
-typedef struct	input_var
+typedef struct	s_cursor
 {
 	int		r_nbr;
 	int		idx;
 	int		buf;
 	int		key_pos;
 	int		len;
-}				t_input_var;
+	int		col;
+	int		row;
+}				t_cursor;
 
 typedef struct	s_env
 {
@@ -106,8 +108,8 @@ void	signal_init(int argc, char **argv);
 /*
 ** ************ terminal_handle.c ******************
 */
-void	term_init(struct termios *term, struct termios *backup, t_input_var *ip);
-int		term_key_handler(t_input_var *ip_var, char **input);
+void	term_init(struct termios *term, struct termios *backup, t_cursor *cursor);
+int		term_key_handler(t_cursor *ip_var, char **input);
 
 /*
 ** ************ parse.c *************
