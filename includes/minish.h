@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/02 16:42:05 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/02 18:10:46 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,16 @@ typedef struct	s_env
 	char		*key;
 	char		*value;
 }				t_env;
+
+/*
+**	double linked list
+*/
+typedef struct	s_dllist
+{
+	void				*data;
+	struct	s_dllist	*prev;
+	struct	s_dllist	*next;
+}				t_dllist;
 
 typedef struct	s_cmd
 {
