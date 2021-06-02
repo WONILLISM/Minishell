@@ -1,5 +1,6 @@
 #include "../includes/minish.h"
 
+
 void		builtin(t_cmd *cmd, int pipe_flag)
 {
 	if (ft_strcmp(cmd->argv[0], "cd") == 0)
@@ -28,78 +29,110 @@ void		builtin(t_cmd *cmd, int pipe_flag)
 		// write(1, ": command not found\n", 20);
 }
 
+void		lets_fork(int	*pid, t_cmd *cmd, t_cmd *next_cmd, int idx)
+{
+	*pid = fork();
+	if (*pid < 0)
+		write(1, "Error\n", 6);
+	else if (*pid == 0)
+	{
+		if (cmd->flag)
+		{
+			close(next_cmd->fd[0]);
+			if (idx != 0)
+				dup2(cmd->fd[0], 0);
+			dup2(next_cmd->fd[1], 1);
+		}
+		else
+			dup2(cmd->fd[0], 0);
+		builtin(cmd, 1);
+		exit(0);
+	}
+	else
+	{
+		close(cmd->fd[0]);
+		close(next_cmd->fd[1]);
+	}
+}
+
+int		count_pipe(t_list *list)
+{
+	t_cmd	*cmd;
+	int		ret;
+
+	ret = 0;
+	while (list)
+	{
+		cmd = list->content;
+		if (cmd->flag)
+			ret++;
+		else
+			break;
+		list = list->next;
+	}
+	return (ret);
+}
+
 void		execute_builtin(t_list *cmd_root)
 {
 	t_list	*temp;
 	t_cmd	*temp_cmd;
 	t_cmd	*temp_next_cmd;
-	// int		*pid;
-	int		pid[10];
 	int		idx;
+	int		pipe_cnt;
+	int		*pid;
 
-	// pid = (int *)malloc(sizeof(int) * pipe_cnt);
 	idx = -1;
 	temp = cmd_root->next;
 	while (temp)
 	{
 		temp_cmd = temp->content;
+		pipe_cnt = count_pipe(temp);
+		pid = (int *)malloc(sizeof(int) * pipe_cnt + 1);
 		if (temp_cmd->flag)
 		{
-			if (idx == -1)
+			while (temp_cmd->flag)
 			{
-				pipe(temp_cmd->fd);
-				close(temp_cmd->fd[1]);
-			}
-			if (temp->next)
-			{
-				temp_next_cmd = temp->next->content;
-				pipe(temp_next_cmd->fd);
-			}
-			else
-				write(1, "Error\n", 6);
-			idx++;
-			pid[idx] = fork();
-			if (pid[idx] < 0)
-				write(1, "Error\n", 6);
-			else if (pid[idx] == 0)
-			{
-				if (temp_cmd->flag)
+				if (idx == -1)
 				{
-					close(temp_next_cmd->fd[0]);
-					if (idx != 0)
-					{
-						dup2(temp_cmd->fd[0], 0);
-					}
-					dup2(temp_next_cmd->fd[1], 1);
+					pipe(temp_cmd->fd);
+					close(temp_cmd->fd[1]);
 				}
-				else
+				if (temp->next)
 				{
-					dup2(temp_cmd->fd[0], 0);
+					temp_next_cmd = temp->next->content;
+					pipe(temp_next_cmd->fd);
 				}
-				builtin(temp_cmd, 0);
-				exit(0);
+				else if (!temp->next && temp_cmd->flag)
+				{
+					write(1, "Pipe Error\n", 11);
+					break;
+				}
+				idx++;
+				lets_fork(&pid[idx], temp_cmd, temp_next_cmd, idx);
+				temp = temp->next;
+				temp_cmd = temp->content;
 			}
-			else
+			if (temp_cmd->flag == 0)
 			{
-				close(temp_cmd->fd[0]);
-				close(temp_next_cmd->fd[1]);
+				idx++;
+				lets_fork(&pid[idx], temp_cmd, temp_next_cmd, idx);
+				while (idx >= 0)
+				{
+					waitpid(pid[pipe_cnt - idx], &g_archive.exit_stat, 0);
+					idx--;
+				}
 			}
 		}
 		else
 		{
-			builtin(temp_cmd, 1);
+			builtin(temp_cmd, 0);
 		}
+		free(pid);
 		temp = temp->next;
-		if (temp_cmd->flag == 0)
-		{
-			while (idx >= 0)
-			{
-				waitpid(pid[idx], &g_archive.exit_stat, 0);
-				idx--;
-			}
-		}
 	}
 }
+
 // void		execute_builtin(t_list *cmd_root)
 // {
 // 	t_list	*temp;

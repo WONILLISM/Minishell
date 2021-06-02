@@ -41,12 +41,12 @@ int		term_key_handler(t_input_var *ip_var, char **input)
 	{
 		tputs(tgetstr("im", NULL), 1, ft_putchar);
 		tputs(tgetstr("ic", NULL), 1, ft_putchar);
-		if (ip_var->buf == '\n')
-			return (0);
 		ft_putchar(ip_var->buf);
-		*(*input + ip_var->idx) = ip_var->buf;
 		tputs(tgetstr("ip", NULL), 1, ft_putchar);
 		tputs(tgetstr("ei", NULL), 1, ft_putchar);
+		if (ip_var->buf == '\n')
+			return (0);
+		*(*input + ip_var->idx) = ip_var->buf;
 		(ip_var->key_pos)++;
 		(ip_var->idx)++;
 		(ip_var->len)++;
