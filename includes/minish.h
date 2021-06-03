@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minish.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
+/*   By: wopark <wopark@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/02 18:10:46 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/03 16:19:08 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,33 @@
 # define READ_SUC			0
 # define SYNTAX_ERROR_MSG	"Syntax Error"
 
+/*
+**	double linked list
+*/
+typedef struct	s_dlnode
+{
+	void			*data;
+	struct s_dlnode	*prev;
+	struct s_dlnode	*next;
+}				t_dlnode;
+
+typedef struct	s_dllist
+{
+	t_dlnode	*head;
+	t_dlnode	*tail;
+	int			length;
+}				t_dllist;
+
+t_dlnode	ft_dll_newnode(void	*data);
+void		ft_dll_init(t_dllist *list);
+void		ft_dll_push(t_dllist *list, void *data);
+void		ft_dll_delnode(t_dllist *list, t_dlnode *node);
+t_dlnode	ft_dll_find(t_dllist *list, void *data);
+void		ft_dll_viewlst(t_dllist *list);
+void		ft_dll_clear(t_dllist *list);
+
+
+
 typedef struct	s_cursor
 {
 	int		r_nbr;
@@ -59,16 +86,6 @@ typedef struct	s_env
 	char		*key;
 	char		*value;
 }				t_env;
-
-/*
-**	double linked list
-*/
-typedef struct	s_dllist
-{
-	void				*data;
-	struct	s_dllist	*prev;
-	struct	s_dllist	*next;
-}				t_dllist;
 
 typedef struct	s_cmd
 {
