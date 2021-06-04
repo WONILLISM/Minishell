@@ -108,8 +108,12 @@ int		parse_input(char *input)
 	free(input_tmp);
 	if (*(data.buf))
 		g_archive.parse_error = lst_add_cmd(&data, cmd_root, 0);
+	// system("leaks minish");
 	if (g_archive.parse_error == 1)
+	{
 		execute_builtin(cmd_root);
+		// system("leaks minish");
+	}
 	else if (g_archive.parse_error < 0)
 		return (ERROR);
 	return (SUCCESS);
