@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
+/*   By: wopark <wopark@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:07:54 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/02 18:03:58 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/03 20:16:34 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,8 +126,9 @@ int		get_input(char **input)
 int		main(int argc, char **argv, char **envv)
 {
 	char	*input;
+	t_dllist	list;
 
-	// g_archive.buf = 0;
+	ft_dll_init(&list);
 	signal_init(argc, argv);
 	envv_lst_make(envv);
 	while (1)
@@ -135,8 +136,10 @@ int		main(int argc, char **argv, char **envv)
 		write(1, "minish $> ", 10);
 		if (get_input(&input) == READ_ERR)
 			printf("Error");
-		if (parse_input(input) == ERROR)
-			parse_error_msg(SYNTAX_ERROR_MSG);
+		printf("%s\n", input);
+		//history(&list, input);
+		//if (parse_input(input) == ERROR)
+		//	parse_error_msg(SYNTAX_ERROR_MSG);
 		free(input);
 	}
 	return (0);

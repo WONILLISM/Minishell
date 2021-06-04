@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/03 16:41:53 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/03 19:26:02 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,8 @@ void		ft_dll_add(t_dllist *list, void *data);
 void		ft_dll_delnode(t_dllist *list, t_dlnode *node, void (*del)(void *));
 t_dlnode	*ft_dll_find(t_dllist *list, void *data);
 void		ft_dll_viewlst(t_dllist *list);
-void		ft_dll_clear(t_dllist *list, void (*del)(void *))
-
-
+void		ft_dll_clear(t_dllist *list, void (*del)(void *));
+void	history(t_dllist *list, char *input);
 
 typedef struct	s_cursor
 {

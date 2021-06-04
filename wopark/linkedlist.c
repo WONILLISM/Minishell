@@ -55,13 +55,20 @@ t_dlnode	*ft_dll_find(t_dllist *list, void *data)
 	return (NULL);
 }
 
-//void		ft_dll_viewlst(t_dllist *list)
-//{
-//	t_dlnode	*node;
+void		ft_dll_viewlst(t_dllist *list)
+{
+	t_dlnode	*node;
+	char		*tmp;
 
-//	node = list->head->next;
+	node = list->head->next;
+	while (node != list->tail)
+	{
+		tmp = node->data;
+		printf("%s\n", tmp);
+		node = node->next;
+	}
+}
 
-//}
 void		ft_dll_clear(t_dllist *list, void (*del)(void *))
 {
 	t_dlnode	*node;
