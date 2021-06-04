@@ -1,10 +1,31 @@
 #include "../includes/minish.h"
 
-void	history(t_dllist *list, char *input)
+int	find_prev_history(t_dllist *h_list, t_cursor *cursor, char **input)
 {
-	//t_dllist	list;
+	t_dlnode	*node;
+	char		*tmp;
 
-	//ft_dll_init(&list);
-	ft_dll_add(list, input);
-	ft_dll_viewlst(list);
+	(void)input;
+	(void)cursor;
+	node = cursor->cur;
+	tmp = node->prev->data;
+	if (tmp)
+	{
+		tputs(tgetstr("le", NULL), 1, ft_putchar); // move left one space
+		tputs(tgetstr("dm", NULL), 1, ft_putchar); // enter de
+		tputs(tgetstr("dl", NULL), 1, ft_putchar);
+		tputs(tgetstr("ed", NULL), 1, ft_putchar); // end delete mode
+		int lines = tgetnum("co");
+		while (lines--)
+			tputs(tgetstr("le", NULL), 1, ft_putchar); // move left one space
+		cursor_init(cursor, h_list);
+		cursor->cur = node->prev;
+		write(1, "minish $> ", 10);
+		free(*input);
+		*input = ft_strdup(tmp);
+		cursor->key_pos = ft_strlen(*input);
+		cursor->len = cursor->key_pos;
+		write(1, *input, cursor->len);
+	}
+	return (1);
 }

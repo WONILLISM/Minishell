@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wopark <wopark@student.42.fr>              +#+  +:+       +#+        */
+/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:07:54 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/03 20:16:34 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/04 18:02:09 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,50 +24,7 @@ char	*realloc_input(char *ptr, size_t size)
 	return (ret);
 }
 
-int	nbr_length(int n)
-{
-	int	i = 0;
-
-	if (n <= 0)
-		i++;
-	while (n != 0)
-	{
-		n /= 10;
-		i++;
-	}
-	return (i);
-}
-
-void	get_cursor_position(int *col, int *rows)
-{
-	int		a = 0;
-	int		i = 1;
-	char	buf[255];
-	int		ret;
-	int		temp;
-
-	write(0, "\033[6n", 4);  //report cursor location
-	ret = read(0, buf, 254);
-	buf[ret] = '\0';
-	while (buf[i])
-	{
-		if (buf[i] >= '0' && buf[i] <= '9')
-		{
-			if (a == 0)
-				*rows = atoi(&buf[i]) - 1;
-			else
-			{
-				temp = atoi(&buf[i]);
-				*col = temp - 1;
-			}
-			a++;
-			i += nbr_length(temp) - 1;
-		}
-		i++;
-	}
-}
-
-int		get_input(char **input)
+int		get_input(char **input, t_dllist *h_list)
 {
 	t_cursor		cursor;
 	struct	termios	term;
@@ -76,17 +33,16 @@ int		get_input(char **input)
 	*input = malloc(1);
 	if (input == NULL)
 		return (READ_ERR);
-	term_init(&term, &term_backup, &cursor);
+	term_init(&term, &term_backup);
+	cursor_init(&cursor, h_list);
 	while (1)
 	{
+		cursor.buf = 0;
 		cursor.r_nbr = read(STDIN_FILENO, &cursor.buf, sizeof(cursor.buf));
-		if (!term_key_handler(&cursor, input))
+		if (!term_key_handler(&cursor, input, h_list))
 		{
-			*(*input + cursor.key_pos) = 0;
-			cursor.buf = 0;
-			cursor.idx = 0;
-			cursor.key_pos = 0;
-			cursor.len = 0;
+			ft_dll_viewlst(h_list);
+			cursor_init(&cursor, h_list);
 			return (READ_SUC);
 		}
 		*input = realloc_input(*input, cursor.key_pos + 2);
@@ -126,18 +82,16 @@ int		get_input(char **input)
 int		main(int argc, char **argv, char **envv)
 {
 	char	*input;
-	t_dllist	list;
+	t_dllist	history_lst;
 
-	ft_dll_init(&list);
+	ft_dll_init(&history_lst);
 	signal_init(argc, argv);
 	envv_lst_make(envv);
 	while (1)
 	{
 		write(1, "minish $> ", 10);
-		if (get_input(&input) == READ_ERR)
+		if (get_input(&input, &history_lst) == READ_ERR)
 			printf("Error");
-		printf("%s\n", input);
-		//history(&list, input);
 		//if (parse_input(input) == ERROR)
 		//	parse_error_msg(SYNTAX_ERROR_MSG);
 		free(input);

@@ -1,11 +1,7 @@
 #include "../includes/minish.h"
 
-void	term_init(struct termios *term, struct termios *backup, t_cursor *cursor)
+void	term_init(struct termios *term, struct termios *backup)
 {
-	cursor->buf = 0;
-	cursor->idx = 0;
-	cursor->len = 0;
-	cursor->key_pos = 0;
 	tgetent(NULL, "xterm");
 	tcgetattr(STDIN_FILENO, term);
 	tcgetattr(STDIN_FILENO, backup);
@@ -14,35 +10,57 @@ void	term_init(struct termios *term, struct termios *backup, t_cursor *cursor)
 	term->c_cc[VTIME] = 0;
 	tcsetattr(STDIN_FILENO, TCSANOW, term);
 }
-void	set_backspace_key(t_cursor *cursor)
+void	set_backspace_key(t_cursor *cursor, char **input)
 {
 	tputs(tgetstr("le", NULL), 1, ft_putchar); // move left one space
 	tputs(tgetstr("dm", NULL), 1, ft_putchar); // enter delete mode
 	tputs(tgetstr("dc", NULL), 1, ft_putchar); // delete character (P*)
 	tputs(tgetstr("ed", NULL), 1, ft_putchar); // end delete mode
-	(cursor->key_pos)--;
-	(cursor->len)--;
+	printf("%d\n", cursor->key_pos);
+	if (*input)
+	{
+		*(input + cursor->key_pos) = 0;
+		(cursor->key_pos)--;
+		(cursor->len)--;
+	}
 }
-void	set_printable_key(t_cursor *cursor)
+void	input_term(int buf)
 {
-	tputs(tgetstr("im", NULL), 1, ft_putchar);
-	tputs(tgetstr("ic", NULL), 1, ft_putchar);
-	ft_putchar(cursor->buf);
-	tputs(tgetstr("ip", NULL), 1, ft_putchar);
-	tputs(tgetstr("ei", NULL), 1, ft_putchar);
+	tputs(tgetstr("im", NULL), 1, ft_putchar); // enter insert mode
+	tputs(tgetstr("ic", NULL), 1, ft_putchar); // insert character
+	ft_putchar(buf);
+	tputs(tgetstr("ip", NULL), 1, ft_putchar); // insert padding after inserted character
+	tputs(tgetstr("ei", NULL), 1, ft_putchar); // exit insert mode
 }
-int		term_key_handler(t_cursor *cursor, char **input)
+int		set_printable_key(t_cursor *cursor, char **input)
+{
+	input_term(cursor->buf);
+	if (cursor->buf == '\n')
+	{
+		*(*input + cursor->key_pos) = 0;
+		return (1);
+	}
+	*(*input + cursor->key_pos) = cursor->buf;
+	(cursor->key_pos)++;
+	(cursor->len)++;
+	return (0);
+}
+int		term_key_handler(t_cursor *cursor, char **input, t_dllist *h_list)
 {
 	if (cursor->buf == KEY_BACKSPACE && (cursor->key_pos) > 0)
-		set_backspace_key(cursor);
+		set_backspace_key(cursor, input);
+	else if (cursor->buf == KEY_UP)
+		return find_prev_history(h_list, cursor, input);
+	// else if (cursor->buf == KEY_DOWN)
+		// history(*input, h_list);
 	else if (ft_isprint(cursor->buf) || cursor->buf == '\n')
 	{
-		set_printable_key(cursor);
-		if (cursor->buf == '\n')
+		if (set_printable_key(cursor, input))
+		{
+			if (*input)
+				ft_dll_add(h_list, *input);
 			return (0);
-		*(*input + cursor->key_pos) = cursor->buf;
-		(cursor->key_pos)++;
-		(cursor->len)++;
+		}
 	}
 	else if (cursor->buf == CTRL_D)
 		return (0);

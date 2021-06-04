@@ -5,7 +5,8 @@ t_dlnode	*ft_dll_newnode(void	*data)
 	t_dlnode	*node;
 
 	node = (t_dlnode *)malloc(sizeof(t_dlnode));
-	node->data = data;
+	node->data = ft_strdup(data);
+	node->idx = -1;
 	node->prev = NULL;
 	node->next = NULL;
 	return (node);
@@ -30,6 +31,7 @@ void		ft_dll_add(t_dllist *list, void *data)
 	list->tail->prev->next = node;
 	list->tail->prev = node;
 	list->length++;
+	node->idx = node->prev->idx + 1;
 }
 
 void		ft_dll_delnode(t_dllist *list, t_dlnode *node, void (*del)(void *))
@@ -41,19 +43,19 @@ void		ft_dll_delnode(t_dllist *list, t_dlnode *node, void (*del)(void *))
 	list->length--;
 }
 
-t_dlnode	*ft_dll_find(t_dllist *list, void *data)
-{
-	t_dlnode	*ret;
+// t_dlnode	*ft_dll_find_idx(t_dllist *list, int idx)
+// {
+// 	t_dlnode	*ret;
 
-	ret = list->head->next;
-	while (ret != list->tail)
-	{
-		if (ret->data == data)
-			return (ret);
-		ret = ret->next;
-	}
-	return (NULL);
-}
+// 	ret = list->head->next;
+// 	while (ret != list->tail)
+// 	{
+// 		if (ret->idx == idx)
+// 			return (ret);
+// 		ret = ret->next;
+// 	}
+// 	return (NULL);
+// }
 
 void		ft_dll_viewlst(t_dllist *list)
 {
@@ -64,7 +66,7 @@ void		ft_dll_viewlst(t_dllist *list)
 	while (node != list->tail)
 	{
 		tmp = node->data;
-		printf("%s\n", tmp);
+		printf("length(%d) idx %d : %s\n", list->length, node->idx, tmp);
 		node = node->next;
 	}
 }

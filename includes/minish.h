@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minish.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wopark <wopark@student.42.fr>              +#+  +:+       +#+        */
+/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/03 19:26:02 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/04 18:02:02 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@
 typedef struct	s_dlnode
 {
 	void			*data;
+	int				idx;
 	struct s_dlnode	*prev;
 	struct s_dlnode	*next;
 }				t_dlnode;
@@ -64,10 +65,9 @@ t_dlnode	*ft_dll_newnode(void	*data);
 void		ft_dll_init(t_dllist *list);
 void		ft_dll_add(t_dllist *list, void *data);
 void		ft_dll_delnode(t_dllist *list, t_dlnode *node, void (*del)(void *));
-t_dlnode	*ft_dll_find(t_dllist *list, void *data);
+t_dlnode	*ft_dll_find_idx(t_dllist *list, int idx);
 void		ft_dll_viewlst(t_dllist *list);
 void		ft_dll_clear(t_dllist *list, void (*del)(void *));
-void	history(t_dllist *list, char *input);
 
 typedef struct	s_cursor
 {
@@ -76,8 +76,9 @@ typedef struct	s_cursor
 	int		buf;
 	int		key_pos;
 	int		len;
-	int		col;
-	int		row;
+	t_dlnode	*cur;
+	// int		col;
+	// int		row;
 }				t_cursor;
 
 typedef struct	s_env
@@ -120,6 +121,13 @@ t_archive	g_archive;
 */
 
 /*
+** ************ cursor.c ***********
+*/
+void	cursor_init(t_cursor *cursor, t_dllist *h_list);
+
+// history
+int	find_prev_history(t_dllist *h_list, t_cursor *cursor,char **input);
+/*
 ** ************ parse_utils.c*************
 */
 void	chk_space_flag(char **strs);
@@ -136,8 +144,8 @@ void	signal_init(int argc, char **argv);
 ** ************ terminal_handle.c ******************
 */
 void	get_cursor_position(int *col, int *rows);
-void	term_init(struct termios *term, struct termios *backup, t_cursor *cursor);
-int		term_key_handler(t_cursor *ip_var, char **input);
+void	term_init(struct termios *term, struct termios *backup);
+int		term_key_handler(t_cursor *cursor, char **input, t_dllist *h_list);
 
 /*
 ** ************ parse.c *************

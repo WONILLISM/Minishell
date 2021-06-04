@@ -7,7 +7,7 @@ RM =		rm -f
 # compile option
 CC =		gcc
 CFLAGS =	-Wall -Wextra -Werror -fsanitize=address
-#CFLAGS =	-Wall -Wextra -Werror
+# CFLAGS =	-Wall -Wextra -Werror
 
 # library
 LIBFT_DIR =	./includes/libft/
@@ -26,7 +26,8 @@ WOPARK_SRCS = \
 			signal.c \
 			terminal_handle.c \
 			history.c \
-			linkedlist.c
+			linkedlist.c \
+			cursor.c
 			# ft_exit.c
 			# execute_proc.c
 
