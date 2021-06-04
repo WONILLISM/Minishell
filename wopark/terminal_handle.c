@@ -16,10 +16,9 @@ void	set_backspace_key(t_cursor *cursor, char **input)
 	tputs(tgetstr("dm", NULL), 1, ft_putchar); // enter delete mode
 	tputs(tgetstr("dc", NULL), 1, ft_putchar); // delete character (P*)
 	tputs(tgetstr("ed", NULL), 1, ft_putchar); // end delete mode
-	printf("%d\n", cursor->key_pos);
 	if (*input)
 	{
-		*(input + cursor->key_pos) = 0;
+		*(*input + cursor->key_pos) = 0;
 		(cursor->key_pos)--;
 		(cursor->len)--;
 	}
@@ -51,13 +50,13 @@ int		term_key_handler(t_cursor *cursor, char **input, t_dllist *h_list)
 		set_backspace_key(cursor, input);
 	else if (cursor->buf == KEY_UP)
 		return find_prev_history(h_list, cursor, input);
-	// else if (cursor->buf == KEY_DOWN)
-		// history(*input, h_list);
+	else if (cursor->buf == KEY_DOWN)
+		return find_next_history(h_list, cursor, input);
 	else if (ft_isprint(cursor->buf) || cursor->buf == '\n')
 	{
 		if (set_printable_key(cursor, input))
 		{
-			if (*input)
+			if (**input)
 				ft_dll_add(h_list, *input);
 			return (0);
 		}
