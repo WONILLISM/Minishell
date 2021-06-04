@@ -2,7 +2,7 @@
 #define READ 0
 #define WRITE 1
 
-void	run_in_current_path(t_cmd *cmd)
+void		run_in_current_path(t_cmd *cmd)
 {
 	char	*path;
 	char	*free_me;
@@ -22,7 +22,7 @@ void	run_in_current_path(t_cmd *cmd)
 	}
 }
 
-void	child_process(t_cmd *cmd)
+void		child_process(t_cmd *cmd)
 {
 	int		idx;
 	t_list	*temp;
@@ -52,10 +52,13 @@ void	child_process(t_cmd *cmd)
 	else
 		g_archive.exit_stat = 127;
 	run_in_current_path(cmd);
+	write(1, cmd->argv[0], ft_strlen(cmd->argv[0]));
+	dup2(1, cmd->fd[1]);
+	write(1, ": command not found\n", 20);
 	exit(0);
 }
 
-int ft_execve(t_cmd *cmd)
+int			ft_execve(t_cmd *cmd)
 {
 	pid_t	pid;
 
@@ -73,7 +76,6 @@ int ft_execve(t_cmd *cmd)
 	{
 		// waitpid(pid, &status ,WNOHANG);
 		waitpid(pid, &g_archive.exit_stat, 0);
-		// printf("execve : %d\n",status);
 	}
 	return (0);
 }
