@@ -29,7 +29,21 @@ void		builtin(t_cmd *cmd, int pipe_flag)
 		// write(1, ": command not found\n", 20);
 }
 
-void		lets_fork(int	*pid, t_cmd *cmd, t_cmd *next_cmd, int idx)
+// void		redirection(t_cmd *cmd)
+// {
+// 	char	*current_path;
+// 	int		fd;
+// 	char	*file_path;
+
+// 	current_path = NULL;
+// 	current_path = getcwd(NULL, 0);
+// 	file_path = ft_strjoin(current_path, );
+// 	fd = open(current_path, O_TRUNC);
+// 	dup2(fd, 1);
+// 	dup2(fd, 0);
+// }
+
+void		lets_fork(pid_t *pid, t_cmd *cmd, t_cmd *next_cmd, int idx)
 {
 	*pid = fork();
 	if (*pid < 0)
@@ -43,6 +57,10 @@ void		lets_fork(int	*pid, t_cmd *cmd, t_cmd *next_cmd, int idx)
 				dup2(cmd->fd[0], 0);
 			dup2(next_cmd->fd[1], 1);
 		}
+		// else if (cmd->redir)
+		// {
+		// 	redirection(cmd);
+		// }
 		else
 			dup2(cmd->fd[0], 0);
 		builtin(cmd, 1);
@@ -67,10 +85,10 @@ int		count_pipe(t_list *list)
 		if (cmd->flag)
 			ret++;
 		else
-			break;
+			return (ret);
 		list = list->next;
 	}
-	return (ret);
+	return (-1);
 }
 
 void		execute_builtin(t_list *cmd_root)
@@ -80,17 +98,17 @@ void		execute_builtin(t_list *cmd_root)
 	t_cmd	*temp_next_cmd;
 	int		idx;
 	int		pipe_cnt;
-	int		*pid;
+	pid_t	*pid;
 
 	idx = -1;
 	temp = cmd_root->next;
 	while (temp)
 	{
 		temp_cmd = temp->content;
-		pipe_cnt = count_pipe(temp);
-		pid = (int *)malloc(sizeof(int) * pipe_cnt + 1);
 		if (temp_cmd->flag)
 		{
+			pipe_cnt = count_pipe(temp);
+			pid = (int *)malloc(sizeof(pid_t) * (pipe_cnt + 1));
 			while (temp_cmd->flag)
 			{
 				if (idx == -1)
@@ -102,11 +120,6 @@ void		execute_builtin(t_list *cmd_root)
 				{
 					temp_next_cmd = temp->next->content;
 					pipe(temp_next_cmd->fd);
-				}
-				else if (!temp->next && temp_cmd->flag)
-				{
-					write(1, "Pipe Error\n", 11);
-					break;
 				}
 				idx++;
 				lets_fork(&pid[idx], temp_cmd, temp_next_cmd, idx);
@@ -123,12 +136,12 @@ void		execute_builtin(t_list *cmd_root)
 					idx--;
 				}
 			}
+			free(pid);
 		}
 		else
 		{
 			builtin(temp_cmd, 0);
 		}
-		free(pid);
 		temp = temp->next;
 	}
 }
