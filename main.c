@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
+/*   By: wopark <wopark@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:07:54 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/04 18:02:09 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/05 12:19:53 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,8 @@ int		get_input(char **input, t_dllist *h_list)
 
 int		main(int argc, char **argv, char **envv)
 {
-	char	*input;
 	t_dllist	history_lst;
+	char		*input;
 
 	ft_dll_init(&history_lst);
 	signal_init(argc, argv);
