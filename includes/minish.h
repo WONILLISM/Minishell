@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minish.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
+/*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/02 12:26:53 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/08 18:35:21 by junghwki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,13 @@
 
 typedef struct	s_cursor
 {
-	int		r_nbr;
-	int		idx;
-	int		buf;
-	int		key_pos;
-	int		len;
-	int		col;
-	int		row;
+	int			r_nbr;
+	int			idx;
+	int			buf;
+	int			key_pos;
+	int			len;
+	int			col;
+	int			row;
 }				t_cursor;
 
 typedef struct	s_env
@@ -60,11 +60,20 @@ typedef struct	s_env
 	char		*value;
 }				t_env;
 
+typedef struct		s_redir
+{
+	char			*sign;
+	char			*file_name;
+	struct s_redir	*next;
+}					t_redir;
+
+
 typedef struct	s_cmd
 {
 	char		**argv;		// 명령어 내용 NULL
 	int			flag;		// 0: ; or NULL	1: pipe
 	int			redir;
+	t_redir		*redir_list;
 	char		quote;		// stack for ' or "
 	int			fd[2];
 }				t_cmd;
@@ -82,10 +91,10 @@ typedef struct	s_data
 
 typedef struct	s_archive
 {
-	t_list	*envv_lst;
-	char	*buf;
-	int		exit_stat;
-	int		parse_error;
+	t_list		*envv_lst;
+	char		*buf;
+	int			exit_stat;
+	int			parse_error;
 }				t_archive;
 
 t_archive	g_archive;
@@ -135,7 +144,7 @@ void			export_lst_print();
 void			export_add(t_cmd *cmd);
 void			env_lst_print();
 void			ft_unset(t_cmd *cmd);
-int				ft_execve(t_cmd *cmd);
+int				other_command(t_cmd *cmd);
 void			free_array(char **array);
 void			child_process(t_cmd *cmd);
 #endif
