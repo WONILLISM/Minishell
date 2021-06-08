@@ -7,7 +7,6 @@ void	parse_init(char *input, t_data *data, t_list **cmd_root)
 	data->cmd = malloc(sizeof(t_cmd));
 	data->cmd->argv = 0;
 	data->cmd->flag = 0;
-	data->cmd->redir = 0;
 	data->cmd->quote = 0;
 	data->cmd->fd[0] = 0;
 	data->cmd->fd[1] = 0;
@@ -50,7 +49,7 @@ void	parse_envv_handler(t_data *data, char *input)
 void	parse_get_data2(char *input, t_data *data)
 {
 	if (data->cmd->quote == 0 && ft_strchr("><", input[data->input_idx]))
-		data->cmd->redir = 1;
+		check_redirection(input, data);
 	else if (data->cmd->quote != '\''
 	&& input[data->input_idx] == '\\' && input[data->input_idx + 1])
 	{

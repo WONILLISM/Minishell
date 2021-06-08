@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/04 18:22:14 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/08 21:59:37 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,12 @@ typedef struct	s_cursor
 	// int		row;
 }				t_cursor;
 
+typedef struct	s_redir
+{
+	int		sign;
+	char	*file_name;
+}				t_redir;
+
 typedef struct	s_env
 {
 	char		*key;
@@ -91,9 +97,9 @@ typedef struct	s_cmd
 {
 	char		**argv;		// 명령어 내용 NULL
 	int			flag;		// 0: ; or NULL	1: pipe
-	int			redir;
 	char		quote;		// stack for ' or "
 	int			fd[2];
+	t_list		*rd_lst;
 }				t_cmd;
 
 typedef struct	s_data
@@ -152,6 +158,8 @@ int		term_key_handler(t_cursor *cursor, char **input, t_dllist *h_list);
 ** ************ parse.c *************
 */
 int		parse_input(char *input);
+
+void	check_redirection(char *input, t_data *data);
 
 int		ft_strcmp(const char *s1, const char *s2);
 
