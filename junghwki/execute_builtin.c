@@ -1,6 +1,5 @@
 #include "../includes/minish.h"
 
-
 void		builtin(t_cmd *cmd, int pipe_flag)
 {
 	if (ft_strcmp(cmd->argv[0], "cd") == 0)
@@ -24,30 +23,40 @@ void		builtin(t_cmd *cmd, int pipe_flag)
 		if (pipe_flag)
 			child_process(cmd);
 		else
-			ft_execve(cmd);
-		// write(1, cmd->argv[0], ft_strlen(cmd->argv[0]));
-		// write(1, ": command not found\n", 20);
+			other_command(cmd);
 }
 
-// void		redirection(t_cmd *cmd)
-// {
-// 	char	*current_path;
-// 	int		fd;
-// 	char	*file_path;
+void		redirection(t_cmd *cmd)
+{
+	int		fd;
+	t_redir	*temp;
 
-// 	current_path = NULL;
-// 	current_path = getcwd(NULL, 0);
-// 	file_path = ft_strjoin(current_path, );
-// 	fd = open(current_path, O_TRUNC);
-// 	dup2(fd, 1);
-// 	dup2(fd, 0);
-// }
+	temp = cmd->redir_list->next;
+	while (temp)
+	{
+		fd = open(cmd->redir_list->file_name, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+		temp = temp->next;
+	}
+	dup2(fd, 1);
+	if (cmd->redir_list->sign == 1)
+	{
+
+	}
+	else if (cmd->redir_list->sign == 2)
+	{
+		
+	}
+	else if (cmd->redir_list->sign == -1)
+	{
+
+	}
+}
 
 void		lets_fork(pid_t *pid, t_cmd *cmd, t_cmd *next_cmd, int idx)
 {
 	*pid = fork();
 	if (*pid < 0)
-		write(1, "Error\n", 6);
+		write(2, "Error\n", 6);
 	else if (*pid == 0)
 	{
 		if (cmd->flag)
@@ -57,10 +66,6 @@ void		lets_fork(pid_t *pid, t_cmd *cmd, t_cmd *next_cmd, int idx)
 				dup2(cmd->fd[0], 0);
 			dup2(next_cmd->fd[1], 1);
 		}
-		// else if (cmd->redir)
-		// {
-		// 	redirection(cmd);
-		// }
 		else
 			dup2(cmd->fd[0], 0);
 		builtin(cmd, 1);
@@ -88,6 +93,7 @@ int		count_pipe(t_list *list)
 			return (ret);
 		list = list->next;
 	}
+	write(2, "Error\n", 6);
 	return (-1);
 }
 
