@@ -27,7 +27,8 @@ WOPARK_SRCS = \
 			terminal_handle.c \
 			history.c \
 			linkedlist.c \
-			cursor.c
+			cursor.c \
+			redirection.c
 			# ft_exit.c
 			# execute_proc.c
 
