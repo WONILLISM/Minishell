@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/08 21:59:37 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/09 20:50:26 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ typedef struct	s_cursor
 typedef struct	s_redir
 {
 	int		sign;
+	int		idx;
 	char	*file_name;
 }				t_redir;
 
@@ -106,6 +107,7 @@ typedef struct	s_data
 {
 	t_list		*last_node;
 	t_cmd		*cmd;
+	t_redir		*rd;
 	char		*buf;
 	int			buf_size;
 	int			input_idx;
@@ -159,7 +161,8 @@ int		term_key_handler(t_cursor *cursor, char **input, t_dllist *h_list);
 */
 int		parse_input(char *input);
 
-void	check_redirection(char *input, t_data *data);
+void	chk_redir_sign(char *input, t_data *data);
+void	chk_redir_filename(char *input, t_data *data);
 
 int		ft_strcmp(const char *s1, const char *s2);
 

@@ -10,11 +10,16 @@ void	parse_init(char *input, t_data *data, t_list **cmd_root)
 	data->cmd->quote = 0;
 	data->cmd->fd[0] = 0;
 	data->cmd->fd[1] = 0;
+	data->cmd_idx = 0;
+	data->cmd->rd_lst = ft_lstnew(NULL);
 	data->buf_size = ft_strlen(input) + 1;
 	data->buf = ft_calloc(data->buf_size, sizeof(char));
-	data->input_idx = -1;
-	data->cmd_idx = 0;
 	data->buf_idx = 0;
+	data->input_idx = -1;
+	data->rd = malloc(sizeof(t_redir));
+	data->rd->file_name = ft_calloc(data->buf_size, sizeof(char));
+	data->rd->sign = 0;
+	data->rd->idx = 0;
 }
 
 void	parse_envv_handler(t_data *data, char *input)
@@ -49,7 +54,9 @@ void	parse_envv_handler(t_data *data, char *input)
 void	parse_get_data2(char *input, t_data *data)
 {
 	if (data->cmd->quote == 0 && ft_strchr("><", input[data->input_idx]))
-		check_redirection(input, data);
+		chk_redir_sign(input, data);
+	else if (data->cmd->quote == 0 && data->rd->sign)
+		chk_redir_filename(input, data);
 	else if (data->cmd->quote != '\''
 	&& input[data->input_idx] == '\\' && input[data->input_idx + 1])
 	{
@@ -93,22 +100,23 @@ int		parse_input(char *input)
 	g_archive.parse_error = 1;
 	g_archive.buf = data.buf;
 	if (*input)
-		input_tmp = ft_strltrim(input, " ");
-	else
-		return (SUCCESS);
-	parse_init(input_tmp, &data, &cmd_root);
-	while (input_tmp && input_tmp[++data.input_idx])
 	{
-		parse_get_data(input_tmp, &data, cmd_root);
-		if (g_archive.parse_error == -1)
-			break;
+		input_tmp = ft_strltrim(input, " ");
+		parse_init(input_tmp, &data, &cmd_root);
+		while (input_tmp && input_tmp[++data.input_idx])
+		{
+			parse_get_data(input_tmp, &data, cmd_root);
+			printf("sign: %d\n", data.rd->sign);
+			if (g_archive.parse_error == -1)
+				break;
+		}
+		free(input_tmp);
+		if (*(data.buf))
+			g_archive.parse_error = lst_add_cmd(&data, cmd_root, 0);
+		if (parse_error_check(&data) == ERROR)
+			return (ERROR);
+		else
+			execute_builtin(cmd_root);
 	}
-	free(input_tmp);
-	if (*(data.buf))
-		g_archive.parse_error = lst_add_cmd(&data, cmd_root, 0);
-	if (parse_error_check(&data) == ERROR)
-		return (ERROR);
-	else
-		execute_builtin(cmd_root);
 	return (SUCCESS);
 }
