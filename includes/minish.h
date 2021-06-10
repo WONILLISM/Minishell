@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minish.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
+/*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/10 22:32:36 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/10 22:39:59 by junghwki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,7 +185,8 @@ void			export_lst_print();
 void			export_add(t_cmd *cmd);
 void			env_lst_print();
 void			ft_unset(t_cmd *cmd);
-int				ft_execve(t_cmd *cmd);
+int				other_command(t_cmd *cmd, char **envp);
 void			free_array(char **array);
-void			child_process(t_cmd *cmd);
+void			child_process(t_cmd *cmd, char **envp);
+char			**make_envp(void);
 #endif

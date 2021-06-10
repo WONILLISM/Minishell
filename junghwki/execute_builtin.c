@@ -1,11 +1,47 @@
 #include "../includes/minish.h"
 
+
+int			*redirection(t_cmd *cmd)
+{
+	int		fd[2];
+	int		*temp_fd;
+	t_list	*temp;
+	t_redir	*temp_rd;
+
+	fd[0] = 0;
+	fd[1] = 1;
+	temp_fd = (int *)malloc(sizeof(int) * 2);
+	temp = cmd->rd_lst->next;
+	while (temp)
+	{
+		temp_rd = temp->content;
+		if (temp_rd->sign == 1)
+		{
+			fd[1] = open(temp_rd->file_name, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+		}
+		else if (temp_rd->sign == 2)
+		{
+			fd[1] = open(temp_rd->file_name, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+		}
+		else if (temp_rd->sign == -1)
+		{
+			fd[0] = open(temp_rd->file_name, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+		}
+		temp = temp->next;
+	}
+	dup2(1, temp_fd[1]);
+	dup2(fd[1], 1);
+	dup2(0, temp_fd[0]);
+	dup2(fd[0], 0);
+	return (temp_fd);
+}
+
 void		builtin(t_cmd *cmd, int pipe_flag)
 {
 	char	**envp;
 	int		*fd;
 
-	if (cmd->redir_list)
+	if (cmd->rd_lst)
 		fd = redirection(cmd);
 	if (cmd->argv)
 	{
@@ -39,39 +75,6 @@ void		builtin(t_cmd *cmd, int pipe_flag)
 	dup2(fd[1], 1);
 	dup2(fd[0], 0);
 }
-
-int			*redirection(t_cmd *cmd)
-{
-	int		fd[2];
-	int		temp_fd[2];
-	t_redir	*temp;
-
-	fd[0] = 0;
-	fd[1] = 1;
-	temp = cmd->redir_list->next;
-	while (temp)
-	{
-		if (cmd->redir_list->sign == 1)
-		{
-			fd[1] = open(cmd->redir_list->file_name, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-		}
-		else if (cmd->redir_list->sign == 2)
-		{
-			fd[1] = open(cmd->redir_list->file_name, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-		}
-		else if (cmd->redir_list->sign == -1)
-		{
-			fd[0] = open(cmd->redir_list->file_name, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-		}
-		temp = temp->next;
-	}
-	dup2(1, temp_fd[1]);
-	dup2(fd[1], 1);
-	dup2(0, temp_fd[0]);
-	dup2(fd[0], 0);
-	return (temp_fd);
-}
-
 void		lets_fork(pid_t *pid, t_cmd *cmd, t_cmd *next_cmd, int idx)
 {
 	*pid = fork();

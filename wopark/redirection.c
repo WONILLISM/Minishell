@@ -46,7 +46,5 @@ void	chk_redir_filename(char *input, t_data *data)
 	else
 	{
 		data->rd_buf[data->rd_buf_idx++] = input[data->input_idx];
-		printf("sign: %d\nrd_idx: %d\n", data->cmd->rd_flag, data->rd_buf_idx);
-		printf("rd_buf:%s\n", data->rd_buf);
 	}
 }
