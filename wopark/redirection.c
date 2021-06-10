@@ -41,7 +41,7 @@ void	chk_redir_sign(char *input, t_data *data)
 
 void	chk_redir_filename(char *input, t_data *data)
 {
-	if (data->cmd->quote == 0 && input[data->input_idx] == ' ')
+	if (*data->rd_buf && data->cmd->quote == 0 && input[data->input_idx] == ' ')
 		init_redir(data);
 	else
 	{

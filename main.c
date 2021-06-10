@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:07:54 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/10 22:58:28 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/11 03:32:48 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ int		get_input(char **input, t_dllist *h_list)
 		cursor.r_nbr = read(STDIN_FILENO, &cursor.buf, sizeof(cursor.buf));
 		if (!term_key_handler(&cursor, input, h_list))
 		{
+			// write(1,"\n",1);
 			//ft_dll_viewlst(h_list);
 			cursor_init(&cursor, h_list);
 			return (READ_SUC);
