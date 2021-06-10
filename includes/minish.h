@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/10 22:18:06 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/10 22:26:39 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ typedef struct	s_cursor
 typedef struct	s_redir
 {
 	int		sign;
+	int		idx;
 	char	*file_name;
 }				t_redir;
 
@@ -93,19 +94,10 @@ typedef struct	s_env
 	char		*value;
 }				t_env;
 
-typedef struct		s_redir
-{
-	char			*sign;
-	char			*file_name;
-	struct s_redir	*next;
-}					t_redir;
-
-
 typedef struct	s_cmd
 {
 	char		**argv;		// 명령어 내용 NULL
 	int			flag;		// 0: ; or NULL	1: pipe
-	int			rd_flag;
 	char		quote;		// stack for ' or "
 	int			fd[2];
 	t_list		*rd_lst;
@@ -117,20 +109,18 @@ typedef struct	s_data
 	t_cmd		*cmd;
 	t_redir		*rd;
 	char		*buf;
-	char		*rd_buf;
 	int			buf_size;
 	int			input_idx;
 	int			buf_idx;
-	int			rd_buf_idx;
 	int			cmd_idx;
 }				t_data;
 
 typedef struct	s_archive
 {
-	t_list		*envv_lst;
-	char		*buf;
-	int			exit_stat;
-	int			parse_error;
+	t_list	*envv_lst;
+	char	*buf;
+	int		exit_stat;
+	int		parse_error;
 }				t_archive;
 
 t_archive	g_archive;
@@ -193,8 +183,7 @@ void			export_lst_print();
 void			export_add(t_cmd *cmd);
 void			env_lst_print();
 void			ft_unset(t_cmd *cmd);
-int				other_command(t_cmd *cmd, char **envp);
+int				ft_execve(t_cmd *cmd);
 void			free_array(char **array);
-void			child_process(t_cmd *cmd, char **envp);
-char		**make_envp(void);
+void			child_process(t_cmd *cmd);
 #endif
