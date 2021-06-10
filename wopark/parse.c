@@ -7,14 +7,19 @@ void	parse_init(char *input, t_data *data, t_list **cmd_root)
 	data->cmd = malloc(sizeof(t_cmd));
 	data->cmd->argv = 0;
 	data->cmd->flag = 0;
+	data->cmd->rd_flag = 0;
 	data->cmd->quote = 0;
 	data->cmd->fd[0] = 0;
 	data->cmd->fd[1] = 0;
+	data->cmd_idx = 0;
+	data->cmd->rd_lst = ft_lstnew(NULL);
 	data->buf_size = ft_strlen(input) + 1;
 	data->buf = ft_calloc(data->buf_size, sizeof(char));
-	data->input_idx = -1;
-	data->cmd_idx = 0;
 	data->buf_idx = 0;
+	data->input_idx = -1;
+
+	data->rd_buf = ft_calloc(data->buf_size, sizeof(char));
+	data->rd_buf_idx = 0;
 }
 
 void	parse_envv_handler(t_data *data, char *input)
@@ -49,7 +54,15 @@ void	parse_envv_handler(t_data *data, char *input)
 void	parse_get_data2(char *input, t_data *data)
 {
 	if (data->cmd->quote == 0 && ft_strchr("><", input[data->input_idx]))
-		data->cmd->redir = 1;
+	{
+		chk_redir_sign(input, data);
+		return ;
+	}
+	else if (data->cmd->rd_flag)
+	{
+		chk_redir_filename(input, data);
+		return ;
+	}
 	else if (data->cmd->quote != '\''
 	&& input[data->input_idx] == '\\' && input[data->input_idx + 1])
 	{
@@ -72,7 +85,7 @@ void	parse_get_data(char *input, t_data *data, t_list *cmd_root)
 		data->cmd->quote = input[data->input_idx];
 	else if (data->cmd->quote == 0 && input[data->input_idx] == '\'')
 		data->cmd->quote = input[data->input_idx];
-	else if (data->cmd->quote != 0 && input[data->input_idx] == ' ')
+	else if (data->cmd->rd_flag == 0 && data->cmd->quote != 0 && input[data->input_idx] == ' ')
 		data->buf[data->buf_idx++] = -1;
 	else if (data->cmd->quote == 0 && input[data->input_idx] == ';')
 		g_archive.parse_error = lst_add_cmd(data, cmd_root, 0);
@@ -92,29 +105,23 @@ int		parse_input(char *input)
 
 	g_archive.parse_error = 1;
 	g_archive.buf = data.buf;
-	input_tmp = NULL;
-	if (input)
+	if (*input)
+	{
 		input_tmp = ft_strltrim(input, " ");
-	parse_init(input_tmp, &data, &cmd_root);
-	while (input_tmp[++data.input_idx])
-	{
-		parse_get_data(input_tmp, &data, cmd_root);
-		if (g_archive.parse_error < 1)
+		parse_init(input_tmp, &data, &cmd_root);
+		while (input_tmp && input_tmp[++data.input_idx])
 		{
-			free(input_tmp);
-			return (ERROR);
+			parse_get_data(input_tmp, &data, cmd_root);
+			if (g_archive.parse_error == -1)
+				break;
 		}
+		free(input_tmp);
+		if (*(data.buf))
+			g_archive.parse_error = lst_add_cmd(&data, cmd_root, 0);
+		if (parse_error_check(&data) == ERROR)
+			return (ERROR);
+		else
+			execute_builtin(cmd_root);
 	}
-	free(input_tmp);
-	if (*(data.buf))
-		g_archive.parse_error = lst_add_cmd(&data, cmd_root, 0);
-	// system("leaks minish");
-	if (g_archive.parse_error == 1)
-	{
-		execute_builtin(cmd_root);
-		// system("leaks minish");
-	}
-	else if (g_archive.parse_error < 0)
-		return (ERROR);
 	return (SUCCESS);
 }

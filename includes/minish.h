@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minish.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/08 21:57:23 by junghwki         ###   ########.fr       */
+/*   Updated: 2021/06/10 22:18:06 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,16 +43,49 @@
 # define READ_SUC			0
 # define SYNTAX_ERROR_MSG	"Syntax Error"
 
+/*
+**	double linked list
+*/
+typedef struct	s_dlnode
+{
+	void			*data;
+	int				idx;
+	struct s_dlnode	*prev;
+	struct s_dlnode	*next;
+}				t_dlnode;
+
+typedef struct	s_dllist
+{
+	t_dlnode	*head;
+	t_dlnode	*tail;
+	int			length;
+}				t_dllist;
+
+t_dlnode	*ft_dll_newnode(void	*data);
+void		ft_dll_init(t_dllist *list);
+void		ft_dll_add(t_dllist *list, void *data);
+void		ft_dll_delnode(t_dllist *list, t_dlnode *node, void (*del)(void *));
+t_dlnode	*ft_dll_find_idx(t_dllist *list, int idx);
+void		ft_dll_viewlst(t_dllist *list);
+void		ft_dll_clear(t_dllist *list, void (*del)(void *));
+
 typedef struct	s_cursor
 {
-	int			r_nbr;
-	int			idx;
-	int			buf;
-	int			key_pos;
-	int			len;
-	int			col;
-	int			row;
+	int		r_nbr;
+	int		idx;
+	int		buf;
+	int		key_pos;
+	int		len;
+	t_dlnode	*cur;
+	// int		col;
+	// int		row;
 }				t_cursor;
+
+typedef struct	s_redir
+{
+	int		sign;
+	char	*file_name;
+}				t_redir;
 
 typedef struct	s_env
 {
@@ -72,20 +105,23 @@ typedef struct	s_cmd
 {
 	char		**argv;		// 명령어 내용 NULL
 	int			flag;		// 0: ; or NULL	1: pipe
-	int			redir;
-	t_redir		*redir_list;
+	int			rd_flag;
 	char		quote;		// stack for ' or "
 	int			fd[2];
+	t_list		*rd_lst;
 }				t_cmd;
 
 typedef struct	s_data
 {
 	t_list		*last_node;
 	t_cmd		*cmd;
+	t_redir		*rd;
 	char		*buf;
+	char		*rd_buf;
 	int			buf_size;
 	int			input_idx;
 	int			buf_idx;
+	int			rd_buf_idx;
 	int			cmd_idx;
 }				t_data;
 
@@ -103,12 +139,21 @@ t_archive	g_archive;
 */
 
 /*
+** ************ cursor.c ***********
+*/
+void	cursor_init(t_cursor *cursor, t_dllist *h_list);
+
+// history
+int	find_prev_history(t_dllist *h_list, t_cursor *cursor, char **input);
+int	find_next_history(t_dllist *h_list, t_cursor *cursor, char **input);
+/*
 ** ************ parse_utils.c*************
 */
 void	chk_space_flag(char **strs);
 int		chk_var_name(t_data *data, char *input);
 int		lst_add_cmd(t_data *data, t_list *cmd_root, int flag);
 
+int		parse_error_check(t_data *data);
 int		parse_error_msg(char *msg);
 int		chk_question_mark(t_data *data, char *input);
 
@@ -117,13 +162,17 @@ void	signal_init(int argc, char **argv);
 /*
 ** ************ terminal_handle.c ******************
 */
-void	term_init(struct termios *term, struct termios *backup, t_cursor *cursor);
-int		term_key_handler(t_cursor *ip_var, char **input);
+void	get_cursor_position(int *col, int *rows);
+void	term_init(struct termios *term, struct termios *backup);
+int		term_key_handler(t_cursor *cursor, char **input, t_dllist *h_list);
 
 /*
 ** ************ parse.c *************
 */
 int		parse_input(char *input);
+
+void	chk_redir_sign(char *input, t_data *data);
+void	chk_redir_filename(char *input, t_data *data);
 
 int		ft_strcmp(const char *s1, const char *s2);
 
