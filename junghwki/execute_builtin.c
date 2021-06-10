@@ -2,54 +2,74 @@
 
 void		builtin(t_cmd *cmd, int pipe_flag)
 {
-	if (ft_strcmp(cmd->argv[0], "cd") == 0)
-		ft_cd(cmd);
-	else if (ft_strcmp(cmd->argv[0], "echo") == 0)
-		ft_echo(cmd);
-	else if (ft_strcmp(cmd->argv[0], "pwd") == 0)
-		ft_pwd();
-	else if (ft_strcmp(cmd->argv[0], "export") == 0)
-		if (!cmd->argv[1])
-			export_lst_print();
+	char	**envp;
+	int		*fd;
+
+	if (cmd->redir_list)
+		fd = redirection(cmd);
+	if (cmd->argv)
+	{
+		if (ft_strcmp(cmd->argv[0], "cd") == 0)
+			ft_cd(cmd);
+		else if (ft_strcmp(cmd->argv[0], "echo") == 0)
+			ft_echo(cmd);
+		else if (ft_strcmp(cmd->argv[0], "pwd") == 0)
+			ft_pwd();
+		else if (ft_strcmp(cmd->argv[0], "export") == 0)
+			if (!cmd->argv[1])
+				export_lst_print();
+			else
+				export_add(cmd);
+		else if (ft_strcmp(cmd->argv[0], "unset") == 0)
+			ft_unset(cmd);
+		else if (ft_strcmp(cmd->argv[0], "env") == 0)
+			env_lst_print();
+		else if (ft_strcmp(cmd->argv[0], "exit") == 0)
+			exit(0);
 		else
-			export_add(cmd);
-	else if (ft_strcmp(cmd->argv[0], "unset") == 0)
-		ft_unset(cmd);
-	else if (ft_strcmp(cmd->argv[0], "env") == 0)
-		env_lst_print();
-	else if (ft_strcmp(cmd->argv[0], "exit") == 0)
-		exit(0);
-	else
-		if (pipe_flag)
-			child_process(cmd);
-		else
-			other_command(cmd);
+		{
+			envp = make_envp();
+			if (pipe_flag)
+				child_process(cmd, envp);
+			else
+				other_command(cmd, envp);
+			free_array(envp);
+		}
+	}
+	dup2(fd[1], 1);
+	dup2(fd[0], 0);
 }
 
-void		redirection(t_cmd *cmd)
+int			*redirection(t_cmd *cmd)
 {
-	int		fd;
+	int		fd[2];
+	int		temp_fd[2];
 	t_redir	*temp;
 
+	fd[0] = 0;
+	fd[1] = 1;
 	temp = cmd->redir_list->next;
 	while (temp)
 	{
-		fd = open(cmd->redir_list->file_name, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+		if (cmd->redir_list->sign == 1)
+		{
+			fd[1] = open(cmd->redir_list->file_name, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+		}
+		else if (cmd->redir_list->sign == 2)
+		{
+			fd[1] = open(cmd->redir_list->file_name, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+		}
+		else if (cmd->redir_list->sign == -1)
+		{
+			fd[0] = open(cmd->redir_list->file_name, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+		}
 		temp = temp->next;
 	}
-	dup2(fd, 1);
-	if (cmd->redir_list->sign == 1)
-	{
-
-	}
-	else if (cmd->redir_list->sign == 2)
-	{
-		
-	}
-	else if (cmd->redir_list->sign == -1)
-	{
-
-	}
+	dup2(1, temp_fd[1]);
+	dup2(fd[1], 1);
+	dup2(0, temp_fd[0]);
+	dup2(fd[0], 0);
+	return (temp_fd);
 }
 
 void		lets_fork(pid_t *pid, t_cmd *cmd, t_cmd *next_cmd, int idx)

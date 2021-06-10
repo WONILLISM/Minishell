@@ -2,7 +2,7 @@
 #define READ 0
 #define WRITE 1
 
-void		ft_execve(char *path, t_cmd *cmd)
+char		**make_envp(void)
 {
 	t_list	*temp;
 	t_env	*temp_env;
@@ -23,11 +23,10 @@ void		ft_execve(char *path, t_cmd *cmd)
 		idx++;
 	}
 	envp[idx] = NULL;
-	execve(path, cmd->argv, envp);
-	free_array(envp);
+	return (envp);
 }
 
-void		run_in_current_path(t_cmd *cmd)
+void		run_in_current_path(t_cmd *cmd, char **envp)
 {
 	char	*path;
 	char	*free_me;
@@ -43,12 +42,11 @@ void		run_in_current_path(t_cmd *cmd)
 		free_me = path;
 		path = ft_strjoin(path, cmd->argv[0]);
 		free(free_me);
-		ft_execve(path, cmd);
-		// execve(path, cmd->argv, NULL);
+		execve(path, cmd->argv, envp);
 	}
 }
 
-void		child_process(t_cmd *cmd)
+void		child_process(t_cmd *cmd, char **envp)
 {
 	int		idx;
 	t_list	*temp;
@@ -70,21 +68,20 @@ void		child_process(t_cmd *cmd)
 			free_me = path[idx];
 			path[idx] = ft_strjoin(path[idx], cmd->argv[0]);
 			free(free_me);
-			// execve(path[idx], cmd->argv, NULL);
-			ft_execve(path[idx], cmd);
+			execve(path[idx], cmd->argv, envp);
 			idx++;
 		}
 		free_array(path);
 	}
 	else
 		g_archive.exit_stat = 127;
-	run_in_current_path(cmd);
+	run_in_current_path(cmd, envp);
 	write(2, cmd->argv[0], ft_strlen(cmd->argv[0]));
 	write(2, ": command not found\n", 20);
 	exit(0);
 }
 
-int			other_command(t_cmd *cmd)
+int			other_command(t_cmd *cmd, char **envp)
 {
 	pid_t	pid;
 
@@ -96,7 +93,7 @@ int			other_command(t_cmd *cmd)
 	}
 	else if (pid == 0)
 	{
-		child_process(cmd);
+		child_process(cmd, envp);
 	}
 	else
 	{
