@@ -7,6 +7,7 @@ void	parse_init(char *input, t_data *data, t_list **cmd_root)
 	data->cmd = malloc(sizeof(t_cmd));
 	data->cmd->argv = 0;
 	data->cmd->flag = 0;
+	data->cmd->rd_flag = 0;
 	data->cmd->quote = 0;
 	data->cmd->fd[0] = 0;
 	data->cmd->fd[1] = 0;
@@ -16,10 +17,9 @@ void	parse_init(char *input, t_data *data, t_list **cmd_root)
 	data->buf = ft_calloc(data->buf_size, sizeof(char));
 	data->buf_idx = 0;
 	data->input_idx = -1;
-	data->rd = malloc(sizeof(t_redir));
-	data->rd->file_name = ft_calloc(data->buf_size, sizeof(char));
-	data->rd->sign = 0;
-	data->rd->idx = 0;
+
+	data->rd_buf = ft_calloc(data->buf_size, sizeof(char));
+	data->rd_buf_idx = 0;
 }
 
 void	parse_envv_handler(t_data *data, char *input)
@@ -54,9 +54,15 @@ void	parse_envv_handler(t_data *data, char *input)
 void	parse_get_data2(char *input, t_data *data)
 {
 	if (data->cmd->quote == 0 && ft_strchr("><", input[data->input_idx]))
+	{
 		chk_redir_sign(input, data);
-	else if (data->cmd->quote == 0 && data->rd->sign)
+		return ;
+	}
+	else if (data->cmd->rd_flag)
+	{
 		chk_redir_filename(input, data);
+		return ;
+	}
 	else if (data->cmd->quote != '\''
 	&& input[data->input_idx] == '\\' && input[data->input_idx + 1])
 	{
@@ -79,7 +85,7 @@ void	parse_get_data(char *input, t_data *data, t_list *cmd_root)
 		data->cmd->quote = input[data->input_idx];
 	else if (data->cmd->quote == 0 && input[data->input_idx] == '\'')
 		data->cmd->quote = input[data->input_idx];
-	else if (data->cmd->quote != 0 && input[data->input_idx] == ' ')
+	else if (data->cmd->rd_flag == 0 && data->cmd->quote != 0 && input[data->input_idx] == ' ')
 		data->buf[data->buf_idx++] = -1;
 	else if (data->cmd->quote == 0 && input[data->input_idx] == ';')
 		g_archive.parse_error = lst_add_cmd(data, cmd_root, 0);
@@ -106,7 +112,6 @@ int		parse_input(char *input)
 		while (input_tmp && input_tmp[++data.input_idx])
 		{
 			parse_get_data(input_tmp, &data, cmd_root);
-			printf("sign: %d\n", data.rd->sign);
 			if (g_archive.parse_error == -1)
 				break;
 		}
