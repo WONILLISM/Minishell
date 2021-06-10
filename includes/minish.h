@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/10 22:28:49 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/10 22:32:36 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,6 @@ typedef struct	s_cursor
 typedef struct	s_redir
 {
 	int		sign;
-	int		idx;
 	char	*file_name;
 }				t_redir;
 
@@ -98,6 +97,7 @@ typedef struct	s_cmd
 {
 	char		**argv;		// 명령어 내용 NULL
 	int			flag;		// 0: ; or NULL	1: pipe
+	int			rd_flag;
 	char		quote;		// stack for ' or "
 	int			fd[2];
 	t_list		*rd_lst;
@@ -109,9 +109,11 @@ typedef struct	s_data
 	t_cmd		*cmd;
 	t_redir		*rd;
 	char		*buf;
+	char		*rd_buf;
 	int			buf_size;
 	int			input_idx;
 	int			buf_idx;
+	int			rd_buf_idx;
 	int			cmd_idx;
 }				t_data;
 
