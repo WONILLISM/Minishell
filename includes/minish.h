@@ -3,14 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minish.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2021/06/10 22:39:59 by junghwki         ###   ########.fr       */
-=======
-/*   Updated: 2021/06/10 22:37:28 by wopark           ###   ########.fr       */
->>>>>>> wopark
+/*   Updated: 2021/06/10 22:49:36 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,8 +188,5 @@ void			ft_unset(t_cmd *cmd);
 int				other_command(t_cmd *cmd, char **envp);
 void			free_array(char **array);
 void			child_process(t_cmd *cmd, char **envp);
-<<<<<<< HEAD
 char			**make_envp(void);
-=======
->>>>>>> wopark
 #endif
