@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
+/*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:07:54 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/11 03:32:48 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/11 15:20:37 by junghwki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,12 @@ int		get_input(char **input, t_dllist *h_list)
 			// write(1,"\n",1);
 			//ft_dll_viewlst(h_list);
 			cursor_init(&cursor, h_list);
+			tcsetattr(STDIN_FILENO, TCSANOW, &term_backup);
 			return (READ_SUC);
 		}
 		*input = realloc_input(*input, cursor.key_pos + 2);
 	}
+	tcsetattr(STDIN_FILENO, TCSANOW, &term_backup);
 	return (READ_ERR);
 }
 

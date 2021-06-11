@@ -1,14 +1,18 @@
 #include "../includes/minish.h"
 
-void	init_redir(t_data *data)
+void		init_redir(t_data *data)
 {
+	char	*tmp;
+	
 	data->rd = (t_redir *)malloc(sizeof(t_redir));
 	data->rd->sign = data->cmd->rd_flag;
 	data->rd_buf[data->rd_buf_idx + 1] = 0;
-	data->rd->file_name = ft_strdup(data->rd_buf);
+	tmp = ft_strdup(data->rd_buf);
+	data->rd->file_name = ft_strtrim(tmp, " ");
+	free(tmp);
 	free(data->rd_buf);
 	ft_lstadd_back(&data->cmd->rd_lst, ft_lstnew(data->rd));
-
+	data->cmd->rd_lst->next = 0;
 	data->cmd->rd_flag = 0;
 	data->rd_buf = ft_calloc(data->buf_size, sizeof(char));
 	data->rd_buf_idx = 0;
