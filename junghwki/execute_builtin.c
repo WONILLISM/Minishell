@@ -39,10 +39,10 @@ int			*redirection(t_cmd *cmd)
 void		builtin(t_cmd *cmd, int pipe_flag)
 {
 	char	**envp;
-	int		*fd;
+	// int		*fd;
 
-	if (cmd->rd_lst)
-		fd = redirection(cmd);
+	// if (cmd->rd_lst)
+	// 	fd = redirection(cmd);
 	if (*cmd->argv)
 	{
 		if (ft_strcmp(cmd->argv[0], "cd") == 0)
@@ -72,8 +72,8 @@ void		builtin(t_cmd *cmd, int pipe_flag)
 			free_array(envp);
 		}
 	}
-	dup2(fd[1], 1);
-	dup2(fd[0], 0);
+	// dup2(fd[1], 1);
+	// dup2(fd[0], 0);
 }
 void		lets_fork(pid_t *pid, t_cmd *cmd, t_cmd *next_cmd, int idx)
 {

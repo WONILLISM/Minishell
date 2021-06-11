@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/11 11:41:07 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/11 19:08:52 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,9 +76,8 @@ typedef struct	s_cursor
 	int		buf;
 	int		key_pos;
 	int		len;
+	char	*input_tmp;
 	t_dlnode	*cur;
-	// int		col;
-	// int		row;
 }				t_cursor;
 
 typedef struct	s_redir
@@ -136,7 +135,7 @@ t_archive	g_archive;
 void	cursor_init(t_cursor *cursor, t_dllist *h_list);
 
 // history
-int	find_prev_history(t_dllist *h_list, t_cursor *cursor, char **input);
+int	find_prev_history(t_dllist *h_list, t_cursor *cursor);
 int	find_next_history(t_dllist *h_list, t_cursor *cursor, char **input);
 /*
 ** ************ parse_utils.c*************

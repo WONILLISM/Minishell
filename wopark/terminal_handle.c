@@ -49,7 +49,7 @@ int		term_key_handler(t_cursor *cursor, char **input, t_dllist *h_list)
 	if (cursor->buf == KEY_BACKSPACE && (cursor->key_pos) > 0)
 		set_backspace_key(cursor, input);
 	else if (cursor->buf == KEY_UP)
-		return find_prev_history(h_list, cursor, input);
+		return find_prev_history(h_list, cursor);
 	else if (cursor->buf == KEY_DOWN)
 		return find_next_history(h_list, cursor, input);
 	else if (ft_isprint(cursor->buf) || cursor->buf == '\n')
