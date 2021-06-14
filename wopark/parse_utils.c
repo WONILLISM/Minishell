@@ -58,7 +58,6 @@ int		lst_add_cmd(t_data *data, t_list *cmd_root, int flag)
 {
 	char	*tmp;
 
-	init_redir(data);
 	tmp = ft_strltrim(data->buf, " ");
 	free(data->buf);
 	data->buf = tmp;

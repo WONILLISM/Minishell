@@ -12,6 +12,7 @@ void	redir_list_view(t_list *lst)
 		lst = lst->next;
 	}
 }
+
 void	init_redir(t_data *data)
 {
 	char	*tmp;
@@ -40,6 +41,8 @@ void	chk_redir_sign(char *input, t_data *data)
 			data->cmd->rd_flag++;
 		else if ((data->cmd->rd_flag == 2 || data->cmd->rd_flag == 1) && *data->rd_buf)
 			init_redir(data);
+		else if (data->cmd->rd_flag == -1 && *data->rd_buf)
+			init_redir(data);
 		else
 			printf("ERROR\n");
 	}
@@ -48,6 +51,8 @@ void	chk_redir_sign(char *input, t_data *data)
 		if (data->cmd->rd_flag == 0)
 			data->cmd->rd_flag--;
 		else if (data->cmd->rd_flag == -1 && *data->rd_buf)
+			init_redir(data);
+		else if ((data->cmd->rd_flag == 2 || data->cmd->rd_flag == 1) && *data->rd_buf)
 			init_redir(data);
 		else
 			printf("ERROR\n");
@@ -59,9 +64,10 @@ void	chk_redir_sign(char *input, t_data *data)
 void	chk_redir_filename(char *input, t_data *data)
 {
 	if (*data->rd_buf && data->cmd->quote == 0 && input[data->input_idx] == ' ')
-		init_redir(data);
-	else
 	{
-		data->rd_buf[data->rd_buf_idx++] = input[data->input_idx];
+		init_redir(data);
+		data->input_idx++;
 	}
+	else
+		data->rd_buf[data->rd_buf_idx++] = input[data->input_idx];
 }
