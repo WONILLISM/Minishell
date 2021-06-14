@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wopark <wopark@student.42.fr>              +#+  +:+       +#+        */
+/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:07:54 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/12 17:39:01 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/14 15:16:01 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ int		get_input(char **input, t_dllist *h_list)
 		return (READ_ERR);
 	term_init(&term, &term_backup);
 	cursor_init(&cursor, h_list);
-	//*cursor.input_tmp = 0;
 	while (1)
 	{
 		cursor.buf = 0;
