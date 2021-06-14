@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minish.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/14 22:21:48 by junghwki         ###   ########.fr       */
+/*   Updated: 2021/06/14 22:25:11 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,6 @@ typedef struct	s_cmd
 {
 	char		**argv;		// 명령어 내용 NULL
 	int			flag;		// 0: ; or NULL	1: pipe
-	int			rd_flag;
 	char		quote;		// stack for ' or "
 	int			fd[2];
 	t_list		*rd_lst;
@@ -165,8 +164,9 @@ int		parse_input(char *input);
 void	chk_redir_sign(char *input, t_data *data);
 void	chk_redir_filename(char *input, t_data *data);
 void	init_redir(t_data *data);
-void	redir_list_view(t_list *lst);
-
+void	update_redir(t_data *data);
+void	init_cmd(t_data *data);
+void	init_data(t_data *data, t_list **cmd_root, int input_size);
 
 int		ft_strcmp(const char *s1, const char *s2);
 
