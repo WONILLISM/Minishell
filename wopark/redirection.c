@@ -28,7 +28,7 @@ void	update_redir(t_data *data)
 	data->rd_buf_idx = 0;
 	ft_lstadd_back(&data->cmd->rd_lst, ft_lstnew(data->rd));
 	ft_lstlast(data->cmd->rd_lst)->next = NULL;
-	redir_list_view(data->cmd->rd_lst);
+	// redir_list_view(data->cmd->rd_lst);
 	data->input_idx--;
 	init_redir(data);
 }
