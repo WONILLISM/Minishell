@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minish.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
+/*   By: wopark <wopark@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/11 11:41:07 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/12 18:10:53 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,9 +76,8 @@ typedef struct	s_cursor
 	int		buf;
 	int		key_pos;
 	int		len;
+	char	*input_tmp;
 	t_dlnode	*cur;
-	// int		col;
-	// int		row;
 }				t_cursor;
 
 typedef struct	s_redir
@@ -165,6 +164,8 @@ int		parse_input(char *input);
 
 void	chk_redir_sign(char *input, t_data *data);
 void	chk_redir_filename(char *input, t_data *data);
+void	init_redir(t_data *data);
+
 
 int		ft_strcmp(const char *s1, const char *s2);
 

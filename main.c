@@ -6,11 +6,16 @@
 /*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:07:54 by wopark            #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2021/06/11 15:20:37 by junghwki         ###   ########.fr       */
+=======
+/*   Updated: 2021/06/14 15:16:01 by wopark           ###   ########.fr       */
+>>>>>>> wopark
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minish.h"
+#include <term.h>
 
 char	*realloc_input(char *ptr, size_t size)
 {
@@ -41,8 +46,6 @@ int		get_input(char **input, t_dllist *h_list)
 		cursor.r_nbr = read(STDIN_FILENO, &cursor.buf, sizeof(cursor.buf));
 		if (!term_key_handler(&cursor, input, h_list))
 		{
-			// write(1,"\n",1);
-			//ft_dll_viewlst(h_list);
 			cursor_init(&cursor, h_list);
 			tcsetattr(STDIN_FILENO, TCSANOW, &term_backup);
 			return (READ_SUC);

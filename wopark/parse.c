@@ -118,6 +118,8 @@ int		parse_input(char *input)
 		free(input_tmp);
 		if (*(data.buf))
 			g_archive.parse_error = lst_add_cmd(&data, cmd_root, 0);
+		else if (*(data.rd_buf))
+			init_redir(&data);
 		if (parse_error_check(&data) == ERROR)
 			return (ERROR);
 		else
