@@ -134,7 +134,6 @@ void		execute_builtin(t_list *cmd_root)
 
 	idx = -1;
 	temp = cmd_root->next;
-	printf("cmdlst size : %d\n", ft_lstsize(cmd_root));
 	while (temp)
 	{
 		temp_cmd = temp->content;
