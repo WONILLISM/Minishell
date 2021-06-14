@@ -1,5 +1,17 @@
 #include "../includes/minish.h"
 
+void	redir_list_view(t_list *lst)
+{
+	t_redir *tmp;
+
+	lst = lst->next;
+	while (lst)
+	{
+		tmp = lst->content;
+		printf("sign : %d, filename: %s\n", tmp->sign, tmp->file_name);
+		lst = lst->next;
+	}
+}
 void	init_redir(t_data *data)
 {
 	char	*tmp;
@@ -12,11 +24,12 @@ void	init_redir(t_data *data)
 	free(tmp);
 	free(data->rd_buf);
 	ft_lstadd_back(&data->cmd->rd_lst, ft_lstnew(data->rd));
-	data->cmd->rd_lst->next =0;
+	ft_lstlast(data->cmd->rd_lst)->next = 0;
 	data->cmd->rd_flag = 0;
 	data->rd_buf = ft_calloc(data->buf_size, sizeof(char));
 	data->rd_buf_idx = 0;
 	data->input_idx--;
+	redir_list_view(data->cmd->rd_lst);
 }
 
 void	chk_redir_sign(char *input, t_data *data)

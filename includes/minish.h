@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minish.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
+/*   By: wopark <wopark@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/11 19:08:52 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/12 18:10:53 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,7 @@ t_archive	g_archive;
 void	cursor_init(t_cursor *cursor, t_dllist *h_list);
 
 // history
-int	find_prev_history(t_dllist *h_list, t_cursor *cursor);
+int	find_prev_history(t_dllist *h_list, t_cursor *cursor, char **input);
 int	find_next_history(t_dllist *h_list, t_cursor *cursor, char **input);
 /*
 ** ************ parse_utils.c*************
@@ -164,6 +164,8 @@ int		parse_input(char *input);
 
 void	chk_redir_sign(char *input, t_data *data);
 void	chk_redir_filename(char *input, t_data *data);
+void	init_redir(t_data *data);
+
 
 int		ft_strcmp(const char *s1, const char *s2);
 

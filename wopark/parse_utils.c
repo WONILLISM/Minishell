@@ -58,6 +58,7 @@ int		lst_add_cmd(t_data *data, t_list *cmd_root, int flag)
 {
 	char	*tmp;
 
+	init_redir(data);
 	tmp = ft_strltrim(data->buf, " ");
 	free(data->buf);
 	data->buf = tmp;
@@ -66,15 +67,12 @@ int		lst_add_cmd(t_data *data, t_list *cmd_root, int flag)
 	data->cmd->flag = flag;
 	if (!(data->cmd->argv)[0] && flag >= 1)
 		return (ERROR);
-	else
-	{
-		ft_lstadd_back(&cmd_root, ft_lstnew(data->cmd));
-		if (data->cmd->quote)
-			return (ERROR);
-		data->cmd = ft_calloc(1, sizeof(t_cmd));
-		data->last_node = ft_lstlast(cmd_root);
-		data->last_node->next = 0;
-	}
+	ft_lstadd_back(&cmd_root, ft_lstnew(data->cmd));
+	if (data->cmd->quote)
+		return (ERROR);
+	data->cmd = ft_calloc(1, sizeof(t_cmd));
+	data->last_node = ft_lstlast(cmd_root);
+	data->last_node->next = 0;
 	data->buf_idx = 0;
 	free(data->buf);
 	data->buf = ft_calloc(data->buf_size, sizeof(char));
