@@ -1,11 +1,5 @@
 #include "../includes/minish.h"
 
-<<<<<<< HEAD
-void		init_redir(t_data *data)
-{
-	char	*tmp;
-	
-=======
 void	redir_list_view(t_list *lst)
 {
 	t_redir *tmp;
@@ -23,7 +17,6 @@ void	init_redir(t_data *data)
 {
 	char	*tmp;
 
->>>>>>> wopark
 	data->rd = (t_redir *)malloc(sizeof(t_redir));
 	data->rd->sign = data->cmd->rd_flag;
 	data->rd_buf[data->rd_buf_idx + 1] = 0;
@@ -32,16 +25,12 @@ void	init_redir(t_data *data)
 	free(tmp);
 	free(data->rd_buf);
 	ft_lstadd_back(&data->cmd->rd_lst, ft_lstnew(data->rd));
-<<<<<<< HEAD
-	data->cmd->rd_lst->next = 0;
-=======
 	ft_lstlast(data->cmd->rd_lst)->next = 0;
->>>>>>> wopark
 	data->cmd->rd_flag = 0;
 	data->rd_buf = ft_calloc(data->buf_size, sizeof(char));
 	data->rd_buf_idx = 0;
 	data->input_idx--;
-	redir_list_view(data->cmd->rd_lst);
+	// redir_list_view(data->cmd->rd_lst);
 }
 
 void	chk_redir_sign(char *input, t_data *data)
