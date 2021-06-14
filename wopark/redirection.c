@@ -4,13 +4,13 @@ void	redir_list_view(t_list *lst)
 {
 	t_redir *tmp;
 
-	lst = lst->next;
-	while (lst)
-	{
+	// lst = lst->next;
+	// while (lst)
+	// {
 		tmp = lst->content;
 		printf("sign : %d, filename: %s\n", tmp->sign, tmp->file_name);
-		lst = lst->next;
-	}
+		// lst = lst->next;
+	// }
 }
 
 void	init_redir(t_data *data)
