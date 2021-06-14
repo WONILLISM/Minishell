@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minish.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wopark <wopark@student.42.fr>              +#+  +:+       +#+        */
+/*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/12 18:10:53 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/14 22:21:48 by junghwki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,6 +165,7 @@ int		parse_input(char *input);
 void	chk_redir_sign(char *input, t_data *data);
 void	chk_redir_filename(char *input, t_data *data);
 void	init_redir(t_data *data);
+void	redir_list_view(t_list *lst);
 
 
 int		ft_strcmp(const char *s1, const char *s2);
