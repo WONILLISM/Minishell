@@ -19,6 +19,7 @@ void	init_redir(t_data *data)
 	data->rd = (t_redir *)malloc(sizeof(t_redir));
 	data->rd->file_name = 0;
 	data->rd->sign = 0;
+	data->rd_buf_idx = 0;
 }
 
 void	update_redir(t_data *data)

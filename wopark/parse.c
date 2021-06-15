@@ -64,6 +64,7 @@ void	parse_get_data2(char *input, t_data *data)
 	}
 	else if (data->rd->sign)
 	{
+		printf("!!!!\n");
 		chk_redir_filename(input, data);
 		return ;
 	}
@@ -73,6 +74,8 @@ void	parse_get_data2(char *input, t_data *data)
 		if (data->cmd->quote == '\"'
 		&& ft_strchr("$`\"\\", input[data->input_idx + 1]))
 			data->input_idx++;
+		if (input[data->input_idx] == ' ')
+			input[data->input_idx] = -1;
 		if (data->cmd->quote == 0)
 			data->input_idx++;
 	}
@@ -130,14 +133,16 @@ int		parse_input(char *input)
 			return (ERROR);
 		// else
 		// 	execute_builtin(cmd_root);
-		t_cmd *tc = cmd_root->next->content;
-		t_list *trd = tc->rd_lst;
-		redir_list_view(trd);
-		if (cmd_root->next->next)
+		t_list	*tcmdl;
+
+		tcmdl = cmd_root->next;
+		while (tcmdl)
 		{
-			tc = cmd_root->next->next->content;
-			trd = tc->rd_lst;
-			redir_list_view(trd);
+			t_cmd *tcmd = tcmdl->content;
+			t_list *trdl = tcmd->rd_lst;
+			redir_list_view(trdl);
+			tcmdl = tcmdl->next;
+			printf("--------------\n");
 		}
 	}
 	return (SUCCESS);
