@@ -2,6 +2,7 @@
 
 void	cursor_init(t_cursor *cursor, t_dllist *h_list)
 {
+	(void)h_list;
 	cursor->buf = 0;
 	cursor->idx = 0;
 	cursor->len = 0;

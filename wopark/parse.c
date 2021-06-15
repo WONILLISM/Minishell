@@ -75,8 +75,6 @@ void	parse_get_data2(char *input, t_data *data)
 			data->input_idx++;
 		if (data->cmd->quote == 0)
 			data->input_idx++;
-		if (input[data->input_idx] == ' ')
-			input[data->input_idx] = -1;
 	}
 	data->buf[data->buf_idx++] = input[data->input_idx];
 }
@@ -95,6 +93,11 @@ void	parse_get_data(char *input, t_data *data, t_list *cmd_root)
 		g_archive.parse_error = lst_add_cmd(data, cmd_root, 1);
 	else if (data->cmd->quote != '\'' && input[data->input_idx] == '$')
 		parse_envv_handler(data, input);
+	else if (!data->rd->sign && data->cmd->quote && input[data->input_idx] == ' ')
+	{
+		input[data->input_idx] = -1;
+		data->buf[data->buf_idx++] = input[data->input_idx];
+	}
 	else
 		parse_get_data2(input, data);
 }
@@ -127,6 +130,15 @@ int		parse_input(char *input)
 			return (ERROR);
 		// else
 		// 	execute_builtin(cmd_root);
+		t_cmd *tc = cmd_root->next->content;
+		t_list *trd = tc->rd_lst;
+		redir_list_view(trd);
+		if (cmd_root->next->next)
+		{
+			tc = cmd_root->next->next->content;
+			trd = tc->rd_lst;
+			redir_list_view(trd);
+		}
 	}
 	return (SUCCESS);
 }
