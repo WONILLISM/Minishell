@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minish.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
+/*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/14 22:25:11 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/15 20:05:22 by junghwki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ typedef struct	s_cmd
 	int			flag;		// 0: ; or NULL	1: pipe
 	char		quote;		// stack for ' or "
 	int			fd[2];
+	int			rd_flag[2];
 	t_list		*rd_lst;
 }				t_cmd;
 

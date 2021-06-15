@@ -122,7 +122,7 @@ int		parse_input(char *input)
 		if (*(data.buf))
 			g_archive.parse_error = lst_add_cmd(&data, cmd_root, 0);
 		if (data.rd->sign)
-			g_archive.parse_error = lst_add_cmd(&data, cmd_root, 0);
+			g_archive.parse_error = lst_add_cmd(&data, cmd_root, 2);
 		if (parse_error_check(&data) == ERROR)
 			return (ERROR);
 		else

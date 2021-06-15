@@ -22,7 +22,7 @@ void	init_redir(t_data *data)
 
 void	update_redir(t_data *data)
 {
-	data->rd->file_name = ft_strdup(data->rd_buf);
+	data->rd->file_name = ft_strtrim(data->rd_buf, " ");
 	free(data->rd_buf);
 	data->rd_buf = ft_calloc(sizeof(char), data->buf_size);
 	data->rd_buf_idx = 0;
