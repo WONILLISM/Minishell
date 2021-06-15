@@ -93,7 +93,8 @@ int		lst_add_cmd(t_data *data, t_list *cmd_root, int flag)
 {
 	char	*tmp;
 
-	update_redir(data);
+	if (flag == 2)
+		update_redir(data);
 	if (data->cmd->quote != 0)
 		return (ERROR);
 	tmp = ft_strltrim(data->buf, " ");
