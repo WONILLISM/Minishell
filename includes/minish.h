@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minish.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/15 20:05:22 by junghwki         ###   ########.fr       */
+/*   Updated: 2021/06/16 13:49:04 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,11 +163,15 @@ int		term_key_handler(t_cursor *cursor, char **input, t_dllist *h_list);
 int		parse_input(char *input);
 
 void	chk_redir_sign(char *input, t_data *data);
-void	chk_redir_filename(char *input, t_data *data);
 void	init_redir(t_data *data);
 void	update_redir(t_data *data);
 void	init_cmd(t_data *data);
 void	init_data(t_data *data, t_list **cmd_root, int input_size);
+void	redir_list_view(t_list *lst);
+char	*realloc_input(char *ptr, size_t size);
+
+
+
 
 int		ft_strcmp(const char *s1, const char *s2);
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:07:54 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/15 18:33:55 by junghwki         ###   ########.fr       */
+/*   Updated: 2021/06/16 13:51:02 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int		get_input(char **input, t_dllist *h_list)
 			tcsetattr(STDIN_FILENO, TCSANOW, &term_backup);
 			return (READ_SUC);
 		}
-		*input = realloc_input(*input, cursor.key_pos + 2);
+		*input = realloc_input(*input, cursor.len + 1);
 	}
 	tcsetattr(STDIN_FILENO, TCSANOW, &term_backup);
 	return (READ_ERR);

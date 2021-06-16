@@ -49,8 +49,6 @@ int		chk_var_name(t_data *data, char *input)
 		ret++;
 		c = *(input + data->input_idx + ret);
 	}
-	if (!ret)
-		data->buf[data->buf_idx++] = input[--(data->input_idx)];
 	return (ret);
 }
 
@@ -83,7 +81,7 @@ void	view_rd_list(t_list *lst)
 void	update_data(t_data *data, t_list *cmd_root)
 {
 	data->last_node = ft_lstlast(cmd_root);
-	data->last_node->next = 0;
+	data->last_node->next = NULL;
 	data->buf_idx = 0;
 	free(data->buf);
 	data->buf = ft_calloc(data->buf_size, sizeof(char));
@@ -93,10 +91,8 @@ int		lst_add_cmd(t_data *data, t_list *cmd_root, int flag)
 {
 	char	*tmp;
 
-	if (flag == 2)
+	if (flag == 2 || data->rd->sign)
 		update_redir(data);
-	if (data->cmd->quote != 0)
-		return (ERROR);
 	tmp = ft_strltrim(data->buf, " ");
 	free(data->buf);
 	data->buf = tmp;
@@ -106,6 +102,7 @@ int		lst_add_cmd(t_data *data, t_list *cmd_root, int flag)
 	ft_lstadd_back(&cmd_root, ft_lstnew(data->cmd));
 	init_cmd(data);
 	update_data(data, cmd_root);
+
 	return (SUCCESS);
 }
 

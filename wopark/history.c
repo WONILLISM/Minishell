@@ -37,20 +37,53 @@ int	find_prev_history(t_dllist *h_list, t_cursor *cursor, char **input)
 int	find_next_history(t_dllist *h_list, t_cursor *cursor, char **input)
 {
 	t_dlnode	*node;
-	char		*tmp;
+	// char		*tmp;
 
 	node = cursor->cur;
-	tmp = node->data;
-	if (tmp)
+	cursor->input_tmp = ft_strdup(*input);
+	if (node->next)
 	{
-		term_del_line(cursor, h_list);
-		cursor->cur = node->next;
-		write(1, "minish $> ", 10);
-		free(*input);
-		*input = ft_strdup(tmp);
-		cursor->key_pos = ft_strlen(*input);
-		cursor->len = cursor->key_pos;
-		write(1, *input, cursor->len);
+		if (node->next->data)
+		{
+			term_del_line(cursor, h_list);
+			cursor->cur = node->next;
+			write(1, "minish $> ", 10);
+			free(*input);
+			*input = ft_strdup(node->next->data);
+			cursor->key_pos = ft_strlen(*input);
+			cursor->len = cursor->key_pos;
+			write(1, *input, cursor->len);
+		}
+		else
+		{
+			// printf("%s\n", cursor->input_tmp);
+			if (cursor->input_tmp[0] == 0)
+			{
+				term_del_line(cursor, h_list);
+				write(1, "minish $> ", 10);
+				cursor->key_pos = 0;
+				cursor->len = 0;
+			}
+		}
 	}
+
+
+
+	// if (h_list->length > 0)
+	// {
+	// 	node = cursor->cur;
+	// 	tmp = node->next->data;
+	// 	if (tmp)
+	// 	{
+	// 		term_del_line(cursor, h_list);
+	// 		write(1, "minish $> ", 10);
+	// 		cursor->cur = node->next;
+	// 		free(*input);
+	// 		*input = ft_strdup(tmp);
+	// 		cursor->key_pos = ft_strlen(*input);
+	// 		cursor->len = cursor->key_pos;
+	// 		write(1, *input, cursor->len);
+	// 	}
+	// }
 	return (1);
 }
