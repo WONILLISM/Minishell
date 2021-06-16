@@ -19,40 +19,6 @@ int			count_pipe(t_list *list)
 	return (-1);
 }
 
-int			rd_input_check(t_list *rd_lst)
-{
-	t_list	*temp;
-	t_redir	*temp_rd;
-
-	temp = rd_lst->next;
-	while (temp)
-	{
-		temp_rd = temp->content;
-		if (temp_rd->sign == 1)
-			return (1);
-		else if (temp_rd->sign == 2)
-			return (1);
-		temp = temp->next;
-	}
-	return (0);
-}
-
-int			rd_output_check(t_list *rd_lst)
-{
-	t_list	*temp;
-	t_redir	*temp_rd;
-
-	temp = rd_lst->next;
-	while (temp)
-	{
-		temp_rd = temp->content;
-		if (temp_rd->sign == -1)
-			return (1);
-		temp = temp->next;
-	}
-	return (0);
-}
-
 void		ft_execve(t_cmd *cmd, int pipe_flag)
 {
 	char	**envp;
@@ -85,69 +51,77 @@ void		ft_execve(t_cmd *cmd, int pipe_flag)
 	}
 }
 
-// int			*redirection(t_cmd *cmd)
-// {
-// 	int		*flag;
-// 	t_list	*temp;
-// 	t_redir	*temp_rd;
+void		redirection(t_cmd *cmd)
+{
+	t_list	*rd_lst;
+	t_redir	*rd;
 
-// 	flag = (int *)malloc(sizeof(int) * 2);
-// 	temp = cmd->rd_lst->next;
-// 	flag[0] = 0;
-// 	flag[1] = 0;
-// 	while (temp)
-// 	{
-// 		temp_rd = temp->content;
-// 		if (temp_rd->sign == 1)
-// 		{
-// 			cmd->fd[1] = open(temp_rd->file_name, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-// 			flag[1] = 1;
-// 		}
-// 		else if (temp_rd->sign == 2)
-// 		{
-// 			cmd->fd[1] = open(temp_rd->file_name, O_CREAT | O_WRONLY | O_APPEND, 0644);
-// 			flag[1] = 1;
-// 		}
-// 		else if (temp_rd->sign == -1)
-// 		{
-// 			cmd->fd[0] = open(temp_rd->file_name, O_RDONLY, 0644);
-// 			flag[0] = 1;
-// 		}
-// 		temp = temp->next;
-// 	}
-// 	return (flag);
-// }
+	rd_lst = cmd->rd_lst->next;
+	cmd->rd_fd[0] = 0;
+	cmd->rd_fd[1] = 0;
+	while (rd_lst)
+	{
+		rd = rd_lst->content;
+		if (rd->sign == -1)
+		{
+			cmd->rd_fd[0] = open(rd->file_name, O_RDONLY, 0644);
+			if (cmd->rd_fd[0] < 0)
+			{
+				write(2, "Error\n", 6);
+				return ;
+			}
+		}
+		else if (rd->sign == 1)
+		{
+			cmd->rd_fd[1] = open(rd->file_name, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+		}
+		else if (rd->sign == 2)
+		{
+			cmd->rd_fd[1] = open(rd->file_name, O_CREAT | O_WRONLY | O_APPEND, 0644);
+		}
+		rd_lst = rd_lst->next;
+	}
+}
 
 void		builtin(t_cmd *cmd, int pipe_flag)
 {
-	// int		*fd;
-	// int		temp_fd[2];
+	int		temp_fd[2];
 
-	// pipe(temp_fd);
-	// if (!pipe_flag && cmd->rd_lst)
-	// {
-	// 	fd = redirection(cmd);
-	// 	if (fd[0])
-	// 	{
-	// 		dup2(0, temp_fd[0]);
-	// 		dup2(cmd->fd[0], 0);
-	// 	}
-	// 	if (fd[1])
-	// 	{
-	// 		dup2(1, temp_fd[1]);
-	// 		dup2(cmd->fd[1], 1);
-	// 	}
-	// }
+	pipe(temp_fd);
+	if (cmd->rd_lst && pipe_flag)
+	{
+		redirection(cmd);
+		if (cmd->rd_fd[0])
+		{
+			dup2(0, temp_fd[0]);
+			dup2(cmd->rd_fd[0], cmd->fd[0]);
+		}
+		if (cmd->rd_fd[1])
+		{
+			dup2(1, temp_fd[1]);
+			dup2(cmd->rd_fd[1], cmd->fd[1]);
+		}
+	}
+	else if (cmd->rd_lst && !pipe_flag)
+	{
+		redirection(cmd);
+		if (cmd->rd_fd[0])
+		{
+			dup2(0, temp_fd[0]);
+			dup2(cmd->rd_fd[0], 0);
+		}
+		if (cmd->rd_fd[1])
+		{
+			dup2(1, temp_fd[1]);
+			dup2(cmd->rd_fd[1], 1);
+		}
+	}
 	if (*(cmd->argv))
 		ft_execve(cmd, pipe_flag);
-	// if (!pipe_flag && cmd->rd_lst)
-	// {
-	// 	if (fd[1])
-	// 		dup2(fd[1], 1);
-	// 	if (fd[0])
-	// 		dup2(fd[0], 0);
-	// 	free(fd);
-	// }
+	if (cmd->rd_fd[1])
+		dup2(temp_fd[1], 1);
+	if (cmd->rd_fd[0])
+		dup2(temp_fd[0], 0);
 }
 
 void		lets_fork(pid_t *pid, t_cmd *cmd, t_cmd *next_cmd, int idx)
@@ -190,6 +164,8 @@ void		execute_builtin(t_list *cmd_root)
 	while (temp)
 	{
 		temp_cmd = temp->content;
+		// if (temp_cmd->rd_lst)
+		// 	redirection(temp_cmd);
 		if (temp_cmd->flag)
 		{
 			pipe_cnt = count_pipe(temp);
@@ -230,76 +206,3 @@ void		execute_builtin(t_list *cmd_root)
 		temp = temp->next;
 	}
 }
-
-// void		execute_builtin(t_list *cmd_root)
-// {
-// 	t_list	*temp;
-// 	t_cmd	*temp_cmd;
-// 	t_cmd	*temp_next_cmd;
-// 	// int		*pid;
-// 	int		pid[10];
-// 	int		idx;
-
-// 	// pid = (int *)malloc(sizeof(int) * pipe_cnt);
-// 	idx = -1;
-// 	temp = cmd_root->next;
-// 	while (temp)
-// 	{
-// 		temp_cmd = temp->content;
-// 		if (temp_cmd->flag)
-// 		{
-// 			if (idx == -1)
-// 			{
-// 				pipe(temp_cmd->fd);
-// 				close(temp_cmd->fd[1]);
-// 			}
-// 			if (temp->next)
-// 			{
-// 				temp_next_cmd = temp->next->content;
-// 				pipe(temp_next_cmd->fd);
-// 			}
-// 			else
-// 				write(1, "Error\n", 6);
-// 			idx++;
-// 			pid[idx] = fork();
-// 			if (pid[idx] < 0)
-// 				write(1, "Error\n", 6);
-// 			else if (pid[idx] == 0)
-// 			{
-// 				if (temp_cmd->flag)
-// 				{
-// 					close(temp_next_cmd->fd[0]);
-// 					if (idx != 0)
-// 					{
-// 						dup2(temp_cmd->fd[0], 0);
-// 					}
-// 					dup2(temp_next_cmd->fd[1], 1);
-// 				}
-// 				else
-// 				{
-// 					dup2(temp_cmd->fd[0], 0);
-// 				}
-// 				builtin(temp_cmd, 0);
-// 				exit(0);
-// 			}
-// 			else
-// 			{
-// 				close(temp_cmd->fd[0]);
-// 				close(temp_next_cmd->fd[1]);
-// 			}
-// 		}
-// 		else
-// 		{
-// 			builtin(temp_cmd, 1);
-// 		}
-// 		temp = temp->next;
-// 		if (temp_cmd->flag == 0)
-// 		{
-// 			while (idx >= 0)
-// 			{
-// 				waitpid(pid[idx], &g_archive.exit_stat, 0);
-// 				idx--;
-// 			}
-// 		}
-// 	}
-// }
