@@ -102,7 +102,6 @@ int		lst_add_cmd(t_data *data, t_list *cmd_root, int flag)
 	ft_lstadd_back(&cmd_root, ft_lstnew(data->cmd));
 	init_cmd(data);
 	update_data(data, cmd_root);
-
 	return (SUCCESS);
 }
 
