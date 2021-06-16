@@ -40,6 +40,7 @@ int		set_printable_key(t_cursor *cursor, char **input)
 		return (1);
 	}
 	*(*input + cursor->key_pos) = cursor->buf;
+
 	(cursor->key_pos)++;
 	(cursor->len)++;
 	return (0);

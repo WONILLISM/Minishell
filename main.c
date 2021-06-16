@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:07:54 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/16 13:51:02 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/16 21:24:28 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,10 @@ int		get_input(char **input, t_dllist *h_list)
 	*input = malloc(1);
 	if (input == NULL)
 		return (READ_ERR);
+	**input = 0;
 	term_init(&term, &term_backup);
 	cursor_init(&cursor, h_list);
+	cursor.input_tmp = *input;
 	while (1)
 	{
 		cursor.buf = 0;

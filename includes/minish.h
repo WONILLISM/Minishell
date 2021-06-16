@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/16 13:49:04 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/16 20:55:06 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ typedef struct	s_cursor
 	int		buf;
 	int		key_pos;
 	int		len;
+	int		input_flag;
 	char	*input_tmp;
 	t_dlnode	*cur;
 }				t_cursor;

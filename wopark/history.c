@@ -16,20 +16,25 @@ void	term_del_line(t_cursor *cursor, t_dllist *h_list)
 int	find_prev_history(t_dllist *h_list, t_cursor *cursor, char **input)
 {
 	t_dlnode	*node;
-	char		*tmp;
 
+	if (**input == 0)
+		cursor->input_flag = 1;
+	// else if (cursor->input_flag == 1 && **input)
+	// 	ft_dll_add(h_list, *input);
 	node = cursor->cur;
-	tmp = node->prev->data;
-	if (tmp)
+	if (node->prev)
 	{
-		term_del_line(cursor, h_list);
-		cursor->cur = node->prev;
-		write(1, "minish $> ", 10);
-		free(*input);
-		*input = ft_strdup(tmp);
-		cursor->key_pos = ft_strlen(*input);
-		cursor->len = cursor->key_pos;
-		write(1, *input, cursor->len);
+		if (node->prev->data)
+		{
+			term_del_line(cursor, h_list);
+			cursor->cur = node->prev;
+			write(1, "minish $> ", 10);
+			free(*input);
+			*input = ft_strdup(node->prev->data);
+			cursor->key_pos = ft_strlen(*input);
+			cursor->len = cursor->key_pos;
+			write(1, *input, cursor->len);
+		}
 	}
 	return (1);
 }
@@ -37,10 +42,8 @@ int	find_prev_history(t_dllist *h_list, t_cursor *cursor, char **input)
 int	find_next_history(t_dllist *h_list, t_cursor *cursor, char **input)
 {
 	t_dlnode	*node;
-	// char		*tmp;
 
 	node = cursor->cur;
-	cursor->input_tmp = ft_strdup(*input);
 	if (node->next)
 	{
 		if (node->next->data)
@@ -56,8 +59,8 @@ int	find_next_history(t_dllist *h_list, t_cursor *cursor, char **input)
 		}
 		else
 		{
-			// printf("%s\n", cursor->input_tmp);
-			if (cursor->input_tmp[0] == 0)
+			// printf("%d\n", cursor->input_flag);
+			if (cursor->input_flag)
 			{
 				term_del_line(cursor, h_list);
 				write(1, "minish $> ", 10);
@@ -66,24 +69,5 @@ int	find_next_history(t_dllist *h_list, t_cursor *cursor, char **input)
 			}
 		}
 	}
-
-
-
-	// if (h_list->length > 0)
-	// {
-	// 	node = cursor->cur;
-	// 	tmp = node->next->data;
-	// 	if (tmp)
-	// 	{
-	// 		term_del_line(cursor, h_list);
-	// 		write(1, "minish $> ", 10);
-	// 		cursor->cur = node->next;
-	// 		free(*input);
-	// 		*input = ft_strdup(tmp);
-	// 		cursor->key_pos = ft_strlen(*input);
-	// 		cursor->len = cursor->key_pos;
-	// 		write(1, *input, cursor->len);
-	// 	}
-	// }
 	return (1);
 }
