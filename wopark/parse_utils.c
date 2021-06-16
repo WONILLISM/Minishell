@@ -49,8 +49,6 @@ int		chk_var_name(t_data *data, char *input)
 		ret++;
 		c = *(input + data->input_idx + ret);
 	}
-	if (!ret)
-		data->buf[data->buf_idx++] = input[--(data->input_idx)];
 	return (ret);
 }
 

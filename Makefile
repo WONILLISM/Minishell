@@ -6,7 +6,7 @@ RM =		rm -f
 
 # compile option
 CC =		gcc
-CFLAGS =	-Wall -Wextra -Werror -fsanitize=address
+CFLAGS =	-Wall -Wextra -Werror -fsanitize=address -g
 # CFLAGS =	-Wall -Wextra -Werror
 
 # library
