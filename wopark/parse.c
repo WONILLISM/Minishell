@@ -126,8 +126,8 @@ int		parse_input(char *input)
 			g_archive.parse_error = lst_add_cmd(&data, cmd_root, 2);
 		if (parse_error_check(&data) == ERROR)
 			return (ERROR);
-		// else
-		// 	execute_builtin(cmd_root);
+		else
+			execute_builtin(cmd_root);
 		// t_list	*tcmdl;
 
 		// tcmdl = cmd_root->next;

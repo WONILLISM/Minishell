@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:07:54 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/16 21:24:28 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/17 19:14:54 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,28 +31,56 @@ int		get_input(char **input, t_dllist *h_list)
 	struct	termios	term;
 	struct	termios	term_backup;
 
-	*input = malloc(1);
-	if (input == NULL)
-		return (READ_ERR);
+	*input = (char *)malloc(sizeof(char));
 	**input = 0;
 	term_init(&term, &term_backup);
 	cursor_init(&cursor, h_list);
-	cursor.input_tmp = *input;
+	ft_dll_add(h_list, *input);
+	cursor.cur = h_list->tail->prev;
 	while (1)
 	{
 		cursor.buf = 0;
 		cursor.r_nbr = read(STDIN_FILENO, &cursor.buf, sizeof(cursor.buf));
 		if (!term_key_handler(&cursor, input, h_list))
 		{
+			ft_dll_viewlst(h_list);
+			*input = ft_strdup(h_list->tail->prev->data);
 			cursor_init(&cursor, h_list);
 			tcsetattr(STDIN_FILENO, TCSANOW, &term_backup);
 			return (READ_SUC);
 		}
-		*input = realloc_input(*input, cursor.len + 1);
 	}
 	tcsetattr(STDIN_FILENO, TCSANOW, &term_backup);
 	return (READ_ERR);
 }
+// int		get_input(char **input, t_dllist *h_list)
+// {
+// 	t_cursor		cursor;
+// 	struct	termios	term;
+// 	struct	termios	term_backup;
+
+// 	*input = malloc(1);
+// 	if (input == NULL)
+// 		return (READ_ERR);
+// 	**input = 0;
+// 	term_init(&term, &term_backup);
+// 	cursor_init(&cursor, h_list);
+// 	cursor.input_tmp = *input;
+// 	while (1)
+// 	{
+// 		cursor.buf = 0;
+// 		cursor.r_nbr = read(STDIN_FILENO, &cursor.buf, sizeof(cursor.buf));
+// 		if (!term_key_handler(&cursor, input, h_list))
+// 		{
+// 			cursor_init(&cursor, h_list);
+// 			tcsetattr(STDIN_FILENO, TCSANOW, &term_backup);
+// 			return (READ_SUC);
+// 		}
+// 		*input = realloc_input(*input, cursor.len + 1);
+// 	}
+// 	tcsetattr(STDIN_FILENO, TCSANOW, &term_backup);
+// 	return (READ_ERR);
+// }
 
 int		main(int argc, char **argv, char **envv)
 {
