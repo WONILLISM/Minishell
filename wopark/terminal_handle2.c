@@ -54,12 +54,16 @@ int		set_printable_key(t_cursor *cursor, char **input)
 	return (0);
 }
 
-void	ft_freestr(void *str)
+void	ft_freehistory(void *history)
 {
-	free(str);
+	t_history	*tmp;
+
+	tmp = history;
+	free(tmp->finished);
+	free(tmp->pending);
 }
 
-int		term_key_handler(t_cursor *cursor, char **input, t_dllist *h_list)
+int		term_key_handler(t_cursor *cursor, t_history *input, t_dllist *h_list)
 {
 	char	*tmp_data;
 	t_dlnode	*tmp_node;
@@ -73,19 +77,7 @@ int		term_key_handler(t_cursor *cursor, char **input, t_dllist *h_list)
 		return find_next_history(h_list, cursor, input);
 	else if (ft_isprint(cursor->buf) || cursor->buf == '\n')
 	{
-		if (set_printable_key(cursor, input))
-		{
-			tmp_node = h_list->tail->prev;
-			tmp_data = tmp_node->data;
-			if (*tmp_data == 0)
-			{
-				ft_dll_delnode(h_list, tmp_node, ft_freestr);
-				cursor->cur = h_list->tail;
-			}
-			if (cursor->cur->idx != -1 && cursor->cur->idx != h_list->length -1)
-				ft_dll_add(h_list, cursor->cur->data);
-			return (0);
-		}
+
 	}
 	else if (cursor->buf == CTRL_D)
 		return (0);

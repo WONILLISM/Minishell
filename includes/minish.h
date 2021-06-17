@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minish.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
+/*   By: wopark <wopark@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/16 20:55:06 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/17 20:23:19 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,12 @@ typedef struct	s_dllist
 	t_dlnode	*tail;
 	int			length;
 }				t_dllist;
+
+typedef struct s_history
+{
+	char	*pending;
+	char	*finished;
+}				t_history;
 
 t_dlnode	*ft_dll_newnode(void	*data);
 void		ft_dll_init(t_dllist *list);
@@ -156,7 +162,7 @@ void	signal_init(int argc, char **argv);
 */
 void	get_cursor_position(int *col, int *rows);
 void	term_init(struct termios *term, struct termios *backup);
-int		term_key_handler(t_cursor *cursor, char **input, t_dllist *h_list);
+int		term_key_handler(t_cursor *cursor, t_history *input, t_dllist *h_list);
 
 /*
 ** ************ parse.c *************
