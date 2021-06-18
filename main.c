@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wopark <wopark@student.42.fr>              +#+  +:+       +#+        */
+/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:07:54 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/17 20:22:44 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/18 16:06:20 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minish.h"
-#include <term.h>
 
 char	*realloc_input(char *ptr, size_t size)
 {
@@ -41,22 +40,26 @@ history 규칙
 */
 int		get_input(char **input, t_dllist *h_list)
 {
-	t_cursor		cursor;
-	t_history		tmp;
 	struct	termios	term;
 	struct	termios	term_backup;
+	t_cursor		cursor;
+	char			*pending;
+	char			*finished;
 
+	(void)input;
 	term_init(&term, &term_backup);
 	cursor_init(&cursor, h_list);
-	tmp.pending = (char *)malloc(sizeof(char));
-	tmp.finished = 0;
+	pending = (char *)malloc(sizeof(char));
+	*pending = 0;
+	finished = NULL;
+	ft_dll_addhisnode(h_list, pending, finished);
+	cursor.cur = h_list->tail->prev;
 	while (1)
 	{
 		cursor.buf = 0;
 		cursor.r_nbr = read(STDIN_FILENO, &cursor.buf, sizeof(cursor.buf));
-		if (!term_key_handler(&cursor, &tmp, h_list))
+		if (!term_key_handler(&cursor, h_list))
 		{
-
 			ft_dll_viewlst(h_list);
 			tcsetattr(STDIN_FILENO, TCSANOW, &term_backup);
 			return (READ_SUC);
@@ -107,9 +110,9 @@ int		main(int argc, char **argv, char **envv)
 		write(1, "minish $> ", 10);
 		if (get_input(&input, &history_lst) == READ_ERR)
 			printf("Error");
-		if (parse_input(input) == ERROR)
-			parse_error_msg(SYNTAX_ERROR_MSG);
-		free(input);
+		// if (parse_input(input) == ERROR)
+		// 	parse_error_msg(SYNTAX_ERROR_MSG);
+		// free(input);
 	}
 	return (0);
 }

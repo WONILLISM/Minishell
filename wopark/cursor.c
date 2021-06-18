@@ -6,9 +6,7 @@ void	cursor_init(t_cursor *cursor, t_dllist *h_list)
 	cursor->idx = 0;
 	cursor->len = 0;
 	cursor->key_pos = 0;
-	cursor->input_tmp = malloc(1);
-	*cursor->input_tmp = 0;
-	// cursor->cur = h_list->tail;
+	cursor->cur = h_list->tail;
 	(void)h_list;
 }
 
