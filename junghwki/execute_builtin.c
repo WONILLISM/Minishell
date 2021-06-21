@@ -9,7 +9,7 @@ int			count_pipe(t_list *list)
 	while (list)
 	{
 		cmd = list->content;
-		if (cmd->flag)
+		if (cmd->flag == 1)
 			ret++;
 		else
 			return (ret);
@@ -126,7 +126,7 @@ void		lets_fork(pid_t *pid, t_cmd *cmd, t_cmd *next_cmd, int idx)
 		write(2, "Error\n", 6);
 	else if (*pid == 0)
 	{
-		if (cmd->flag)
+		if (cmd->flag == 1)
 		{
 			close(next_cmd->fd[0]);
 			if (idx != 0)
@@ -159,11 +159,11 @@ void		execute_builtin(t_list *cmd_root)
 	while (temp)
 	{
 		cmd = temp->content;
-		if (cmd->flag)
+		if (cmd->flag == 1)
 		{
 			pipe_cnt = count_pipe(temp);
 			pid = (int *)malloc(sizeof(pid_t) * (pipe_cnt + 1));
-			while (cmd->flag)
+			while (cmd->flag == 1)
 			{
 				if (idx == -1)
 				{
