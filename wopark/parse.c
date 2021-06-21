@@ -71,7 +71,7 @@ void	parse_get_data2(char *input, t_data *data)
 		if (input[data->input_idx] == ' ')
 			input[data->input_idx] = -1;
 	}
-	if (data->rd->sign)
+	if (data->rd->sign && input[data->input_idx] != ' ')
 		data->rd_buf[data->rd_buf_idx++] = input[data->input_idx];
 	else
 		data->buf[data->buf_idx++] = input[data->input_idx];
@@ -81,7 +81,7 @@ int		parse_get_data(char *input, t_data *data, t_list *cmd_root)
 {
 	if (data->cmd->quote == input[data->input_idx])
 		data->cmd->quote = 0;
-	else if (data->cmd->quote == 0 && *data->rd_buf &&input[data->input_idx] == ' ')
+	else if (data->cmd->quote == 0 && *data->rd_buf && input[data->input_idx] == ' ')
 		update_redir(data);
 	else if (data->cmd->quote == 0 && input[data->input_idx] == '\"')
 		data->cmd->quote = input[data->input_idx];
@@ -99,7 +99,8 @@ int		parse_get_data(char *input, t_data *data, t_list *cmd_root)
 		parse_get_data2(input, data);
 	return (0);
 }
-
+// ; 만왔을 때 에러처리
+// " 따옴표 안닫혔을 때 에러처리
 int		parse_input(char *input)
 {
 	t_data	data;

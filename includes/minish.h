@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minish.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/21 20:42:10 by junghwki         ###   ########.fr       */
+/*   Updated: 2021/06/21 22:16:22 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,28 +46,29 @@
 /*
 **	double linked list
 */
-typedef struct	s_dlnode
+typedef struct	s_hisnode
 {
-	void			*data;
-	int				idx;
-	struct s_dlnode	*prev;
-	struct s_dlnode	*next;
-}				t_dlnode;
+	void				*pending;
+	void				*finished;
+	int					idx;
+	struct s_hisnode	*prev;
+	struct s_hisnode	*next;
+}				t_hisnode;
 
 typedef struct	s_dllist
 {
-	t_dlnode	*head;
-	t_dlnode	*tail;
+	t_hisnode	*head;
+	t_hisnode	*tail;
 	int			length;
 }				t_dllist;
 
-t_dlnode	*ft_dll_newnode(void	*data);
+t_hisnode	*ft_dll_newhisnode(void *pending, void *finished);
 void		ft_dll_init(t_dllist *list);
-void		ft_dll_add(t_dllist *list, void *data);
-void		ft_dll_delnode(t_dllist *list, t_dlnode *node, void (*del)(void *));
-t_dlnode	*ft_dll_find_idx(t_dllist *list, int idx);
+void		ft_dll_addhisnode(t_dllist *list, void *pending, void *finished);
+void		ft_dll_delhisnode(t_dllist *list, t_hisnode *node, void (*del)(void *, void *));
+// t_hisnode	*ft_dll_find_idx(t_dllist *list, int idx);
 void		ft_dll_viewlst(t_dllist *list);
-void		ft_dll_clear(t_dllist *list, void (*del)(void *));
+// void		ft_dll_clear(t_dllist *list, void (*del)(void *));
 
 typedef struct	s_cursor
 {
@@ -76,8 +77,7 @@ typedef struct	s_cursor
 	int		buf;
 	int		key_pos;
 	int		len;
-	char	*input_tmp;
-	t_dlnode	*cur;
+	t_hisnode	*cur;
 }				t_cursor;
 
 typedef struct	s_redir
@@ -135,8 +135,8 @@ t_archive	g_archive;
 void	cursor_init(t_cursor *cursor, t_dllist *h_list);
 
 // history
-int	find_prev_history(t_dllist *h_list, t_cursor *cursor, char **input);
-int	find_next_history(t_dllist *h_list, t_cursor *cursor, char **input);
+int		find_prev_history(t_dllist *h_list, t_cursor *cursor);
+int		find_next_history(t_dllist *h_list, t_cursor *cursor);
 /*
 ** ************ parse_utils.c*************
 */
@@ -155,7 +155,7 @@ void	signal_init(int argc, char **argv);
 */
 void	get_cursor_position(int *col, int *rows);
 void	term_init(struct termios *term, struct termios *backup);
-int		term_key_handler(t_cursor *cursor, char **input, t_dllist *h_list);
+int		term_key_handler(t_cursor *cursor, t_dllist *h_list);
 
 /*
 ** ************ parse.c *************

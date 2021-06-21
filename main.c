@@ -6,12 +6,11 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:07:54 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/16 13:51:02 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/21 16:52:41 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minish.h"
-#include <term.h>
 
 char	*realloc_input(char *ptr, size_t size)
 {
@@ -27,26 +26,31 @@ char	*realloc_input(char *ptr, size_t size)
 
 int		get_input(char **input, t_dllist *h_list)
 {
-	t_cursor		cursor;
 	struct	termios	term;
 	struct	termios	term_backup;
+	t_cursor		cursor;
+	char			*pending;
+	char			*finished;
 
-	*input = malloc(1);
-	if (input == NULL)
-		return (READ_ERR);
 	term_init(&term, &term_backup);
 	cursor_init(&cursor, h_list);
+	pending = (char *)malloc(sizeof(char));
+	*pending = 0;
+	finished = NULL;
+	ft_dll_addhisnode(h_list, pending, finished);
+	free(pending);
+	cursor.cur = h_list->tail->prev;
 	while (1)
 	{
 		cursor.buf = 0;
 		cursor.r_nbr = read(STDIN_FILENO, &cursor.buf, sizeof(cursor.buf));
-		if (!term_key_handler(&cursor, input, h_list))
+		if (!term_key_handler(&cursor, h_list))
 		{
-			cursor_init(&cursor, h_list);
+			// ft_dll_viewlst(h_list);
+			*input = h_list->tail->prev->finished;
 			tcsetattr(STDIN_FILENO, TCSANOW, &term_backup);
 			return (READ_SUC);
 		}
-		*input = realloc_input(*input, cursor.len + 1);
 	}
 	tcsetattr(STDIN_FILENO, TCSANOW, &term_backup);
 	return (READ_ERR);
@@ -67,7 +71,6 @@ int		main(int argc, char **argv, char **envv)
 			printf("Error");
 		if (parse_input(input) == ERROR)
 			parse_error_msg(SYNTAX_ERROR_MSG);
-		free(input);
 	}
 	return (0);
 }
