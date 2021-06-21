@@ -1,8 +1,8 @@
 #include "../includes/minish.h"
 
-int		ft_strcmp(const char *s1, const char *s2)
+int			ft_strcmp(const char *s1, const char *s2)
 {
-	int	idx;
+	int		idx;
 
 	idx = 0;
 	while (s1[idx] || s2[idx])
@@ -14,17 +14,17 @@ int		ft_strcmp(const char *s1, const char *s2)
 	return (0);
 }
 
-void	envv_lst_del(t_env *content)
+void		envv_lst_del(t_env *content)
 {
 	free(content->key);
 	free(content->value);
 	free(content);
 }
 
-t_list			*get_curr_envv_lst(char *key_value)
+t_list		*get_curr_envv_lst(char *key_value)
 {
-	t_list		*temp;
-	t_env		*temp_env;
+	t_list	*temp;
+	t_env	*temp_env;
 
 	temp = g_archive.envv_lst->next;
 	while (temp)

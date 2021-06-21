@@ -5,7 +5,7 @@ void		env_value_print(char *str)
 	int		idx;
 
 	idx = 0;
-	while(str[idx])
+	while (str[idx])
 	{
 		if (ft_strchr("$`\\\"", str[idx]))
 			write(1, "\\", 1);
@@ -45,25 +45,25 @@ int			env_lst_cmp(char *s1, char *s2)
 	return (-1);
 }
 
-t_env	*env_dup(t_env *content)
+t_env		*env_dup(t_env *content)
 {
 	t_env	*ret;
 
-	ret = (t_env *)malloc(sizeof(t_env));//free
-	ret->key = ft_strdup(content->key);//free
+	ret = (t_env *)malloc(sizeof(t_env)); //free
+	ret->key = ft_strdup(content->key);	  //free
 	if (content->value)
-		ret->value = ft_strdup(content->value);//free
+		ret->value = ft_strdup(content->value); //free
 	else
 		ret->value = NULL;
 	return (ret);
 }
 
-void			export_lst_sort(t_list **lst)
+void		export_lst_sort(t_list **lst)
 {
-	t_list		*temp;
-	t_env		*temp_env;
-	t_list		*next_temp;
-	t_env		*next_temp_env;
+	t_list	*temp;
+	t_env	*temp_env;
+	t_list	*next_temp;
+	t_env	*next_temp_env;
 
 	temp = (*lst)->next;
 	while (temp)
@@ -81,11 +81,11 @@ void			export_lst_sort(t_list **lst)
 	}
 }
 
-t_list			*export_lst_make()
+t_list		*export_lst_make(void)
 {
-	t_env		*content;
-	t_list		*export_head;
-	t_list		*temp;
+	t_env	*content;
+	t_list	*export_head;
+	t_list	*temp;
 
 	export_head = ft_lstnew(0);
 	temp = g_archive.envv_lst->next;
@@ -93,13 +93,13 @@ t_list			*export_lst_make()
 	while (temp)
 	{
 		content = env_dup(temp->content);
-		ft_lstadd_back(&export_head, ft_lstnew(content));//free
+		ft_lstadd_back(&export_head, ft_lstnew(content)); //free
 		temp = temp->next;
 	}
 	return (export_head);
 }
 
-void		export_lst_print()
+void		export_lst_print(void)
 {
 	t_list	*head;
 	t_list	*temp;
@@ -169,7 +169,7 @@ void		export_add(t_cmd *cmd)
 			}
 			else
 			{
-				ft_lstadd_back(&g_archive.envv_lst, ft_lstnew(content));//free
+				ft_lstadd_back(&g_archive.envv_lst, ft_lstnew(content)); //free
 			}
 		}
 		idx++;

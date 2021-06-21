@@ -10,15 +10,9 @@ int			count_pipe(t_list *list)
 	{
 		cmd = list->content;
 		if (cmd->flag)
-		{
-			cmd->pipe_nbr = ret;
 			ret++;
-		}
 		else
-		{
-			cmd->pipe_nbr = ret;
 			return (ret);
-		}
 		list = list->next;
 	}
 	write(2, "Error\n", 6);
@@ -125,7 +119,7 @@ void		builtin(t_cmd *cmd, int pipe_flag)
 	}
 }
 
-void		lets_fork(pid_t *pid, t_cmd *cmd, t_cmd *next_cmd)
+void		lets_fork(pid_t *pid, t_cmd *cmd, t_cmd *next_cmd, int idx)
 {
 	*pid = fork();
 	if (*pid < 0)
@@ -135,14 +129,12 @@ void		lets_fork(pid_t *pid, t_cmd *cmd, t_cmd *next_cmd)
 		if (cmd->flag)
 		{
 			close(next_cmd->fd[0]);
-			if (cmd->pipe_nbr != 0)
+			if (idx != 0)
 				dup2(cmd->fd[0], 0);
 			dup2(next_cmd->fd[1], 1);
 		}
 		else
-		{
 			dup2(cmd->fd[0], 0);
-		}
 		builtin(cmd, 1);
 		exit(0);
 	}
@@ -184,14 +176,14 @@ void		execute_builtin(t_list *cmd_root)
 					pipe(next_cmd->fd);
 				}
 				idx++;
-				lets_fork(&pid[idx], cmd, next_cmd);
+				lets_fork(&pid[idx], cmd, next_cmd, idx);
 				temp = temp->next;
 				cmd = temp->content;
 			}
 			if (cmd->flag == 0)
 			{
 				idx++;
-				lets_fork(&pid[idx], cmd, next_cmd);
+				lets_fork(&pid[idx], cmd, next_cmd, idx);
 				while (idx >= 0)
 				{
 					waitpid(pid[pipe_cnt - idx], &g_archive.exit_stat, 0);
@@ -201,9 +193,7 @@ void		execute_builtin(t_list *cmd_root)
 			free(pid);
 		}
 		else
-		{
 			builtin(cmd, 0);
-		}
 		temp = temp->next;
 	}
 }

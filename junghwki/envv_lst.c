@@ -15,13 +15,13 @@ t_env		*envv_sep(char *envv)
 	t_env	*ret;
 
 	idx = 0;
-	ret = (t_env *)malloc(sizeof(t_env));//free
+	ret = (t_env *)malloc(sizeof(t_env)); //free
 	while (envv[idx])
 	{
 		if (envv[idx] == '=')
 		{
-			ret->key = ft_substr(envv, 0, idx);//free
-			ret->value = ft_strdup(&envv[idx + 1]);//free
+			ret->key = ft_substr(envv, 0, idx);		//free
+			ret->value = ft_strdup(&envv[idx + 1]); //free
 			break ;
 		}
 		idx++;
@@ -45,12 +45,12 @@ void		envv_lst_make(char **envv)
 	while (envv[idx])
 	{
 		content = envv_sep(envv[idx]);
-		ft_lstadd_back(&g_archive.envv_lst, ft_lstnew(content));//free
+		ft_lstadd_back(&g_archive.envv_lst, ft_lstnew(content)); //free
 		idx++;
 	}
 }
 
-void		env_lst_print()
+void		env_lst_print(void)
 {
 	t_list	*temp;
 	t_env	*temp_env;

@@ -1,6 +1,6 @@
 #include "../includes/minish.h"
 
-int		argv_is_empty(char *s)
+int			argv_is_empty(char *s)
 {
 	if (!s)
 	{

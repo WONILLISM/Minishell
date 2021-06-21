@@ -6,7 +6,7 @@
 /*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/21 17:51:26 by junghwki         ###   ########.fr       */
+/*   Updated: 2021/06/21 20:04:52 by junghwki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,6 @@ typedef struct	s_cmd
 	int			fd[2];
 	int			rd_fd[2];
 	t_list		*rd_lst;
-	int			pipe_nbr;
 }				t_cmd;
 
 typedef struct	s_data

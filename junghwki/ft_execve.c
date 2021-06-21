@@ -1,6 +1,4 @@
 #include "../includes/minish.h"
-#define READ 0
-#define WRITE 1
 
 char		**make_envp(void)
 {
