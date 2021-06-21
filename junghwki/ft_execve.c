@@ -79,15 +79,14 @@ void		child_process(t_cmd *cmd, char **envp)
 	exit(0);
 }
 
-int			other_command(t_cmd *cmd, char **envp)
+void		other_command(t_cmd *cmd, char **envp)
 {
 	pid_t	pid;
 
 	pid = fork();
 	if (pid < 0)
 	{
-		write(1, "fork Error\n", 11);
-		return (-1);
+		write(2, "Error\n", 6);
 	}
 	else if (pid == 0)
 	{
@@ -97,5 +96,4 @@ int			other_command(t_cmd *cmd, char **envp)
 	{
 		waitpid(pid, &g_archive.exit_stat, 0);
 	}
-	return (0);
 }
