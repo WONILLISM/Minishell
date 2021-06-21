@@ -53,45 +53,37 @@ int		set_printable_key(t_dllist *h_list, t_cursor *cursor)
 	input_term(cursor->buf);
 	pending = cursor->cur->pending;
 	finished = cursor->cur->finished;
+	if (pending == NULL && finished)
+	{
+		cursor->cur->pending = ft_strdup(cursor->cur->finished);
+		cursor->cur->pending = realloc(cursor->cur->pending, cursor->len + 1);
+		pending = cursor->cur->pending;
+	}
 	if (cursor->buf == '\n')
 	{
-		if (finished == NULL && pending != NULL)
+		if (pending && finished)
+		{
+			ft_dll_addhisnode(h_list, pending, finished);
+			free(cursor->cur->pending);
+			cursor->cur->pending = NULL;
+		}
+		else if (finished == NULL && *pending != 0)
 		{
 			finished = ft_strdup(cursor->cur->pending);
+			pending = NULL;
 			ft_dll_delhisnode(h_list, cursor->cur, ft_freehistory);
 			ft_dll_addhisnode(h_list, pending, finished);
 			free(finished);
-			cursor->cur = h_list->tail->prev;
 		}
-		else if (finished != NULL && pending != NULL)
-		{
-			pending = 0;
-			finished = ft_strdup(cursor->cur->pending);
-			free(cursor->cur->pending);
-			cursor->cur->pending = NULL;
-			ft_dll_addhisnode(h_list, pending, finished);
-			free(finished);
-		}
+		else if (finished == NULL && *pending == 0)
+			ft_dll_delhisnode(h_list, cursor->cur, ft_freehistory);
+		cursor->cur = h_list->tail;
 		return (0);
 	}
 	pending[cursor->key_pos] = cursor->buf;
 	cursor->key_pos++;
 	cursor->len++;
-	cursor->cur->pending = realloc_input(pending, cursor->len + 1);
-	// (void)input;
-	// char	*tmp;
-
-	// tmp = cursor->cur->data;
-	// input_term(cursor->buf);
-	// if (cursor->buf == '\n')
-	// {
-	// 	tmp[cursor->key_pos] = 0;
-	// 	return (1);
-	// }
-	// tmp[cursor->key_pos] = cursor->buf;
-	// (cursor->key_pos)++;
-	// (cursor->len)++;
-	// cursor->cur->data = realloc_input(cursor->cur->data, cursor->len + 1);
+	cursor->cur->pending = realloc_input(cursor->cur->pending, cursor->len + 1);
 	return (1);
 }
 
@@ -103,16 +95,10 @@ int		term_key_handler(t_cursor *cursor, t_dllist *h_list)
 	// else
 	if (cursor->buf == KEY_UP)
 		return find_prev_history(h_list, cursor);
-	// else if (cursor->buf == KEY_DOWN)
-	// 	return find_next_history(h_list, cursor);
+	else if (cursor->buf == KEY_DOWN)
+		return find_next_history(h_list, cursor);
 	else if (ft_isprint(cursor->buf) || cursor->buf == '\n')
 	{
-		if (cursor->cur->idx == -1)
-		{
-			ft_dll_addhisnode(h_list, NULL, NULL);
-			cursor->cur = h_list->tail->prev;
-			printf("%d\n", cursor->cur->idx);
-		}
 		return set_printable_key(h_list, cursor);
 	}
 	else if (cursor->buf == CTRL_D)
