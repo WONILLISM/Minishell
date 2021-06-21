@@ -1,5 +1,5 @@
 # output
-NAME =		minish
+NAME =		minishell
 
 AR =		ar rcs
 RM =		rm -f
