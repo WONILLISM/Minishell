@@ -99,7 +99,8 @@ int		parse_get_data(char *input, t_data *data, t_list *cmd_root)
 		parse_get_data2(input, data);
 	return (0);
 }
-
+// ; 만왔을 때 에러처리
+// " 따옴표 안닫혔을 때 에러처리
 int		parse_input(char *input)
 {
 	t_data	data;

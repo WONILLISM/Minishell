@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:07:54 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/21 16:50:03 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/21 16:52:41 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,8 @@ int		main(int argc, char **argv, char **envv)
 		write(1, "minish $> ", 10);
 		if (get_input(&input, &history_lst) == READ_ERR)
 			printf("Error");
-		// if (parse_input(input) == ERROR)
-		// 	parse_error_msg(SYNTAX_ERROR_MSG);
-		// // free(input);
+		if (parse_input(input) == ERROR)
+			parse_error_msg(SYNTAX_ERROR_MSG);
 	}
 	return (0);
 }
