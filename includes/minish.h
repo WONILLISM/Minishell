@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/21 22:16:22 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/21 22:20:53 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@
 # define STDERR				2
 # define READ_ERR			-1
 # define READ_SUC			0
-# define SYNTAX_ERROR_MSG	"Syntax Error"
+# define SYNTAX_ERROR_MSG	"bash: syntax error near unexpected token"
 
 /*
 **	double linked list

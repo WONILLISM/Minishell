@@ -125,6 +125,7 @@ int		parse_input(char *input)
 			g_archive.parse_error = lst_add_cmd(&data, cmd_root, 0);
 		if (data.rd->sign)
 			g_archive.parse_error = lst_add_cmd(&data, cmd_root, 2);
+		printf("%d\n", data.rd->sign);
 		if (parse_error_check(&data) == ERROR)
 			return (ERROR);
 		else

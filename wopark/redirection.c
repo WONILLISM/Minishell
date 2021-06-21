@@ -27,6 +27,11 @@ void	update_redir(t_data *data)
 	int		i;
 
 	i = 0;
+	if (data->rd->sign && data->rd_buf[0] == 0)
+	{
+		g_archive.parse_error = ERROR;
+		return ;
+	}
 	data->rd->file_name = ft_strtrim(data->rd_buf, " ");
 	while (data->rd->file_name[i])
 	{
