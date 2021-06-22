@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/21 22:20:53 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/22 16:29:32 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,7 @@ int		find_next_history(t_dllist *h_list, t_cursor *cursor);
 */
 void	chk_space_flag(char **strs);
 int		chk_var_name(t_data *data, char *input);
-int		lst_add_cmd(t_data *data, t_list *cmd_root, int flag);
+int		lst_add_cmd(t_data *data, t_list *cmd_root, char *input, int flag);
 
 int		parse_error_check(t_data *data);
 int		parse_error_msg(char *msg);

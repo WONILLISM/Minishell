@@ -88,20 +88,47 @@ void	update_data(t_data *data, t_list *cmd_root)
 	data->buf = ft_calloc(data->buf_size, sizeof(char));
 }
 
-int		lst_add_cmd(t_data *data, t_list *cmd_root, int flag)
+
+int		clensing_data_buf(t_data *data, char *input, int flag)
 {
 	char	*tmp;
 
-	if (flag == 2 || data->rd->sign)
-		update_redir(data);
+	(void)input;
 	tmp = ft_strltrim(data->buf, " ");
 	free(data->buf);
 	data->buf = tmp;
 	data->cmd->argv = ft_split(data->buf, ' ');
 	chk_space_flag(data->cmd->argv);
 	data->cmd->flag = flag;
+	// printf("%c\n",input[data->input_idx]);
+	return (0);
+}
+
+t_list	*ft_lstcmdnew(t_cmd *content)
+{
+	t_list	*node;
+
+	if (!(node = (t_list *)malloc(sizeof(t_list))))
+		return (0);
+	node->content = content;
+	node->next = NULL;
+	return (node);
+}
+
+int		lst_add_cmd(t_data *data, t_list *cmd_root, char *input, int flag)
+{
+	// char	*tmp;
+
+	if (flag == 2 || data->rd->sign)
+		update_redir(data);
+	clensing_data_buf(data, input, flag);
+	// tmp = ft_strltrim(data->buf, " ");
+	// free(data->buf);
+	// data->buf = tmp;
+	// data->cmd->argv = ft_split(data->buf, ' ');
+	// chk_space_flag(data->cmd->argv);
+	// data->cmd->flag = flag;
 	ft_lstadd_back(&cmd_root, ft_lstnew(data->cmd));
-	// free(data->cmd);
 	init_cmd(data);
 	update_data(data, cmd_root);
 	return (SUCCESS);

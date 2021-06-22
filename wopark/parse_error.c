@@ -2,17 +2,17 @@
 
 int		parse_error_check(t_data *data)
 {
-	t_cmd	*tmp;
+	// t_cmd	*tmp;
 
-	tmp = data->last_node->content;
-	if (!tmp)
-		return (SUCCESS);
+	// tmp = data->last_node->content;
+	// if (!tmp)
+	// 	return (SUCCESS);
 	if (data->rd->sign)
 		return (ERROR);
-	if (data->cmd->quote != 0)
-		return (ERROR);
-	if (tmp->flag == 1)
-		return (ERROR);
+	// if (data->cmd->quote != 0)
+	// 	return (ERROR);
+	// if (tmp->flag == 1)
+	// 	return (ERROR);
 	if (g_archive.parse_error == ERROR)
 		return (ERROR);
 	return (SUCCESS);

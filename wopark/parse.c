@@ -26,8 +26,6 @@ void	init_cmd(t_data *data)
 	init_redir(data);
 }
 
-// $
-// 찾지 못한 변수는 NULL 처리
 int		parse_envv_handler(t_data *data, char *input)
 {
 	t_list	*envlst;
@@ -88,15 +86,67 @@ int		parse_get_data(char *input, t_data *data, t_list *cmd_root)
 	else if (data->cmd->quote == 0 && input[data->input_idx] == '\'')
 		data->cmd->quote = input[data->input_idx];
 	else if (data->cmd->quote == 0 && input[data->input_idx] == ';')
-		return (lst_add_cmd(data, cmd_root, 0));
+		return (lst_add_cmd(data, cmd_root, input, 0));
 	else if (data->cmd->quote == 0 && input[data->input_idx] == '|')
-		return (lst_add_cmd(data, cmd_root, 1));
+		return (lst_add_cmd(data, cmd_root, input, 1));
 	else if (data->cmd->quote != '\'' && input[data->input_idx] == '$')
 		return parse_envv_handler(data, input);
 	else if (data->cmd->quote == 0 && ft_strchr("><", input[data->input_idx]))
 		chk_redir_sign(input, data);
 	else
 		parse_get_data2(input, data);
+	return (0);
+}
+
+int		free_rdlst(t_list *rd_lst)
+{
+	t_list	*tmp;
+	t_redir	*rd;
+
+	tmp = rd_lst->next;
+	while (tmp)
+	{
+		rd = rd_lst->content;
+		free(rd->file_name);
+		tmp = tmp->next;
+	}
+	return (0);
+}
+
+int		free_cmd(t_cmd *cmd)
+{
+	int		i;
+
+	i = 0;
+	if (cmd->argv)
+	{
+		while (cmd->argv[i])
+			free(cmd->argv[i++]);
+	}
+	free(cmd->argv);
+	free_rdlst(cmd->rd_lst);
+	free(cmd->rd_lst);
+	return (0);
+}
+
+int		free_data(t_data *data, t_list *cmd_root)
+{
+	t_list	*cmdlst;
+
+	free(data->buf);
+	free_cmd(data->cmd);
+	free(data->rd->file_name);
+	free(data->rd);
+	free(data->rd_buf);
+
+	cmdlst = cmd_root->next;
+	while (cmdlst)
+	{
+		free_cmd(cmdlst->content);
+		cmdlst = cmdlst->next;
+	}
+	free(cmd_root);
+	// free(cmdlst);
 	return (0);
 }
 // ; 만왔을 때 에러처리
@@ -122,16 +172,17 @@ int		parse_input(char *input)
 		}
 		free(input_tmp);
 		if (*(data.buf))
-			g_archive.parse_error = lst_add_cmd(&data, cmd_root, 0);
+			g_archive.parse_error = lst_add_cmd(&data, cmd_root, input, 0);
 		if (data.rd->sign)
-			g_archive.parse_error = lst_add_cmd(&data, cmd_root, 2);
-		printf("%d\n", data.rd->sign);
+			g_archive.parse_error = lst_add_cmd(&data, cmd_root, input, 2);
 		if (parse_error_check(&data) == ERROR)
 			return (ERROR);
-		else
-			execute_builtin(cmd_root);
+		// else
+		// 	execute_builtin(cmd_root);
+
 		// t_list	*tcmdl;
 
+		free_data(&data, cmd_root);
 		// tcmdl = cmd_root->next;
 		// while (tcmdl)
 		// {
