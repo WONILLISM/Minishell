@@ -6,7 +6,6 @@ t_list		*get_prev_envv_lst(char *key_value)
 	t_list	*temp;
 	t_env	*temp_env;
 
-	// temp = g_envv_lst->next;
 	temp = g_archive.envv_lst->next;
 	ret = g_archive.envv_lst;
 	while (temp)
@@ -31,12 +30,22 @@ void		ft_unset(t_cmd *cmd)
 	del = envv_lst_del;
 	while (cmd->argv[idx])
 	{
-		temp = get_prev_envv_lst(cmd->argv[idx]);
-		if (temp)
+		if (env_key_check(cmd->argv[idx]) < 0)
 		{
-			del_lst = temp->next;
-			temp->next = del_lst->next;
-			ft_lstdelone(del_lst, del);
+			write(2, "minish: unset: `", 16);
+			write(2, cmd->argv[idx], ft_strlen(cmd->argv[idx]));
+			write(2, "': not a valid identifier\n", 26);
+			g_archive.exit_stat = 1;
+		}
+		else
+		{
+			temp = get_prev_envv_lst(cmd->argv[idx]);
+			if (temp)
+			{
+				del_lst = temp->next;
+				temp->next = del_lst->next;
+				ft_lstdelone(del_lst, del);
+			}
 		}
 		idx++;
 	}

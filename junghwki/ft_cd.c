@@ -11,10 +11,10 @@ void		ft_cd(t_cmd *cmd)
 	if (ret_value < 0)
 	{
 		g_archive.exit_stat = 1;
-		write(1, "minish: cd: ", 12);
+		write(2, "minish: cd: ", 12);
 		if (cmd->argv[1])
-			write(1, cmd->argv[1], ft_strlen(cmd->argv[1]));
-		write(1, ": No such file or directory\n", 28);
+			write(2, cmd->argv[1], ft_strlen(cmd->argv[1]));
+		write(2, ": No such file or directory\n", 28);
 	}
 	else
 	{

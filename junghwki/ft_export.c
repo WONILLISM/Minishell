@@ -19,7 +19,7 @@ int			env_key_check(char *key)
 	int		idx;
 
 	idx = 0;
-	if (ft_isdigit(key[idx]))
+	if (!key[idx] || ft_isdigit(key[idx]))
 		return (-1);
 	while (key[idx])
 	{
@@ -89,7 +89,6 @@ t_list		*export_lst_make(void)
 
 	export_head = ft_lstnew(0);
 	temp = g_archive.envv_lst->next;
-	// temp = g_envv_lst->next;
 	while (temp)
 	{
 		content = env_dup(temp->content);
@@ -156,21 +155,23 @@ void		export_add(t_cmd *cmd)
 		content = envv_sep(cmd->argv[idx]);
 		if (env_key_check(content->key) < 0)
 		{
-			write(1, "export: `", 9);
-			write(1, content->key, ft_strlen(content->key));
-			write(1, "': not a valid identifier\n", 26);
+			write(2, "minish: export: `", 17);
+			write(2, content->key, ft_strlen(content->key));
+			if (content->value)
+			{
+				write(2, "=", 1);
+				write(2, content->value, ft_strlen(content->value));
+			}
+			write(2, "': not a valid identifier\n", 26);
+			g_archive.exit_stat = 1;
 		}
 		else
 		{
 			temp = get_curr_envv_lst(content->key);
 			if (temp)
-			{
 				temp->content = content;
-			}
 			else
-			{
 				ft_lstadd_back(&g_archive.envv_lst, ft_lstnew(content)); //free
-			}
 		}
 		idx++;
 	}
