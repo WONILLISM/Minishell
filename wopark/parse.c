@@ -109,7 +109,7 @@ int		parse_input(char *input)
 
 	g_archive.parse_error = 1;
 	g_archive.buf = data.buf;
-	if (*input)
+	if (input)
 	{
 		input_tmp = ft_strltrim(input, " ");
 		init_data(&data, &cmd_root, ft_strlen(input));
@@ -125,11 +125,10 @@ int		parse_input(char *input)
 			g_archive.parse_error = lst_add_cmd(&data, cmd_root, 0);
 		if (data.rd->sign)
 			g_archive.parse_error = lst_add_cmd(&data, cmd_root, 2);
-		printf("%d\n", data.rd->sign);
 		if (parse_error_check(&data) == ERROR)
 			return (ERROR);
 		else
-			execute_builtin(cmd_root);
+			execute_cmd(cmd_root);
 		// t_list	*tcmdl;
 
 		// tcmdl = cmd_root->next;
