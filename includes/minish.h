@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/22 16:29:32 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/23 21:24:27 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,6 @@ typedef struct	s_data
 	int			input_idx;
 	int			buf_idx;
 	int			rd_buf_idx;
-	int			cmd_idx;
 }				t_data;
 
 typedef struct	s_archive
@@ -160,6 +159,7 @@ int		term_key_handler(t_cursor *cursor, t_dllist *h_list);
 /*
 ** ************ parse.c *************
 */
+void	parse_init(t_data *data, t_list *cmd_root, int input_size);
 int		parse_input(char *input);
 
 void	chk_redir_sign(char *input, t_data *data);
@@ -167,6 +167,7 @@ void	init_redir(t_data *data);
 void	update_redir(t_data *data);
 void	init_cmd(t_data *data);
 void	init_data(t_data *data, t_list **cmd_root, int input_size);
+void	init_redir(t_data *data);
 void	redir_list_view(t_list *lst);
 char	*realloc_input(char *ptr, size_t size);
 

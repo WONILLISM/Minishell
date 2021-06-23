@@ -14,14 +14,6 @@ void	redir_list_view(t_list *lst)
 	}
 }
 
-void	init_redir(t_data *data)
-{
-	data->rd = (t_redir *)malloc(sizeof(t_redir));
-	data->rd->file_name = 0;
-	data->rd->sign = 0;
-	data->rd_buf_idx = 0;
-}
-
 void	update_redir(t_data *data)
 {
 	int		i;
@@ -70,10 +62,16 @@ void	chk_redir_sign(char *input, t_data *data)
 	{
 		if (data->rd->sign == 0)
 			data->rd->sign--;
-		else if (data->rd->sign == -1 && *data->rd_buf)
-			update_redir(data);
 		else if ((data->rd->sign == 2 || data->rd->sign == 1) && *data->rd_buf)
+		{
 			update_redir(data);
+			data->input_idx--;
+		}
+		else if (data->rd->sign == -1 && *data->rd_buf)
+		{
+			update_redir(data);
+			data->input_idx--;
+		}
 		else
 			printf("ERROR\n");
 	}

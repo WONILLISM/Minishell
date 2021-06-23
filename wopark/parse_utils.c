@@ -52,32 +52,6 @@ int		chk_var_name(t_data *data, char *input)
 	return (ret);
 }
 
-void	view_cmd_list(t_list *lst)
-{
-	t_list	*tmp;
-
-	tmp = lst->next;
-	while (tmp)
-	{
-		t_cmd	*tmpc = tmp->content;
-		printf("%s\n", tmpc->argv[0]);
-		tmp = tmp->next;
-	}
-}
-
-void	view_rd_list(t_list *lst)
-{
-	t_list	*tmp;
-
-	tmp = lst->next;
-	while (tmp)
-	{
-		t_redir	*tmpr = tmp->content;
-		printf("%s\n", tmpr->file_name);
-		tmp = tmp->next;
-	}
-}
-
 void	update_data(t_data *data, t_list *cmd_root)
 {
 	data->last_node = ft_lstlast(cmd_root);
@@ -89,30 +63,17 @@ void	update_data(t_data *data, t_list *cmd_root)
 }
 
 
-int		clensing_data_buf(t_data *data, char *input, int flag)
+int		clensing_data_buf(t_data *data, int flag)
 {
 	char	*tmp;
 
-	(void)input;
 	tmp = ft_strltrim(data->buf, " ");
 	free(data->buf);
 	data->buf = tmp;
 	data->cmd->argv = ft_split(data->buf, ' ');
 	chk_space_flag(data->cmd->argv);
 	data->cmd->flag = flag;
-	// printf("%c\n",input[data->input_idx]);
 	return (0);
-}
-
-t_list	*ft_lstcmdnew(t_cmd *content)
-{
-	t_list	*node;
-
-	if (!(node = (t_list *)malloc(sizeof(t_list))))
-		return (0);
-	node->content = content;
-	node->next = NULL;
-	return (node);
 }
 
 int		lst_add_cmd(t_data *data, t_list *cmd_root, char *input, int flag)
@@ -121,7 +82,7 @@ int		lst_add_cmd(t_data *data, t_list *cmd_root, char *input, int flag)
 
 	if (flag == 2 || data->rd->sign)
 		update_redir(data);
-	clensing_data_buf(data, input, flag);
+	clensing_data_buf(data, flag);
 	// tmp = ft_strltrim(data->buf, " ");
 	// free(data->buf);
 	// data->buf = tmp;
@@ -132,5 +93,12 @@ int		lst_add_cmd(t_data *data, t_list *cmd_root, char *input, int flag)
 	init_cmd(data);
 	update_data(data, cmd_root);
 	return (SUCCESS);
+}
+
+int		push_cmd(t_data *data, t_list *cmd_root, char *input, int flag)
+{
+	clensing_data_buf(data, flag);
+	ft_lstadd_back(&cmd_root, ft_lstnew(data->cmd));
+
 }
 

@@ -1,31 +1,5 @@
 #include "../includes/minish.h"
 
-void	init_data(t_data *data, t_list **cmd_root, int input_size)
-{
-	*cmd_root = ft_lstnew(NULL);
-	data->buf_idx = 0;
-	data->cmd_idx = 0;
-	data->rd_buf_idx = 0;
-	data->input_idx = -1;
-	data->buf_size = input_size + 1;
-	data->buf = ft_calloc(data->buf_size, sizeof(char));
-	data->rd_buf = ft_calloc(data->buf_size, sizeof(char));
-	data->last_node = ft_lstlast(*cmd_root);
-	data->last_node->next = NULL;
-}
-
-void	init_cmd(t_data *data)
-{
-	data->cmd = (t_cmd *)malloc(sizeof(t_cmd));
-	data->cmd->argv = 0;
-	data->cmd->flag = 0;
-	data->cmd->quote = 0;
-	data->cmd->fd[0] = 0;
-	data->cmd->fd[1] = 0;
-	data->cmd->rd_lst = ft_lstnew(NULL);
-	init_redir(data);
-}
-
 int		parse_envv_handler(t_data *data, char *input)
 {
 	t_list	*envlst;
@@ -159,11 +133,10 @@ int		parse_input(char *input)
 
 	g_archive.parse_error = 1;
 	g_archive.buf = data.buf;
-	if (*input)
+	if (input)
 	{
 		input_tmp = ft_strltrim(input, " ");
-		init_data(&data, &cmd_root, ft_strlen(input));
-		init_cmd(&data);
+		parse_init(&data, cmd_root, ft_strlen(input));
 		while (input_tmp[++data.input_idx])
 		{
 			g_archive.parse_error = parse_get_data(input_tmp, &data, cmd_root);
@@ -173,6 +146,7 @@ int		parse_input(char *input)
 		free(input_tmp);
 		if (*(data.buf))
 			g_archive.parse_error = lst_add_cmd(&data, cmd_root, input, 0);
+		// system("leaks minishell");
 		if (data.rd->sign)
 			g_archive.parse_error = lst_add_cmd(&data, cmd_root, input, 2);
 		if (parse_error_check(&data) == ERROR)
