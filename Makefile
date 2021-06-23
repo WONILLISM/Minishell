@@ -6,8 +6,8 @@ RM =		rm -f
 
 # compile option
 CC =		gcc
-# CFLAGS =	-Wall -Wextra -Werror -fsanitize=address -g
-CFLAGS =	-Wall -Wextra -Werror
+CFLAGS =	-Wall -Wextra -Werror -fsanitize=address -g
+# CFLAGS =	-Wall -Wextra -Werror
 
 # library
 LIBFT_DIR =	./includes/libft/
@@ -42,7 +42,8 @@ JUNGHWKI_SRCS = \
 			ft_pwd.c \
 			ft_unset.c \
 			ft_execve.c \
-			utils.c
+			utils.c	\
+			ft_exit.c
 
 MANDATORY =	\
 			$(addprefix $(MAIN_DIR), $(MAIN_SRCS)) \

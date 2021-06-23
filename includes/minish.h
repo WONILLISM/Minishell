@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minish.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
+/*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/21 22:20:53 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/23 21:01:43 by junghwki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,7 +187,7 @@ t_list			*get_prev_envv_lst(char *key_value);
 t_env			*envv_sep(char *envv);
 /*				utils			*/
 void			envv_lst_del(t_env *content);
-void			execute_builtin(t_list *cmd_root);
+void			execute_cmd(t_list *cmd_root);
 void			export_lst_print();
 void			export_add(t_cmd *cmd);
 void			env_lst_print();
@@ -196,4 +196,6 @@ void			other_command(t_cmd *cmd, char **envp);
 void			free_array(char **array);
 void			child_process(t_cmd *cmd, char **envp);
 char			**make_envp(void);
+int			env_key_check(char *key);
+void		ft_exit(t_cmd *cmd);
 #endif
