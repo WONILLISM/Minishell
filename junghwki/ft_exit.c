@@ -18,16 +18,19 @@ void		ft_exit(t_cmd *cmd)
 	}
 	if (cmd->argv[2])
 		write(2, "minish: exit: too many arguments\n", 33);
-	while (cmd->argv[1][idx])
+	else
 	{
-		if (!ft_isdigit(cmd->argv[1][idx]))
+		while (cmd->argv[1][idx])
 		{
-			write(2, "minish: exit: abc: numeric argument required\n", 45);
-			g_archive.exit_stat = 255;
-			exit(g_archive.exit_stat);
+			if (!ft_isdigit(cmd->argv[1][idx]))
+			{
+				write(2, "minish: exit: abc: numeric argument required\n", 45);
+				g_archive.exit_stat = 255;
+				exit(g_archive.exit_stat);
+			}
+			idx++;
 		}
-		idx++;
+		g_archive.exit_stat = ft_atoi(cmd->argv[1]);
+		exit(g_archive.exit_stat);
 	}
-	g_archive.exit_stat = ft_atoi(cmd->argv[1]);
-	exit(g_archive.exit_stat);
 }
