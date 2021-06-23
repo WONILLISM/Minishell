@@ -1,5 +1,50 @@
 #include "../includes/minish.h"
 
+void		print_cmd(t_cmd *cmd)
+{
+	int		idx;
+	t_list	*rd_lst;
+	t_redir	*rd;
+
+	idx = 0;
+	write(2, "+========================+\n\n", 28);
+	while (cmd->argv[idx])
+	{
+		write(2, "     argv[", 10);
+		write(2, ft_itoa(idx), ft_strlen(ft_itoa(idx)));
+		write(2, "]   : ", 6);
+		write(2, cmd->argv[idx], ft_strlen(cmd->argv[idx]));
+		write(2, "\n", 1);
+		idx++;
+	}
+	write(2, "     flag   ", 12);
+	write(2, "   : ", 5);
+	write(2, ft_itoa(cmd->flag), ft_strlen(ft_itoa(cmd->flag)));
+	write(2, "\n\n", 2);
+	if (cmd->rd_lst)
+	{
+		rd_lst = cmd->rd_lst->next;
+		idx = 0;
+		while (rd_lst)
+		{
+			rd = rd_lst->content;
+			write(2, "     rd[", 8);
+			write(2, ft_itoa(idx), ft_strlen(ft_itoa(idx)));
+			write(2, "]sign : ", 8);
+			write(2, ft_itoa(rd->sign), ft_strlen(ft_itoa(rd->sign)));
+			write(2, "\n", 1);
+			write(2, "     rd[", 8);
+			write(2, ft_itoa(idx), ft_strlen(ft_itoa(idx)));
+			write(2, "]name : ", 8);
+			write(2, rd->file_name, ft_strlen(rd->file_name));
+			write(2, "\n\n", 2);
+			idx++;
+			rd_lst = rd_lst->next;
+		}
+	}
+	write(2, "+========================+\n\n", 28);
+}
+
 int			count_pipe(t_list *list)
 {
 	t_cmd	*cmd;
@@ -39,7 +84,7 @@ void		ft_execve(t_cmd *cmd, int pipe_flag)
 	else if (ft_strcmp(cmd->argv[0], "env") == 0)
 		env_lst_print();
 	else if (ft_strcmp(cmd->argv[0], "exit") == 0)
-		exit(0);
+		ft_exit(cmd);
 	else
 	{
 		envp = make_envp();
@@ -69,21 +114,21 @@ void		redirection(t_cmd *cmd)
 			cmd->rd_fd[0] = open(rd->file_name, O_RDONLY, 0644);
 			if (cmd->rd_fd[0] < 0)
 			{
-				write(2, "Error\n", 6);
-				return ;
+				g_archive.exit_stat = 1;
+				write(2, "minish: ", 8);
+				write(2, rd->file_name, ft_strlen(rd->file_name));
+				write(2, ": No such file or directory\n", 28);
+				break ;
 			}
 		}
-		else if (rd->sign == 1)
+		else if (rd->sign == 1 || rd->sign == 2)
 		{
 			if (cmd->rd_fd[1] > 0)
 				close(cmd->rd_fd[1]);
-			cmd->rd_fd[1] = open(rd->file_name, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-		}
-		else if (rd->sign == 2)
-		{
-			if (cmd->rd_fd[1] > 0)
-				close(cmd->rd_fd[1]);
-			cmd->rd_fd[1] = open(rd->file_name, O_CREAT | O_WRONLY | O_APPEND, 0644);
+			if (rd->sign == 1)
+				cmd->rd_fd[1] = open(rd->file_name, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+			else
+				cmd->rd_fd[1] = open(rd->file_name, O_CREAT | O_WRONLY | O_APPEND, 0644);
 		}
 		rd_lst = rd_lst->next;
 	}
@@ -108,7 +153,7 @@ void		builtin(t_cmd *cmd, int pipe_flag)
 			dup2(cmd->rd_fd[1], 1);
 		}
 	}
-	if (*(cmd->argv))
+	if (*(cmd->argv) && cmd->rd_fd[0] >= 0)
 		ft_execve(cmd, pipe_flag);
 	if (cmd->rd_lst)
 	{
@@ -117,13 +162,14 @@ void		builtin(t_cmd *cmd, int pipe_flag)
 		if (cmd->rd_fd[0])
 			dup2(temp_fd[0], 0);
 	}
+	g_archive.exit_stat = 0;
 }
 
 void		lets_fork(pid_t *pid, t_cmd *cmd, t_cmd *next_cmd, int idx)
 {
 	*pid = fork();
 	if (*pid < 0)
-		write(2, "Error\n", 6);
+		write(2, "\n", 6);
 	else if (*pid == 0)
 	{
 		if (cmd->flag == 1)
@@ -145,7 +191,7 @@ void		lets_fork(pid_t *pid, t_cmd *cmd, t_cmd *next_cmd, int idx)
 	}
 }
 
-void		execute_builtin(t_list *cmd_root)
+void		execute_cmd(t_list *cmd_root)
 {
 	t_list	*temp;
 	t_cmd	*cmd;
@@ -159,6 +205,7 @@ void		execute_builtin(t_list *cmd_root)
 	while (temp)
 	{
 		cmd = temp->content;
+		print_cmd(cmd);//////////////////////////////////////////test
 		if (cmd->flag == 1)
 		{
 			pipe_cnt = count_pipe(temp);
@@ -179,6 +226,7 @@ void		execute_builtin(t_list *cmd_root)
 				lets_fork(&pid[idx], cmd, next_cmd, idx);
 				temp = temp->next;
 				cmd = temp->content;
+				print_cmd(cmd);//////////////////////////////////////////test
 			}
 			if (cmd->flag == 0)
 			{
