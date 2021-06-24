@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/23 21:24:27 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/24 16:30:13 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,10 +105,10 @@ typedef struct	s_cmd
 typedef struct	s_data
 {
 	t_list		*last_node;
-	t_cmd		*cmd;
-	t_redir		*rd;
 	char		*buf;
 	char		*rd_buf;
+	t_cmd		cmd;
+	t_redir		rd;
 	int			buf_size;
 	int			input_idx;
 	int			buf_idx;
@@ -159,7 +159,7 @@ int		term_key_handler(t_cursor *cursor, t_dllist *h_list);
 /*
 ** ************ parse.c *************
 */
-void	parse_init(t_data *data, t_list *cmd_root, int input_size);
+void	parse_init(t_data *data, t_list **cmd_root, int input_size);
 int		parse_input(char *input);
 
 void	chk_redir_sign(char *input, t_data *data);

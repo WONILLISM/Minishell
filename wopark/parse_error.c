@@ -7,7 +7,7 @@ int		parse_error_check(t_data *data)
 	// tmp = data->last_node->content;
 	// if (!tmp)
 	// 	return (SUCCESS);
-	if (data->rd->sign)
+	if (data->rd.sign)
 		return (ERROR);
 	// if (data->cmd->quote != 0)
 	// 	return (ERROR);

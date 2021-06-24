@@ -32,18 +32,18 @@ int		parse_envv_handler(t_data *data, char *input)
 
 void	parse_get_data2(char *input, t_data *data)
 {
-	if (data->cmd->quote && input[data->input_idx] == ' ')
+	if (data->cmd.quote && input[data->input_idx] == ' ')
 		input[data->input_idx] = -1;
-	if (data->cmd->quote != '\'' && input[data->input_idx] == '\\' && input[data->input_idx + 1])
+	if (data->cmd.quote != '\'' && input[data->input_idx] == '\\' && input[data->input_idx + 1])
 	{
-		if (data->cmd->quote == '\"' && ft_strchr("$`\"\\", input[data->input_idx + 1]))
+		if (data->cmd.quote == '\"' && ft_strchr("$`\"\\", input[data->input_idx + 1]))
 			data->input_idx++;
-		if (data->cmd->quote == 0)
+		if (data->cmd.quote == 0)
 			data->input_idx++;
 		if (input[data->input_idx] == ' ')
 			input[data->input_idx] = -1;
 	}
-	if (data->rd->sign && input[data->input_idx] != ' ')
+	if (data->rd.sign && input[data->input_idx] != ' ')
 		data->rd_buf[data->rd_buf_idx++] = input[data->input_idx];
 	else
 		data->buf[data->buf_idx++] = input[data->input_idx];
@@ -51,78 +51,113 @@ void	parse_get_data2(char *input, t_data *data)
 
 int		parse_get_data(char *input, t_data *data, t_list *cmd_root)
 {
-	if (data->cmd->quote == input[data->input_idx])
-		data->cmd->quote = 0;
-	else if (data->cmd->quote == 0 && *data->rd_buf && input[data->input_idx] == ' ')
+	if (data->cmd.quote == input[data->input_idx])
+		data->cmd.quote = 0;
+	else if (data->cmd.quote == 0 && *data->rd_buf && input[data->input_idx] == ' ')
 		update_redir(data);
-	else if (data->cmd->quote == 0 && input[data->input_idx] == '\"')
-		data->cmd->quote = input[data->input_idx];
-	else if (data->cmd->quote == 0 && input[data->input_idx] == '\'')
-		data->cmd->quote = input[data->input_idx];
-	else if (data->cmd->quote == 0 && input[data->input_idx] == ';')
+	else if (data->cmd.quote == 0 && input[data->input_idx] == '\"')
+		data->cmd.quote = input[data->input_idx];
+	else if (data->cmd.quote == 0 && input[data->input_idx] == '\'')
+		data->cmd.quote = input[data->input_idx];
+	else if (data->cmd.quote == 0 && input[data->input_idx] == ';')
 		return (lst_add_cmd(data, cmd_root, input, 0));
-	else if (data->cmd->quote == 0 && input[data->input_idx] == '|')
+	else if (data->cmd.quote == 0 && input[data->input_idx] == '|')
 		return (lst_add_cmd(data, cmd_root, input, 1));
-	else if (data->cmd->quote != '\'' && input[data->input_idx] == '$')
+	else if (data->cmd.quote != '\'' && input[data->input_idx] == '$')
 		return parse_envv_handler(data, input);
-	else if (data->cmd->quote == 0 && ft_strchr("><", input[data->input_idx]))
+	else if (data->cmd.quote == 0 && ft_strchr("><", input[data->input_idx]))
 		chk_redir_sign(input, data);
 	else
 		parse_get_data2(input, data);
 	return (0);
 }
 
-int		free_rdlst(t_list *rd_lst)
+// int		free_rdlst(t_list *rd_lst)
+// {
+// 	t_list	*tmp;
+// 	t_redir	*rd;
+
+// 	tmp = rd_lst->next;
+// 	while (tmp)
+// 	{
+// 		rd = rd_lst->content;
+// 		free(rd->file_name);
+// 		tmp = tmp->next;
+// 	}
+// 	return (0);
+// }
+
+// int		free_cmd(t_cmd *cmd)
+// {
+// 	int		i;
+
+// 	i = 0;
+// 	if (cmd->argv)
+// 	{
+// 		while (cmd->argv[i])
+// 			free(cmd->argv[i++]);
+// 	}
+// 	free(cmd->argv);
+// 	free_rdlst(cmd->rd_lst);
+// 	free(cmd->rd_lst);
+// 	return (0);
+// }
+
+void	free_cmd_lst(t_list *cmd_root)
 {
 	t_list	*tmp;
-	t_redir	*rd;
-
-	tmp = rd_lst->next;
-	while (tmp)
-	{
-		rd = rd_lst->content;
-		free(rd->file_name);
-		tmp = tmp->next;
-	}
-	return (0);
-}
-
-int		free_cmd(t_cmd *cmd)
-{
+	t_list	*tmp_rdlst;
+	t_cmd	*tmp_cmd;
+	t_redir	*tmp_rd;
 	int		i;
 
-	i = 0;
-	if (cmd->argv)
+	tmp = cmd_root->next;
+	while (tmp)
 	{
-		while (cmd->argv[i])
-			free(cmd->argv[i++]);
+		tmp_cmd = tmp->content;
+		i = 0;
+		while (tmp_cmd->argv[i])
+		{
+			free(tmp_cmd->argv[i]);
+			i++;
+		}
+		tmp_rdlst = tmp_cmd->rd_lst->next;
+		while (tmp_rdlst)
+		{
+			tmp_rd = tmp_rdlst->content;
+			free(tmp_rd->file_name);
+			tmp_rdlst = tmp_rdlst->next;
+		}
+		// printf("%p\n", tmp_cmd->rd_lst);
+		free(tmp_cmd->rd_lst);
+		free(tmp_cmd);
+		free(tmp_cmd->argv);
+		free(tmp);
+		tmp = tmp->next;
 	}
-	free(cmd->argv);
-	free_rdlst(cmd->rd_lst);
-	free(cmd->rd_lst);
-	return (0);
-}
-
-int		free_data(t_data *data, t_list *cmd_root)
-{
-	t_list	*cmdlst;
-
-	free(data->buf);
-	free_cmd(data->cmd);
-	free(data->rd->file_name);
-	free(data->rd);
-	free(data->rd_buf);
-
-	cmdlst = cmd_root->next;
-	while (cmdlst)
-	{
-		free_cmd(cmdlst->content);
-		cmdlst = cmdlst->next;
-	}
+	// free(cmd_root->content);
 	free(cmd_root);
-	// free(cmdlst);
-	return (0);
 }
+// int		free_data(t_data *data, t_list *cmd_root)
+// {
+// 	t_list	*cmdlst;
+
+// 	free(data->buf);
+// 	free_cmd(data->cmd);
+// 	free(data->rd->file_name);
+// 	free(data->rd);
+// 	free(data->rd_buf);
+
+// 	cmdlst = cmd_root->next;
+// 	while (cmdlst)
+// 	{
+// 		free_cmd(cmdlst->content);
+// 		cmdlst = cmdlst->next;
+// 	}
+// 	free(cmd_root);
+// 	// free(cmdlst);
+// 	return (0);
+// }
 // ; 만왔을 때 에러처리
 // " 따옴표 안닫혔을 때 에러처리
 int		parse_input(char *input)
@@ -136,7 +171,7 @@ int		parse_input(char *input)
 	if (input)
 	{
 		input_tmp = ft_strltrim(input, " ");
-		parse_init(&data, cmd_root, ft_strlen(input));
+		parse_init(&data, &cmd_root, ft_strlen(input));
 		while (input_tmp[++data.input_idx])
 		{
 			g_archive.parse_error = parse_get_data(input_tmp, &data, cmd_root);
@@ -145,18 +180,19 @@ int		parse_input(char *input)
 		}
 		free(input_tmp);
 		if (*(data.buf))
-			g_archive.parse_error = lst_add_cmd(&data, cmd_root, input, 0);
-		// system("leaks minishell");
-		if (data.rd->sign)
+			g_archive.parse_error = lst_add_cmd(&data, cmd_root, input, -1);
+		if (data.rd.sign)
 			g_archive.parse_error = lst_add_cmd(&data, cmd_root, input, 2);
 		if (parse_error_check(&data) == ERROR)
 			return (ERROR);
 		// else
 		// 	execute_builtin(cmd_root);
+		// free(data.rd->file_name);
 
+		free_cmd_lst(cmd_root);
+		// system("leaks minishell");
 		// t_list	*tcmdl;
 
-		free_data(&data, cmd_root);
 		// tcmdl = cmd_root->next;
 		// while (tcmdl)
 		// {

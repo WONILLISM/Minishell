@@ -63,16 +63,25 @@ void	update_data(t_data *data, t_list *cmd_root)
 }
 
 
-int		clensing_data_buf(t_data *data, int flag)
+int		clensing_data_buf(t_data *data, t_list *cmd_root, int flag)
 {
+	t_cmd	*tmp_cmd;
 	char	*tmp;
 
+	tmp_cmd = (t_cmd *)malloc(sizeof(t_cmd));
 	tmp = ft_strltrim(data->buf, " ");
-	free(data->buf);
-	data->buf = tmp;
-	data->cmd->argv = ft_split(data->buf, ' ');
-	chk_space_flag(data->cmd->argv);
-	data->cmd->flag = flag;
+	ft_lstadd_back(&cmd_root, ft_lstnew(tmp_cmd));
+	data->last_node = ft_lstlast(cmd_root);
+	tmp_cmd->rd_lst = ft_lstnew(NULL);
+	tmp_cmd->argv = ft_split(tmp, ' ');
+	free(tmp);
+	chk_space_flag(tmp_cmd->argv);
+	tmp_cmd->flag = flag;
+	tmp_cmd->fd[0] = 0;
+	tmp_cmd->fd[1] = 0;
+	tmp_cmd->rd_fd[0] = 0;
+	tmp_cmd->rd_fd[1] = 0;
+	data->cmd.flag = flag;
 	return (0);
 }
 
@@ -80,25 +89,25 @@ int		lst_add_cmd(t_data *data, t_list *cmd_root, char *input, int flag)
 {
 	// char	*tmp;
 
-	if (flag == 2 || data->rd->sign)
+	(void)input;
+	clensing_data_buf(data, cmd_root, flag);
+	if (flag == 2 || data->rd.sign)
 		update_redir(data);
-	clensing_data_buf(data, flag);
+	free(data->buf);
+	free(data->rd_buf);
+	// system("leaks minishell");
+	// if (flag != -1)
+	// 	data->buf = ft_calloc(data->buf_size, sizeof(char));
+	data->buf_idx = 0;
 	// tmp = ft_strltrim(data->buf, " ");
 	// free(data->buf);
 	// data->buf = tmp;
 	// data->cmd->argv = ft_split(data->buf, ' ');
 	// chk_space_flag(data->cmd->argv);
 	// data->cmd->flag = flag;
-	ft_lstadd_back(&cmd_root, ft_lstnew(data->cmd));
-	init_cmd(data);
-	update_data(data, cmd_root);
+	// ft_lstadd_back(&cmd_root, ft_lstnew(data->cmd));
+	// system("leaks minishell");
+	// init_cmd(data);
+	// update_data(data, cmd_root);
 	return (SUCCESS);
 }
-
-int		push_cmd(t_data *data, t_list *cmd_root, char *input, int flag)
-{
-	clensing_data_buf(data, flag);
-	ft_lstadd_back(&cmd_root, ft_lstnew(data->cmd));
-
-}
-
