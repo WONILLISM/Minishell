@@ -43,7 +43,7 @@ void	ft_freehistory(void *pending, void *finished)
 		free(finished);
 }
 
-int		set_printable_key(t_dllist *h_list, t_cursor *cursor)
+int		set_printable_key(t_dllist *h_list, t_cursor *cursor, char **input)
 {
 	t_hisnode	*last;
 	char	*pending;
@@ -59,7 +59,10 @@ int		set_printable_key(t_dllist *h_list, t_cursor *cursor)
 		{
 			pending = last->pending;
 			if (*pending == 0)
+			{
+				*input = NULL;
 				ft_dll_delhisnode(h_list, last, ft_freehistory);
+			}
 			// init current history node when pending node finished
 			pending = cursor->cur->pending;
 			if (*pending != 0 && pending && finished)
@@ -68,12 +71,16 @@ int		set_printable_key(t_dllist *h_list, t_cursor *cursor)
 				ft_dll_addhisnode(h_list, NULL, cursor->cur->pending);
 				free(cursor->cur->pending);
 				cursor->cur->pending = 0;
+				*input = h_list->tail->prev->finished;
 			}
 		}
 		else
 		{
 			if (*pending == 0)
+			{
+				*input = NULL;
 				ft_dll_delhisnode(h_list, last, ft_freehistory);
+			}
 			else if (pending && finished == NULL)
 			{
 				// init last history node when pending node finished
@@ -81,6 +88,7 @@ int		set_printable_key(t_dllist *h_list, t_cursor *cursor)
 				cursor->cur->finished = ft_strdup(cursor->cur->pending);
 				free(cursor->cur->pending);
 				cursor->cur->pending = NULL;
+				*input = h_list->tail->prev->finished;
 			}
 		}
 		cursor->cur = h_list->tail;
@@ -94,7 +102,7 @@ int		set_printable_key(t_dllist *h_list, t_cursor *cursor)
 }
 
 
-int		term_key_handler(t_cursor *cursor, t_dllist *h_list)
+int		term_key_handler(t_cursor *cursor, t_dllist *h_list, char **input)
 {
 	if (cursor->buf == KEY_BACKSPACE && (cursor->key_pos) > 0)
 		set_backspace_key(cursor);
@@ -104,7 +112,7 @@ int		term_key_handler(t_cursor *cursor, t_dllist *h_list)
 		return find_next_history(h_list, cursor);
 	else if (ft_isprint(cursor->buf) || cursor->buf == '\n')
 	{
-		return set_printable_key(h_list, cursor);
+		return set_printable_key(h_list, cursor, input);
 	}
 	else if (cursor->buf == CTRL_D)
 		return (0);

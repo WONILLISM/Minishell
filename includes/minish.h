@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/24 16:30:13 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/24 22:00:08 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,9 +152,11 @@ void	signal_init(int argc, char **argv);
 /*
 ** ************ terminal_handle.c ******************
 */
+void	ft_freehistory(void *pending, void *finished);
 void	get_cursor_position(int *col, int *rows);
 void	term_init(struct termios *term, struct termios *backup);
-int		term_key_handler(t_cursor *cursor, t_dllist *h_list);
+int		term_key_handler(t_cursor *cursor, t_dllist *h_list, char **input);
+// int		term_key_handler(t_cursor *cursor, t_dllist *h_list);
 
 /*
 ** ************ parse.c *************
