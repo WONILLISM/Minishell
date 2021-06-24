@@ -9,11 +9,12 @@ void		signal_handler(int signo)
 	{
 		if (pid == -1)
 		{
-			ft_putstr_fd("\b\b  \b\b\n", STDOUT);
 			// ft_putstr_fd("minish $> ", STDOUT);
+			// ft_putstr_fd("\b\b  \b\b\n", STDOUT);
+			write(1,"\n",1);
 			write(1, "minish $> ", 10);
-			if (g_archive.buf)
-				free(g_archive.buf);
+			// if (g_archive.buf)
+			// 	free(g_archive.buf);
 			g_archive.buf = 0;
 			g_archive.exit_stat = 1;
 		}

@@ -28,6 +28,7 @@ void	update_redir(t_data *data)
 		return ;
 	}
 	tmp_rd->file_name = ft_strtrim(data->rd_buf, " ");
+	free(data->rd_buf);
 	i = 0;
 	while (tmp_rd->file_name[i])
 	{
@@ -35,7 +36,6 @@ void	update_redir(t_data *data)
 			tmp_rd->file_name[i] = ' ';
 		i++;
 	}
-	free(data->rd_buf);
 	data->rd_buf = ft_calloc(sizeof(char), data->buf_size);
 	data->rd_buf_idx = 0;
 	data->rd.sign = 0;

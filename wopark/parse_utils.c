@@ -87,14 +87,19 @@ int		clensing_data_buf(t_data *data, t_list *cmd_root, int flag)
 
 int		lst_add_cmd(t_data *data, t_list *cmd_root, char *input, int flag)
 {
-	// char	*tmp;
-
 	(void)input;
 	clensing_data_buf(data, cmd_root, flag);
+	free(data->buf);
+	data->buf = NULL;
 	if (flag == 2 || data->rd.sign)
 		update_redir(data);
-	free(data->buf);
 	free(data->rd_buf);
+	data->rd_buf = NULL;
+	if (flag == 1 || flag == 0)
+	{
+		data->buf = ft_calloc(data->buf_size, sizeof(char));
+		data->rd_buf = ft_calloc(data->buf_size, sizeof(char));
+	}
 	// system("leaks minishell");
 	// if (flag != -1)
 	// 	data->buf = ft_calloc(data->buf_size, sizeof(char));

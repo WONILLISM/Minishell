@@ -121,6 +121,7 @@ void	free_cmd_lst(t_list *cmd_root)
 			free(tmp_cmd->argv[i]);
 			i++;
 		}
+		free(tmp_cmd->argv);
 		tmp_rdlst = tmp_cmd->rd_lst->next;
 		while (tmp_rdlst)
 		{
@@ -128,14 +129,11 @@ void	free_cmd_lst(t_list *cmd_root)
 			free(tmp_rd->file_name);
 			tmp_rdlst = tmp_rdlst->next;
 		}
-		// printf("%p\n", tmp_cmd->rd_lst);
 		free(tmp_cmd->rd_lst);
 		free(tmp_cmd);
-		free(tmp_cmd->argv);
-		free(tmp);
 		tmp = tmp->next;
 	}
-	// free(cmd_root->content);
+	free(tmp);
 	free(cmd_root);
 }
 // int		free_data(t_data *data, t_list *cmd_root)
@@ -185,8 +183,8 @@ int		parse_input(char *input)
 			g_archive.parse_error = lst_add_cmd(&data, cmd_root, input, 2);
 		if (parse_error_check(&data) == ERROR)
 			return (ERROR);
-		// else
-		// 	execute_builtin(cmd_root);
+		else
+			execute_builtin(cmd_root);
 		// free(data.rd->file_name);
 
 		free_cmd_lst(cmd_root);
