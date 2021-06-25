@@ -104,6 +104,8 @@ int		set_printable_key(t_dllist *h_list, t_cursor *cursor, char **input)
 
 int		term_key_handler(t_cursor *cursor, t_dllist *h_list, char **input)
 {
+	char	*pending;
+
 	if (cursor->buf == KEY_BACKSPACE && (cursor->key_pos) > 0)
 		set_backspace_key(cursor);
 	else if (cursor->buf == KEY_UP)
@@ -111,10 +113,17 @@ int		term_key_handler(t_cursor *cursor, t_dllist *h_list, char **input)
 	else if (cursor->buf == KEY_DOWN)
 		return find_next_history(h_list, cursor);
 	else if (ft_isprint(cursor->buf) || cursor->buf == '\n')
-	{
 		return set_printable_key(h_list, cursor, input);
-	}
 	else if (cursor->buf == CTRL_D)
-		return (0);
+	{
+		pending = h_list->tail->prev->pending;
+		if (pending && *pending != 0)
+			return (1);
+		else
+		{
+			write(1, "exit\n", 5);
+			exit(0);
+		}
+	}
 	return (1);
 }
