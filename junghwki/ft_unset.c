@@ -32,10 +32,10 @@ void		ft_unset(t_cmd *cmd)
 	{
 		if (env_key_check(cmd->argv[idx]) < 0)
 		{
+			g_archive.exit_stat = 1;
 			write(2, "minish: unset: `", 16);
 			write(2, cmd->argv[idx], ft_strlen(cmd->argv[idx]));
 			write(2, "': not a valid identifier\n", 26);
-			g_archive.exit_stat = 1;
 		}
 		else
 		{

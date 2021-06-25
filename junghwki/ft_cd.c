@@ -35,5 +35,6 @@ void		ft_cd(t_cmd *cmd)
 			if (path)
 				free(path);
 		}
+		g_archive.exit_stat = 0;
 	}
 }

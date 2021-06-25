@@ -35,4 +35,5 @@ void		ft_echo(t_cmd *cmd)
 		else if (!n_flag)
 			write(1, "\n", 1);
 	}
+	g_archive.exit_stat = 0;
 }

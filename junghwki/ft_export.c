@@ -155,6 +155,7 @@ void		export_add(t_cmd *cmd)
 		content = envv_sep(cmd->argv[idx]);
 		if (env_key_check(content->key) < 0)
 		{
+			g_archive.exit_stat = 1;
 			write(2, "minish: export: `", 17);
 			write(2, content->key, ft_strlen(content->key));
 			if (content->value)
@@ -163,7 +164,6 @@ void		export_add(t_cmd *cmd)
 				write(2, content->value, ft_strlen(content->value));
 			}
 			write(2, "': not a valid identifier\n", 26);
-			g_archive.exit_stat = 1;
 		}
 		else
 		{

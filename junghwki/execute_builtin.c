@@ -7,20 +7,20 @@ void		print_cmd(t_cmd *cmd)
 	t_redir	*rd;
 
 	idx = 0;
-	write(2, "+========================+\n\n", 28);
+	write(2, "+=========================+\n\n", 29);
 	while (cmd->argv[idx])
 	{
-		write(2, "     argv[", 10);
+		write(2, "      argv[", 11);
 		write(2, ft_itoa(idx), ft_strlen(ft_itoa(idx)));
-		write(2, "]   : ", 6);
+		write(2, "] : ", 4);
 		write(2, cmd->argv[idx], ft_strlen(cmd->argv[idx]));
-		write(2, "\n", 1);
+		write(2, "$\n", 2);
 		idx++;
 	}
-	write(2, "     flag   ", 12);
-	write(2, "   : ", 5);
+	write(2, "         flag", 13);
+	write(2, " : ", 3);
 	write(2, ft_itoa(cmd->flag), ft_strlen(ft_itoa(cmd->flag)));
-	write(2, "\n\n", 2);
+	write(2, "$\n\n", 3);
 	if (cmd->rd_lst)
 	{
 		rd_lst = cmd->rd_lst->next;
@@ -28,21 +28,21 @@ void		print_cmd(t_cmd *cmd)
 		while (rd_lst)
 		{
 			rd = rd_lst->content;
-			write(2, "     rd[", 8);
+			write(2, "    rd[", 7);
 			write(2, ft_itoa(idx), ft_strlen(ft_itoa(idx)));
 			write(2, "]sign : ", 8);
 			write(2, ft_itoa(rd->sign), ft_strlen(ft_itoa(rd->sign)));
-			write(2, "\n", 1);
-			write(2, "     rd[", 8);
+			write(2, "$\n", 2);
+			write(2, "    rd[", 7);
 			write(2, ft_itoa(idx), ft_strlen(ft_itoa(idx)));
 			write(2, "]name : ", 8);
 			write(2, rd->file_name, ft_strlen(rd->file_name));
-			write(2, "\n\n", 2);
+			write(2, "$\n\n", 3);
 			idx++;
 			rd_lst = rd_lst->next;
 		}
 	}
-	write(2, "+========================+\n\n", 28);
+	write(2, "+=========================+\n", 28);
 }
 
 int			count_pipe(t_list *list)
@@ -114,10 +114,11 @@ void		redirection(t_cmd *cmd)
 			cmd->rd_fd[0] = open(rd->file_name, O_RDONLY, 0644);
 			if (cmd->rd_fd[0] < 0)
 			{
-				g_archive.exit_stat = 1;
+				// g_archive.exit_stat = 1;
 				write(2, "minish: ", 8);
 				write(2, rd->file_name, ft_strlen(rd->file_name));
-				write(2, ": No such file or directory\n", 28);
+				ft_error(2, 1);
+				// write(2, ": No such file or directory\n", 28);
 				break ;
 			}
 		}
@@ -162,7 +163,9 @@ void		builtin(t_cmd *cmd, int pipe_flag)
 		if (cmd->rd_fd[0])
 			dup2(temp_fd[0], 0);
 	}
-	g_archive.exit_stat = 0;
+	write(2, "exit_stat : ", 12);
+	write(2, ft_itoa(g_archive.exit_stat), ft_strlen(ft_itoa(g_archive.exit_stat)));
+	write(2, "\n", 1);
 }
 
 void		lets_fork(pid_t *pid, t_cmd *cmd, t_cmd *next_cmd, int idx)
