@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/24 22:00:08 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/25 15:33:07 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,9 +164,9 @@ int		term_key_handler(t_cursor *cursor, t_dllist *h_list, char **input);
 void	parse_init(t_data *data, t_list **cmd_root, int input_size);
 int		parse_input(char *input);
 
-void	chk_redir_sign(char *input, t_data *data);
+void	chk_redir_sign(char *input, t_data *data, t_list *cmd_root);
 void	init_redir(t_data *data);
-void	update_redir(t_data *data);
+void	update_redir(t_data *data, t_list *cmd_root);
 void	init_cmd(t_data *data);
 void	init_data(t_data *data, t_list **cmd_root, int input_size);
 void	init_redir(t_data *data);

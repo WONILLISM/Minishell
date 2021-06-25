@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:07:54 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/24 22:00:31 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/25 16:26:37 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,7 @@ int		get_input(char **input, t_dllist *h_list)
 		cursor.r_nbr = read(STDIN_FILENO, &cursor.buf, sizeof(cursor.buf));
 		if (!term_key_handler(&cursor, h_list, input))
 		{
-			ft_dll_viewlst(h_list);
-			// *input = h_list->tail->prev->finished;
+			// ft_dll_viewlst(h_list);
 			tcsetattr(STDIN_FILENO, TCSANOW, &term_backup);
 			return (READ_SUC);
 		}
@@ -69,8 +68,6 @@ int		main(int argc, char **argv, char **envv)
 		write(1, "minish $> ", 10);
 		if (get_input(&input, &history_lst) == READ_ERR)
 			printf("Error");
-		// if (input)
-		// 	printf("!!!\n");
 		if (parse_input(input) == ERROR)
 			parse_error_msg(SYNTAX_ERROR_MSG);
 	}

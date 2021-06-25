@@ -13,13 +13,13 @@ void	redir_list_view(t_list *lst)
 	}
 }
 
-void	update_redir(t_data *data)
+void	update_redir(t_data *data, t_list *cmd_root)
 {
 	t_cmd	*tmp_cmd;
 	t_redir	*tmp_rd;
 	int		i;
 
-	// system("leaks minishell");
+	tmp_cmd = NULL;
 	tmp_rd = (t_redir *)malloc(sizeof(t_redir));
 	tmp_rd->sign = data->rd.sign;
 	if (data->rd.sign && data->rd_buf[0] == 0)
@@ -39,12 +39,24 @@ void	update_redir(t_data *data)
 	data->rd_buf = ft_calloc(sizeof(char), data->buf_size);
 	data->rd_buf_idx = 0;
 	data->rd.sign = 0;
-	// free(data->rd.file_name);
-	tmp_cmd = data->last_node->content;
+	if (data->last_node->content == NULL)
+	{
+		// printf("!!!\n");
+		tmp_cmd = (t_cmd *)malloc(sizeof(t_cmd));
+		ft_lstadd_back(&cmd_root, ft_lstnew(tmp_cmd));
+		data->last_node = ft_lstlast(cmd_root);
+		data->last_node->next = NULL;
+		tmp_cmd->rd_lst = ft_lstnew(NULL);
+		tmp_cmd->argv = NULL;
+	}
+	else
+		tmp_cmd = data->last_node->content;
 	ft_lstadd_back(&tmp_cmd->rd_lst, ft_lstnew(tmp_rd));
+	data->rd.file_name = 0;
+	data->rd.sign = 0;
 }
 
-void	chk_redir_sign(char *input, t_data *data)
+void	chk_redir_sign(char *input, t_data *data, t_list *cmd_root)
 {
 	if (input[data->input_idx] == '>')
 	{
@@ -52,12 +64,12 @@ void	chk_redir_sign(char *input, t_data *data)
 			data->rd.sign++;
 		else if ((data->rd.sign == 2 || data->rd.sign == 1) && *data->rd_buf)
 		{
-			update_redir(data);
+			update_redir(data, cmd_root);
 			data->input_idx--;
 		}
 		else if (data->rd.sign == -1 && *data->rd_buf)
 		{
-			update_redir(data);
+			update_redir(data, cmd_root);
 			data->input_idx--;
 		}
 		else
@@ -69,12 +81,12 @@ void	chk_redir_sign(char *input, t_data *data)
 			data->rd.sign--;
 		else if ((data->rd.sign == 2 || data->rd.sign == 1) && *data->rd_buf)
 		{
-			update_redir(data);
+			update_redir(data, cmd_root);
 			data->input_idx--;
 		}
 		else if (data->rd.sign == -1 && *data->rd_buf)
 		{
-			update_redir(data);
+			update_redir(data, cmd_root);
 			data->input_idx--;
 		}
 		else

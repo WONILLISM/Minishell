@@ -51,10 +51,11 @@ void	parse_get_data2(char *input, t_data *data)
 
 int		parse_get_data(char *input, t_data *data, t_list *cmd_root)
 {
+	// printf("%p\n", data->rd_buf);
 	if (data->cmd.quote == input[data->input_idx])
 		data->cmd.quote = 0;
-	else if (data->cmd.quote == 0 && *data->rd_buf && input[data->input_idx] == ' ')
-		update_redir(data);
+	else if (data->cmd.quote == 0 && data->rd.sign && input[data->input_idx] == ' ')
+		update_redir(data, cmd_root);
 	else if (data->cmd.quote == 0 && input[data->input_idx] == '\"')
 		data->cmd.quote = input[data->input_idx];
 	else if (data->cmd.quote == 0 && input[data->input_idx] == '\'')
@@ -66,96 +67,79 @@ int		parse_get_data(char *input, t_data *data, t_list *cmd_root)
 	else if (data->cmd.quote != '\'' && input[data->input_idx] == '$')
 		return parse_envv_handler(data, input);
 	else if (data->cmd.quote == 0 && ft_strchr("><", input[data->input_idx]))
-		chk_redir_sign(input, data);
+		chk_redir_sign(input, data, cmd_root);
 	else
 		parse_get_data2(input, data);
 	return (0);
 }
 
-// int		free_rdlst(t_list *rd_lst)
-// {
-// 	t_list	*tmp;
-// 	t_redir	*rd;
+void	free_rd_lst(t_list *rdlst)
+{
+	t_list	*tmp1;
+	t_list	*tmp2;
+	t_redir	*tmp_rd;
 
-// 	tmp = rd_lst->next;
-// 	while (tmp)
-// 	{
-// 		rd = rd_lst->content;
-// 		free(rd->file_name);
-// 		tmp = tmp->next;
-// 	}
-// 	return (0);
-// }
-
-// int		free_cmd(t_cmd *cmd)
-// {
-// 	int		i;
-
-// 	i = 0;
-// 	if (cmd->argv)
-// 	{
-// 		while (cmd->argv[i])
-// 			free(cmd->argv[i++]);
-// 	}
-// 	free(cmd->argv);
-// 	free_rdlst(cmd->rd_lst);
-// 	free(cmd->rd_lst);
-// 	return (0);
-// }
+	tmp1 = rdlst->next;
+	tmp2 = rdlst->next;
+	while (tmp1)
+	{
+		tmp_rd = tmp1->content;
+		free(tmp_rd->file_name);
+		tmp2 = tmp1;
+		tmp1 = tmp1->next;
+		free(tmp_rd);
+		free(tmp2);
+	}
+	free(rdlst);
+}
 
 void	free_cmd_lst(t_list *cmd_root)
 {
-	t_list	*tmp;
-	t_list	*tmp_rdlst;
+	t_list	*tmp1;
+	t_list	*tmp2;
 	t_cmd	*tmp_cmd;
-	t_redir	*tmp_rd;
 	int		i;
 
-	tmp = cmd_root->next;
-	while (tmp)
+	tmp1 = cmd_root->next;
+	tmp2 = cmd_root->next;
+	while (tmp1)
 	{
-		tmp_cmd = tmp->content;
+		tmp_cmd = tmp1->content;
 		i = 0;
-		while (tmp_cmd->argv[i])
+		if (tmp_cmd->argv)
 		{
-			free(tmp_cmd->argv[i]);
-			i++;
+			while (tmp_cmd->argv[i])
+			{
+				free(tmp_cmd->argv[i]);
+				i++;
+			}
+			free(tmp_cmd->argv);
 		}
-		free(tmp_cmd->argv);
-		tmp_rdlst = tmp_cmd->rd_lst->next;
-		while (tmp_rdlst)
-		{
-			tmp_rd = tmp_rdlst->content;
-			free(tmp_rd->file_name);
-			tmp_rdlst = tmp_rdlst->next;
-		}
-		free(tmp_cmd->rd_lst);
-		free(tmp_cmd);
-		tmp = tmp->next;
+		free_rd_lst(tmp_cmd->rd_lst);
+		// system("leaks minishell");
+		tmp2 = tmp1;
+		tmp1 = tmp1->next;
+		free(tmp2);
 	}
-	free(tmp);
 	free(cmd_root);
 }
-// int		free_data(t_data *data, t_list *cmd_root)
-// {
-// 	t_list	*cmdlst;
 
-// 	free(data->buf);
-// 	free_cmd(data->cmd);
-// 	free(data->rd->file_name);
-// 	free(data->rd);
-// 	free(data->rd_buf);
+void	print_data_address(t_data *data, t_list *cmd_root)
+{
+	t_cmd	*cmd = &data->cmd;
 
-// 	cmdlst = cmd_root->next;
-// 	while (cmdlst)
-// 	{
-// 		free_cmd(cmdlst->content);
-// 		cmdlst = cmdlst->next;
-// 	}
-// 	free(cmd_root);
-// 	// free(cmdlst);
-// 	return (0);
-// }
+	printf("\n==============================\n");
+	printf("buf : %p\n",data->buf);
+	printf("rd_buf : %p\n",data->rd_buf);
+	printf("\n");
+	printf("cmd argv : %p\n", cmd->argv);
+	printf("rd_lst : %p\n", cmd->rd_lst);
+	printf("\n");
+	printf("cmd_root : %p\n", cmd_root);
+	printf("\n==============================\n");
+	// printf("cmd_root : %p\n", cmd_root->argv);
+	// printf("cmd_root : %p\n", cmd_root->argv);
+}
 // ; 만왔을 때 에러처리
 // " 따옴표 안닫혔을 때 에러처리
 int		parse_input(char *input)
@@ -170,6 +154,7 @@ int		parse_input(char *input)
 	{
 		input_tmp = ft_strltrim(input, " ");
 		parse_init(&data, &cmd_root, ft_strlen(input));
+		print_data_address(&data, cmd_root);
 		while (input_tmp[++data.input_idx])
 		{
 			g_archive.parse_error = parse_get_data(input_tmp, &data, cmd_root);
@@ -177,31 +162,34 @@ int		parse_input(char *input)
 				break;
 		}
 		free(input_tmp);
-		if (*(data.buf))
+		// if (data.rd.sign)
+		// 	g_archive.parse_error = lst_add_cmd(&data, cmd_root, input, 2);
+		if (data.rd.sign || *(data.buf))
 			g_archive.parse_error = lst_add_cmd(&data, cmd_root, input, -1);
-		if (data.rd.sign)
-			g_archive.parse_error = lst_add_cmd(&data, cmd_root, input, 2);
 		if (parse_error_check(&data) == ERROR)
 			return (ERROR);
-		else
-			execute_builtin(cmd_root);
-		// free(data.rd->file_name);
+		// else
+		// 	execute_builtin(cmd_root);
 
-		free_cmd_lst(cmd_root);
+		// print_data_address(&data, cmd_root);
+
+		t_list	*tcmdl;
+
+		tcmdl = cmd_root->next;
+		while (tcmdl)
+		{
+			t_cmd *tcmd = tcmdl->content;
+			t_list *trdl = tcmd->rd_lst;
+			if (tcmd->argv){
+				for (int i = 0; tcmd->argv[i]; i++)
+					printf("argv[%d] : %s\n", i, tcmd->argv[i]);
+			}
+			redir_list_view(trdl);
+			tcmdl = tcmdl->next;
+			printf("--------------\n");
+		}
 		// system("leaks minishell");
-		// t_list	*tcmdl;
-
-		// tcmdl = cmd_root->next;
-		// while (tcmdl)
-		// {
-		// 	t_cmd *tcmd = tcmdl->content;
-		// 	t_list *trdl = tcmd->rd_lst;
-		// 	for (int i = 0; tcmd->argv[i]; i++)
-		// 		printf("argv[%d] : %s\n", i, tcmd->argv[i]);
-		// 	redir_list_view(trdl);
-		// 	tcmdl = tcmdl->next;
-		// 	printf("--------------\n");
-		// }
+		free_cmd_lst(cmd_root);
 	}
 	return (SUCCESS);
 }
