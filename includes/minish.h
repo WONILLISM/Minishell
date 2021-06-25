@@ -6,7 +6,7 @@
 /*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/23 21:01:43 by junghwki         ###   ########.fr       */
+/*   Updated: 2021/06/25 14:21:07 by junghwki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,7 @@ void	signal_init(int argc, char **argv);
 */
 void	get_cursor_position(int *col, int *rows);
 void	term_init(struct termios *term, struct termios *backup);
-int		term_key_handler(t_cursor *cursor, t_dllist *h_list);
+int		term_key_handler(t_cursor *cursor, t_dllist *h_list, char **input);
 
 /*
 ** ************ parse.c *************
@@ -198,4 +198,5 @@ void			child_process(t_cmd *cmd, char **envp);
 char			**make_envp(void);
 int			env_key_check(char *key);
 void		ft_exit(t_cmd *cmd);
+void		ft_error(int err_nbr, int exit_status);
 #endif

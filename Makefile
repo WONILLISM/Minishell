@@ -42,8 +42,9 @@ JUNGHWKI_SRCS = \
 			ft_pwd.c \
 			ft_unset.c \
 			ft_execve.c \
-			utils.c	\
-			ft_exit.c
+			utils.c \
+			ft_exit.c \
+			ft_error.c
 
 MANDATORY =	\
 			$(addprefix $(MAIN_DIR), $(MAIN_SRCS)) \
