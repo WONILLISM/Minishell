@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
+/*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:07:54 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/21 16:52:41 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/24 22:07:58 by junghwki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,10 @@ int		get_input(char **input, t_dllist *h_list)
 	{
 		cursor.buf = 0;
 		cursor.r_nbr = read(STDIN_FILENO, &cursor.buf, sizeof(cursor.buf));
-		if (!term_key_handler(&cursor, h_list))
+		if (!term_key_handler(&cursor, h_list, input))
 		{
 			// ft_dll_viewlst(h_list);
-			*input = h_list->tail->prev->finished;
+			// *input = h_list->tail->prev->finished;
 			tcsetattr(STDIN_FILENO, TCSANOW, &term_backup);
 			return (READ_SUC);
 		}
