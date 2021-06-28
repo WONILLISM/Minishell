@@ -49,9 +49,8 @@ void	parse_get_data2(char *input, t_data *data)
 		data->buf[data->buf_idx++] = input[data->input_idx];
 }
 
-int		parse_get_data(char *input, t_data *data, t_list *cmd_root)
+int		parse_get_data(char *input, t_data *data, t_list **cmd_root)
 {
-	// printf("%p\n", data->rd_buf);
 	if (data->cmd.quote == input[data->input_idx])
 		data->cmd.quote = 0;
 	else if (data->cmd.quote == 0 && data->rd.sign && input[data->input_idx] == ' ')
@@ -61,9 +60,9 @@ int		parse_get_data(char *input, t_data *data, t_list *cmd_root)
 	else if (data->cmd.quote == 0 && input[data->input_idx] == '\'')
 		data->cmd.quote = input[data->input_idx];
 	else if (data->cmd.quote == 0 && input[data->input_idx] == ';')
-		return (lst_add_cmd(data, cmd_root, input, 0));
+		return (lst_add_cmd(data, cmd_root, 0));
 	else if (data->cmd.quote == 0 && input[data->input_idx] == '|')
-		return (lst_add_cmd(data, cmd_root, input, 1));
+		return (lst_add_cmd(data, cmd_root, 1));
 	else if (data->cmd.quote != '\'' && input[data->input_idx] == '$')
 		return parse_envv_handler(data, input);
 	else if (data->cmd.quote == 0 && ft_strchr("><", input[data->input_idx]))
@@ -101,7 +100,6 @@ void	free_cmd_lst(t_list *cmd_root)
 	int		i;
 
 	tmp1 = cmd_root->next;
-	tmp2 = cmd_root->next;
 	while (tmp1)
 	{
 		tmp_cmd = tmp1->content;
@@ -116,7 +114,7 @@ void	free_cmd_lst(t_list *cmd_root)
 			free(tmp_cmd->argv);
 		}
 		free_rd_lst(tmp_cmd->rd_lst);
-		// system("leaks minishell");
+		free(tmp_cmd);
 		tmp2 = tmp1;
 		tmp1 = tmp1->next;
 		free(tmp2);
@@ -137,8 +135,6 @@ void	print_data_address(t_data *data, t_list *cmd_root)
 	printf("\n");
 	printf("cmd_root : %p\n", cmd_root);
 	printf("\n==============================\n");
-	// printf("cmd_root : %p\n", cmd_root->argv);
-	// printf("cmd_root : %p\n", cmd_root->argv);
 }
 // ; 만왔을 때 에러처리
 // " 따옴표 안닫혔을 때 에러처리
@@ -154,42 +150,40 @@ int		parse_input(char *input)
 	{
 		input_tmp = ft_strltrim(input, " ");
 		parse_init(&data, &cmd_root, ft_strlen(input));
-		print_data_address(&data, cmd_root);
 		while (input_tmp[++data.input_idx])
 		{
-			g_archive.parse_error = parse_get_data(input_tmp, &data, cmd_root);
+			g_archive.parse_error = parse_get_data(input_tmp, &data, &cmd_root);
 			if (g_archive.parse_error == -1)
 				break;
 		}
 		free(input_tmp);
-		// if (data.rd.sign)
-		// 	g_archive.parse_error = lst_add_cmd(&data, cmd_root, input, 2);
-		if (data.rd.sign || *(data.buf))
-			g_archive.parse_error = lst_add_cmd(&data, cmd_root, input, -1);
+		g_archive.parse_error = lst_add_cmd(&data, &cmd_root, -1);
 		if (parse_error_check(&data) == ERROR)
 			return (ERROR);
-		// else
-		// 	execute_builtin(cmd_root);
-
-		// print_data_address(&data, cmd_root);
+		else
+			execute_builtin(cmd_root);
 
 		t_list	*tcmdl;
+		int	j;
 
 		tcmdl = cmd_root->next;
+		j = 0;
 		while (tcmdl)
 		{
 			t_cmd *tcmd = tcmdl->content;
 			t_list *trdl = tcmd->rd_lst;
 			if (tcmd->argv){
+				printf("-------idx %d-------\n", j);
+				printf("flag : %d\n", tcmd->flag);
 				for (int i = 0; tcmd->argv[i]; i++)
 					printf("argv[%d] : %s\n", i, tcmd->argv[i]);
 			}
 			redir_list_view(trdl);
+			j++;
 			tcmdl = tcmdl->next;
-			printf("--------------\n");
 		}
-		// system("leaks minishell");
 		free_cmd_lst(cmd_root);
+		// system("leaks minishell");
 	}
 	return (SUCCESS);
 }

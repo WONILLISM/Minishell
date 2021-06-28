@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/25 15:33:07 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/28 19:05:38 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,7 @@ int		find_next_history(t_dllist *h_list, t_cursor *cursor);
 */
 void	chk_space_flag(char **strs);
 int		chk_var_name(t_data *data, char *input);
-int		lst_add_cmd(t_data *data, t_list *cmd_root, char *input, int flag);
+int		lst_add_cmd(t_data *data, t_list **cmd_root, int flag);
 
 int		parse_error_check(t_data *data);
 int		parse_error_msg(char *msg);
@@ -164,9 +164,9 @@ int		term_key_handler(t_cursor *cursor, t_dllist *h_list, char **input);
 void	parse_init(t_data *data, t_list **cmd_root, int input_size);
 int		parse_input(char *input);
 
-void	chk_redir_sign(char *input, t_data *data, t_list *cmd_root);
+void	chk_redir_sign(char *input, t_data *data, t_list **cmd_root);
 void	init_redir(t_data *data);
-void	update_redir(t_data *data, t_list *cmd_root);
+void	update_redir(t_data *data, t_list **cmd_root);
 void	init_cmd(t_data *data);
 void	init_data(t_data *data, t_list **cmd_root, int input_size);
 void	init_redir(t_data *data);
