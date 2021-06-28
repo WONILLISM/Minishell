@@ -41,7 +41,6 @@ void	update_redir(t_data *data, t_list *cmd_root)
 	data->rd.sign = 0;
 	if (data->last_node->content == NULL)
 	{
-		// printf("!!!\n");
 		tmp_cmd = (t_cmd *)malloc(sizeof(t_cmd));
 		ft_lstadd_back(&cmd_root, ft_lstnew(tmp_cmd));
 		data->last_node = ft_lstlast(cmd_root);

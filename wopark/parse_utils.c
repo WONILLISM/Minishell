@@ -68,11 +68,8 @@ int		clensing_data_buf(t_data *data, t_list *cmd_root, int flag)
 	t_cmd	*tmp_cmd;
 	char	*tmp;
 
-	tmp_cmd = (t_cmd *)malloc(sizeof(t_cmd));
+	tmp_cmd = data->last_node->content;
 	tmp = ft_strltrim(data->buf, " ");
-	ft_lstadd_back(&cmd_root, ft_lstnew(tmp_cmd));
-	data->last_node = ft_lstlast(cmd_root);
-	tmp_cmd->rd_lst = ft_lstnew(NULL);
 	tmp_cmd->argv = ft_split(tmp, ' ');
 	free(tmp);
 	chk_space_flag(tmp_cmd->argv);
@@ -86,6 +83,13 @@ int		clensing_data_buf(t_data *data, t_list *cmd_root, int flag)
 	return (0);
 }
 
+/*
+** 초기 상태 : cmd 리스트에 빈 cmd 컨텐츠 추가
+** 만약 ; | 개행이 오면 cmd 리스트에 새로운 빈 cmd 추가
+
+
+
+*/
 int		lst_add_cmd(t_data *data, t_list *cmd_root, char *input, int flag)
 {
 	(void)input;
@@ -98,7 +102,6 @@ int		lst_add_cmd(t_data *data, t_list *cmd_root, char *input, int flag)
 	}
 	if (flag == -1 && data->rd.sign)
 	{
-		printf("!!!\n");
 		update_redir(data, cmd_root);
 	}
 	else if (data->rd_buf)
