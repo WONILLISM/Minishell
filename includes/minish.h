@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/28 20:08:48 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/28 21:34:54 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,12 +140,10 @@ int		find_next_history(t_dllist *h_list, t_cursor *cursor);
 ** ************ parse_utils.c*************
 */
 void	chk_space_flag(char **strs);
-int		chk_var_name(t_data *data, char *input);
 int		lst_add_cmd(t_data *data, t_list **cmd_root, int flag);
 
 int		parse_error_check(t_data *data);
 int		parse_error_msg(char *msg);
-int		chk_question_mark(t_data *data, char *input);
 
 void	signal_init(int argc, char **argv);
 
@@ -157,6 +155,17 @@ void	get_cursor_position(int *col, int *rows);
 void	term_init(struct termios *term, struct termios *backup);
 int		term_key_handler(t_cursor *cursor, t_dllist *h_list, char **input);
 
+
+/*
+** ************ parse_free.c **************
+*/
+void	free_cmd_lst(t_list *cmd_root);
+
+/*
+** ************ parse_env.c **************
+*/
+int		chk_question_mark(t_data *data, char *input);
+int		chk_var_name(t_data *data, char *input, int *len);
 /*
 ** ************ parse.c *************
 */
