@@ -1,24 +1,5 @@
 #include "../includes/minish.h"
 
-// 9223372036854775807
-// int			exit_str_check(char *str)
-// {
-// 	int		idx;
-
-// 	idx = 0;
-// 	if (str[idx] == '-' || str[idx] == '+')
-// 		idx++;
-// 	if (ft_strlen(str[idx]) > 19)
-// 		return (-1);
-// 	return (0);
-// }
-
-// int			ft_error(int exit_stat)
-// {
-// 	g_archive.exit_stat = exit_stat;
-// 	exit(exit_stat);
-// }
-
 void		ft_exit(t_cmd *cmd)
 {
 	int		idx;
