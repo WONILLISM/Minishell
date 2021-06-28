@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minish.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/25 14:21:07 by junghwki         ###   ########.fr       */
+/*   Updated: 2021/06/28 20:08:48 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,15 +105,14 @@ typedef struct	s_cmd
 typedef struct	s_data
 {
 	t_list		*last_node;
-	t_cmd		*cmd;
-	t_redir		*rd;
 	char		*buf;
 	char		*rd_buf;
+	t_cmd		cmd;
+	t_redir		rd;
 	int			buf_size;
 	int			input_idx;
 	int			buf_idx;
 	int			rd_buf_idx;
-	int			cmd_idx;
 }				t_data;
 
 typedef struct	s_archive
@@ -142,7 +141,7 @@ int		find_next_history(t_dllist *h_list, t_cursor *cursor);
 */
 void	chk_space_flag(char **strs);
 int		chk_var_name(t_data *data, char *input);
-int		lst_add_cmd(t_data *data, t_list *cmd_root, int flag);
+int		lst_add_cmd(t_data *data, t_list **cmd_root, int flag);
 
 int		parse_error_check(t_data *data);
 int		parse_error_msg(char *msg);
@@ -153,6 +152,7 @@ void	signal_init(int argc, char **argv);
 /*
 ** ************ terminal_handle.c ******************
 */
+void	ft_freehistory(void *pending, void *finished);
 void	get_cursor_position(int *col, int *rows);
 void	term_init(struct termios *term, struct termios *backup);
 int		term_key_handler(t_cursor *cursor, t_dllist *h_list, char **input);
@@ -160,13 +160,15 @@ int		term_key_handler(t_cursor *cursor, t_dllist *h_list, char **input);
 /*
 ** ************ parse.c *************
 */
+void	parse_init(t_data *data, t_list **cmd_root, int input_size);
 int		parse_input(char *input);
 
-void	chk_redir_sign(char *input, t_data *data);
+void	chk_redir_sign(char *input, t_data *data, t_list **cmd_root);
 void	init_redir(t_data *data);
-void	update_redir(t_data *data);
+void	update_redir(t_data *data, t_list **cmd_root);
 void	init_cmd(t_data *data);
 void	init_data(t_data *data, t_list **cmd_root, int input_size);
+void	init_redir(t_data *data);
 void	redir_list_view(t_list *lst);
 char	*realloc_input(char *ptr, size_t size);
 

@@ -21,6 +21,7 @@ MAIN_SRCS = \
 WOPARK_DIR =	./wopark/
 WOPARK_SRCS = \
 			parse.c \
+			parse_init.c \
 			parse_utils.c \
 			parse_error.c \
 			signal.c \

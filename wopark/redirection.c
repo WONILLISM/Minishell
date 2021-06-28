@@ -5,7 +5,6 @@ void	redir_list_view(t_list *lst)
 	t_redir *tmp;
 
 	lst = lst->next;
-
 	while (lst)
 	{
 		tmp = lst->content;
@@ -14,53 +13,52 @@ void	redir_list_view(t_list *lst)
 	}
 }
 
-void	init_redir(t_data *data)
+void	update_redir(t_data *data, t_list **cmd_root)
 {
-	data->rd = (t_redir *)malloc(sizeof(t_redir));
-	data->rd->file_name = 0;
-	data->rd->sign = 0;
-	data->rd_buf_idx = 0;
-}
-
-void	update_redir(t_data *data)
-{
+	t_cmd	*tmp_cmd;
+	t_redir	*tmp_rd;
 	int		i;
 
+	(void)cmd_root;
+	tmp_cmd = data->last_node->content;
+	tmp_rd = (t_redir *)malloc(sizeof(t_redir));
+	tmp_rd->sign = data->rd.sign;
+	// if (data->rd.sign && data->rd_buf[0] == 0)
+	// {
+	// 	g_archive.parse_error = ERROR;
+	// 	return ;
+	// }
+	tmp_rd->file_name = ft_strtrim(data->rd_buf, " ");
+	free(data->rd_buf);
 	i = 0;
-	if (data->rd->sign && data->rd_buf[0] == 0)
+	while (tmp_rd->file_name[i])
 	{
-		g_archive.parse_error = ERROR;
-		return ;
-	}
-	data->rd->file_name = ft_strtrim(data->rd_buf, " ");
-	while (data->rd->file_name[i])
-	{
-		if (data->rd->file_name[i] == -1)
-			data->rd->file_name[i] = ' ';
+		if (tmp_rd->file_name[i] == -1)
+			tmp_rd->file_name[i] = ' ';
 		i++;
 	}
-	free(data->rd_buf);
 	data->rd_buf = ft_calloc(sizeof(char), data->buf_size);
 	data->rd_buf_idx = 0;
-	ft_lstadd_back(&data->cmd->rd_lst, ft_lstnew(data->rd));
-	ft_lstlast(data->cmd->rd_lst)->next = NULL;
-	init_redir(data);
+	data->rd.sign = 0;
+	ft_lstadd_back(&tmp_cmd->rd_lst, ft_lstnew(tmp_rd));
+	data->rd.file_name = 0;
+	data->rd.sign = 0;
 }
 
-void	chk_redir_sign(char *input, t_data *data)
+void	chk_redir_sign(char *input, t_data *data, t_list **cmd_root)
 {
 	if (input[data->input_idx] == '>')
 	{
-		if (data->rd->sign == 0 || (data->rd->sign == 1 && !*data->rd_buf))
-			data->rd->sign++;
-		else if ((data->rd->sign == 2 || data->rd->sign == 1) && *data->rd_buf)
+		if (data->rd.sign == 0 || (data->rd.sign == 1 && !*data->rd_buf))
+			data->rd.sign++;
+		else if ((data->rd.sign == 2 || data->rd.sign == 1) && *data->rd_buf)
 		{
-			update_redir(data);
+			update_redir(data, cmd_root);
 			data->input_idx--;
 		}
-		else if (data->rd->sign == -1 && *data->rd_buf)
+		else if (data->rd.sign == -1 && *data->rd_buf)
 		{
-			update_redir(data);
+			update_redir(data, cmd_root);
 			data->input_idx--;
 		}
 		else
@@ -68,16 +66,16 @@ void	chk_redir_sign(char *input, t_data *data)
 	}
 	else if (input[data->input_idx] == '<')
 	{
-		if (data->rd->sign == 0)
-			data->rd->sign--;
-		else if ((data->rd->sign == 2 || data->rd->sign == 1) && *data->rd_buf)
+		if (data->rd.sign == 0)
+			data->rd.sign--;
+		else if ((data->rd.sign == 2 || data->rd.sign == 1) && *data->rd_buf)
 		{
-			update_redir(data);
+			update_redir(data, cmd_root);
 			data->input_idx--;
 		}
-		else if (data->rd->sign == -1 && *data->rd_buf)
+		else if (data->rd.sign == -1 && *data->rd_buf)
 		{
-			update_redir(data);
+			update_redir(data, cmd_root);
 			data->input_idx--;
 		}
 		else

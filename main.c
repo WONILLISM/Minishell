@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:07:54 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/24 22:07:58 by junghwki         ###   ########.fr       */
+/*   Updated: 2021/06/28 20:10:23 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ int		get_input(char **input, t_dllist *h_list)
 		if (!term_key_handler(&cursor, h_list, input))
 		{
 			// ft_dll_viewlst(h_list);
-			// *input = h_list->tail->prev->finished;
 			tcsetattr(STDIN_FILENO, TCSANOW, &term_backup);
 			return (READ_SUC);
 		}
@@ -74,6 +73,3 @@ int		main(int argc, char **argv, char **envv)
 	}
 	return (0);
 }
-
-
-
