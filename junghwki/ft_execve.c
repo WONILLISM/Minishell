@@ -36,7 +36,7 @@ void		run_in_current_path(t_cmd *cmd, char **envp)
 	{
 		if (cmd->argv[0][0] == '/')
 		{
-		printf("path : %s\n",cmd->argv[0]);
+		// printf("path : %s\n",cmd->argv[0]);
 			execve(cmd->argv[0], cmd->argv, envp);
 		}
 		else
@@ -47,7 +47,7 @@ void		run_in_current_path(t_cmd *cmd, char **envp)
 		free_me = path;
 		path = ft_strjoin(path, cmd->argv[0]);
 		free(free_me);
-		printf("path : %s\n",path);
+		// printf("path : %s\n",path);
 		execve(path, cmd->argv, envp);
 		}
 	}

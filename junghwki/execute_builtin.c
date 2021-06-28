@@ -163,9 +163,9 @@ void		builtin(t_cmd *cmd, int pipe_flag)
 		if (cmd->rd_fd[0])
 			dup2(temp_fd[0], 0);
 	}
-	write(2, "exit_stat : ", 12);
-	write(2, ft_itoa(g_archive.exit_stat), ft_strlen(ft_itoa(g_archive.exit_stat)));
-	write(2, "\n", 1);
+	// write(2, "exit_stat : ", 12);
+	// write(2, ft_itoa(g_archive.exit_stat), ft_strlen(ft_itoa(g_archive.exit_stat)));
+	// write(2, "\n", 1);
 }
 
 void		lets_fork(pid_t *pid, t_cmd *cmd, t_cmd *next_cmd, int idx)
@@ -208,7 +208,7 @@ void		execute_cmd(t_list *cmd_root)
 	while (temp)
 	{
 		cmd = temp->content;
-		print_cmd(cmd);//////////////////////////////////////////test
+		// print_cmd(cmd);//////////////////////////////////////////test
 		if (cmd->flag == 1)
 		{
 			pipe_cnt = count_pipe(temp);
@@ -229,7 +229,7 @@ void		execute_cmd(t_list *cmd_root)
 				lets_fork(&pid[idx], cmd, next_cmd, idx);
 				temp = temp->next;
 				cmd = temp->content;
-				print_cmd(cmd);//////////////////////////////////////////test
+				// print_cmd(cmd);//////////////////////////////////////////test
 			}
 			if (cmd->flag == 0)
 			{
