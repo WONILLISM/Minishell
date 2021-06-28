@@ -63,7 +63,6 @@ int		set_printable_key(t_dllist *h_list, t_cursor *cursor, char **input)
 				*input = NULL;
 				ft_dll_delhisnode(h_list, last, ft_freehistory);
 			}
-			// init current history node when pending node finished
 			pending = cursor->cur->pending;
 			if (*pending != 0 && pending && finished)
 			{

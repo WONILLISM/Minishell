@@ -19,49 +19,6 @@ void	chk_space_flag(char **strs)
 	}
 }
 
-int		chk_question_mark(t_data *data, char *input)
-{
-	char	*buf_tmp;
-	char	*tmp;
-
-	if (input[data->input_idx] != '?')
-		return (0);
-	tmp = ft_itoa(g_archive.exit_stat);
-	buf_tmp = ft_strjoin(data->buf, tmp);
-	free(tmp);
-	free(data->buf);
-	data->buf = buf_tmp;
-	data->buf_idx = ft_strlen(buf_tmp);
-	return (1);
-}
-
-int		chk_var_name(t_data *data, char *input)
-{
-	int		ret;
-	char	c;
-
-	ret = 0;
-	c = *(input + data->input_idx);
-	if (ret == 0 && ft_isdigit(c))
-		return (1);
-	while (c == '_' || ft_isalnum(c))
-	{
-		ret++;
-		c = *(input + data->input_idx + ret);
-	}
-	return (ret);
-}
-
-void	update_data(t_data *data, t_list *cmd_root)
-{
-	data->last_node = ft_lstlast(cmd_root);
-	data->last_node->next = NULL;
-	data->buf_idx = 0;
-	free(data->buf);
-	data->buf = ft_calloc(data->buf_size, sizeof(char));
-}
-
-
 int		clensing_data_buf(t_data *data, t_list **cmd_root, int flag)
 {
 	t_cmd	*tmp_cmd;
@@ -86,11 +43,6 @@ int		clensing_data_buf(t_data *data, t_list **cmd_root, int flag)
 	return (0);
 }
 
-
-/*
-** 초기 상태 : cmd 리스트에 빈 cmd 컨텐츠 추가
-** 만약 ; | 개행이 오면 cmd 리스트에 새로운 빈 cmd 추가
-*/
 void	new_cmdlst_addback(t_data *data, t_list **cmd_root)
 {
 	t_cmd	*tmp_cmd;
