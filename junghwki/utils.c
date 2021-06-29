@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junghwki <junghwki@student.42.fr>          +#+  +:+       +#+        */
+/*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/29 18:24:40 by junghwki          #+#    #+#             */
-/*   Updated: 2021/06/29 18:24:41 by junghwki         ###   ########.fr       */
+/*   Updated: 2021/06/30 08:35:00 by junghwki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,4 +60,63 @@ void		free_array(char **array)
 		idx++;
 	}
 	free(array);
+}
+
+t_env		*env_dup(t_env *content)
+{
+	t_env	*ret;
+
+	ret = (t_env *)malloc(sizeof(t_env));
+	ret->key = ft_strdup(content->key);
+	if (content->value)
+		ret->value = ft_strdup(content->value);
+	else
+		ret->value = NULL;
+	return (ret);
+}
+
+
+void		print_cmd(t_cmd *cmd)
+{
+	int		idx;
+	t_list	*rd_lst;
+	t_redir	*rd;
+
+	idx = 0;
+	write(2, "+=========================+\n\n", 29);
+	while (cmd->argv[idx])
+	{
+		write(2, "      argv[", 11);
+		write(2, ft_itoa(idx), ft_strlen(ft_itoa(idx)));
+		write(2, "] : ", 4);
+		write(2, cmd->argv[idx], ft_strlen(cmd->argv[idx]));
+		write(2, "$\n", 2);
+		idx++;
+	}
+	write(2, "         flag", 13);
+	write(2, " : ", 3);
+	write(2, ft_itoa(cmd->flag), ft_strlen(ft_itoa(cmd->flag)));
+	write(2, "$\n\n", 3);
+	if (cmd->rd_lst)
+	{
+		rd_lst = cmd->rd_lst->next;
+		idx = 0;
+		while (rd_lst)
+		{
+			rd = rd_lst->content;
+			write(2, "    rd[", 7);
+			write(2, ft_itoa(idx), ft_strlen(ft_itoa(idx)));
+			write(2, "]sign : ", 8);
+			write(2, ft_itoa(rd->sign), ft_strlen(ft_itoa(rd->sign)));
+			write(2, "$\n", 2);
+			write(2, "    rd[", 7);
+			write(2, ft_itoa(idx), ft_strlen(ft_itoa(idx)));
+			write(2, "]name : ", 8);
+			write(2, rd->file_name, ft_strlen(rd->file_name));
+			write(2, "$\n\n", 3);
+			idx++;
+			rd_lst = rd_lst->next;
+		}
+	}
+	write(2, "+=========================+\n", 28);
 }
