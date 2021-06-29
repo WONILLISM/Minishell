@@ -6,7 +6,7 @@
 /*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/29 18:24:45 by junghwki          #+#    #+#             */
-/*   Updated: 2021/06/29 18:47:55 by junghwki         ###   ########.fr       */
+/*   Updated: 2021/06/29 22:13:05 by junghwki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,10 @@ void		ft_cd(t_cmd *cmd)
 	ret_value = chdir(cmd->argv[1]);
 	if (ret_value < 0)
 	{
-		g_archive.exit_stat = 1;
 		write(2, "minish: cd: ", 12);
 		if (cmd->argv[1])
 			write(2, cmd->argv[1], ft_strlen(cmd->argv[1]));
-		write(2, ": No such file or directory\n", 28);
+		err_msg_print(": No such file or directory\n", 1);
 	}
 	else
 		change_pwd();

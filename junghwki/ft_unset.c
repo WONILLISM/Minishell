@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junghwki <junghwki@student.42.fr>          +#+  +:+       +#+        */
+/*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/29 18:24:21 by junghwki          #+#    #+#             */
-/*   Updated: 2021/06/29 18:24:22 by junghwki         ###   ########.fr       */
+/*   Updated: 2021/06/30 07:50:34 by junghwki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,20 @@ t_list		*get_prev_envv_lst(char *key_value)
 	return (NULL);
 }
 
+void		ft_lst_del_and_link(t_list *lst, void (*del)(void *))
+{
+	t_list	*del_lst;
+
+	if (!lst || !del || !lst->next)
+		return ;
+	del_lst = lst->next;
+	lst->next = del_lst->next;
+	ft_lstdelone(del_lst, del);
+}
+
 void		ft_unset(t_cmd *cmd)
 {
 	t_list	*temp;
-	t_list	*del_lst;
 	void	(*del)();
 	int		idx;
 
@@ -44,20 +54,15 @@ void		ft_unset(t_cmd *cmd)
 	{
 		if (env_key_check(cmd->argv[idx]) < 0)
 		{
-			g_archive.exit_stat = 1;
 			write(2, "minish: unset: `", 16);
 			write(2, cmd->argv[idx], ft_strlen(cmd->argv[idx]));
-			write(2, "': not a valid identifier\n", 26);
+			err_msg_print("': not a valid identifier\n", 1);
 		}
 		else
 		{
 			temp = get_prev_envv_lst(cmd->argv[idx]);
 			if (temp)
-			{
-				del_lst = temp->next;
-				temp->next = del_lst->next;
-				ft_lstdelone(del_lst, del);
-			}
+				ft_lst_del_and_link(temp, del);
 		}
 		idx++;
 	}

@@ -6,7 +6,7 @@
 /*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/29 18:24:35 by junghwki          #+#    #+#             */
-/*   Updated: 2021/06/29 21:59:17 by junghwki         ###   ########.fr       */
+/*   Updated: 2021/06/30 05:18:49 by junghwki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,73 +23,6 @@ void		env_value_print(char *str)
 			write(1, "\\", 1);
 		write(1, &str[idx], 1);
 		idx++;
-	}
-}
-
-int			env_key_check(char *key)
-{
-	int		idx;
-
-	idx = 0;
-	if (!key[idx] || ft_isdigit(key[idx]))
-		return (-1);
-	while (key[idx])
-	{
-		if (key[idx] == '_' || ft_isalnum(key[idx]))
-			idx++;
-		else
-			return (-1);
-	}
-	return (0);
-}
-
-int			env_lst_cmp(char *s1, char *s2)
-{
-	int		idx;
-
-	idx = 0;
-	while (s1[idx])
-	{
-		if (s1[idx] != s2[idx])
-			return (s1[idx] - s2[idx]);
-		idx++;
-	}
-	return (-1);
-}
-
-t_env		*env_dup(t_env *content)
-{
-	t_env	*ret;
-
-	ret = (t_env *)malloc(sizeof(t_env));
-	ret->key = ft_strdup(content->key);
-	if (content->value)
-		ret->value = ft_strdup(content->value);
-	else
-		ret->value = NULL;
-	return (ret);
-}
-
-void		export_lst_sort(t_list **lst)
-{
-	t_list	*temp;
-	t_env	*temp_env;
-	t_list	*next_temp;
-	t_env	*next_temp_env;
-
-	temp = (*lst)->next;
-	while (temp)
-	{
-		temp_env = temp->content;
-		next_temp = temp->next;
-		while (next_temp)
-		{
-			next_temp_env = next_temp->content;
-			if (env_lst_cmp(temp_env->key, next_temp_env->key) > 0)
-				env_swap(temp_env, next_temp_env);
-			next_temp = next_temp->next;
-		}
-		temp = temp->next;
 	}
 }
 
@@ -128,8 +61,7 @@ void		export_lst_print(void)
 		write(1, temp_env->key, ft_strlen(temp_env->key));
 		if (temp_env->value)
 		{
-			write(1, "=", 1);
-			write(1, "\"", 1);
+			write(1, "=\"", 2);
 			env_value_print(temp_env->value);
 			write(1, "\"", 1);
 		}
@@ -138,6 +70,19 @@ void		export_lst_print(void)
 	}
 	ft_lstclear(&head->next, del);
 	free(head);
+}
+
+void		export_add_err(t_env *content)
+{
+	write(2, "minish: export: `", 17);
+	write(2, content->key, ft_strlen(content->key));
+	if (content->value)
+	{
+		write(2, "=", 1);
+		write(2, content->value, ft_strlen(content->value));
+	}
+	err_msg_print("': not a valid identifier\n", 1);
+	envv_content_del(content);
 }
 
 void		export_add(t_cmd *cmd)
@@ -151,18 +96,7 @@ void		export_add(t_cmd *cmd)
 	{
 		content = envv_sep(cmd->argv[idx]);
 		if (env_key_check(content->key) < 0)
-		{
-			g_archive.exit_stat = 1;
-			write(2, "minish: export: `", 17);
-			write(2, content->key, ft_strlen(content->key));
-			if (content->value)
-			{
-				write(2, "=", 1);
-				write(2, content->value, ft_strlen(content->value));
-			}
-			write(2, "': not a valid identifier\n", 26);
-			envv_content_del(content);
-		}
+			export_add_err(content);
 		else
 		{
 			temp = get_curr_envv_lst(content->key);
