@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/28 21:31:59 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/29 20:55:32 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/30 08:54:56 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,6 @@ int		parse_input(char *input)
 	char	*input_tmp;
 
 	g_archive.parse_error = 1;
-	g_archive.buf = data.buf;
 	if (input)
 	{
 		input_tmp = ft_strltrim(input, " ");

@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/29 18:24:49 by junghwki          #+#    #+#             */
-/*   Updated: 2021/06/29 20:55:21 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/30 08:55:09 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ void		child_process(t_cmd *cmd, char **envp)
 void		other_command(t_cmd *cmd, char **envp)
 {
 	pid_t	pid;
+	// int		status;
 
 	pid = fork();
 	if (pid < 0)
@@ -114,6 +115,14 @@ void		other_command(t_cmd *cmd, char **envp)
 	else
 	{
 		waitpid(pid, &g_archive.exit_stat, 0);
-		g_archive.exit_stat /= 256;
+		// waitpid(pid, &status, 0);
+		// printf("%d\n",status);
+		if (g_archive.exit_stat >= 256)
+			g_archive.exit_stat /= 256;
+		// (void)status;
+		// if ((status & 0xff) == 0)
+		// 	g_archive.exit_stat = ((status >> 8) & 0xff);
+		// else
+		// 	g_archive.exit_stat = (status & 0xff) + 128;
 	}
 }

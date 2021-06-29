@@ -1,35 +1,49 @@
 #include "../includes/minish.h"
 
+int			new_line(void)
+{
+	t_cursor	*cursor;
+
+	tputs(tgetstr("do", NULL), 1, ft_putchar);
+	tputs(tgetstr("ll", NULL), 1, ft_putchar);
+	cursor = get_cursor();
+	cursor->key_pos = 0;
+	cursor->len = cursor->key_pos;
+	ft_putstr_fd("minish $> ", STDOUT);
+	return (SUCCESS);
+}
+
 void		signal_handler(int signo)
 {
 	pid_t	pid;
+	int		status;
 
-	pid = waitpid(-1, &g_archive.exit_stat, WNOHANG);
+	pid = waitpid(-1, &status, 0);
 	if (signo == SIGINT)
 	{
 		if (pid == -1)
 		{
-			// ft_putstr_fd("minish $> ", STDOUT);
-			// ft_putstr_fd("\b\b  \b\b\n", STDOUT);
-			write(1,"\n",1);
-			write(1, "minish $> ", 10);
-			// if (g_archive.buf)
-			// 	free(g_archive.buf);
-			g_archive.buf = 0;
+			new_line();
 			g_archive.exit_stat = 1;
 		}
 		else
 		{
-			g_archive.exit_stat = 130;
 			ft_putchar_fd('\n', STDOUT);
+			if ((status & 0xff) == 0)
+				g_archive.exit_stat = ((status >> 8) & 0xff);
+			else
+				g_archive.exit_stat = (status & 0xff) + 128;
 		}
 	}
 	else if (signo == SIGQUIT)
 	{
 		if (pid != -1)
 		{
-			g_archive.exit_stat = 131;
 			ft_putstr_fd("Quit: 3\n", STDOUT);
+			if ((status & 0xff) == 0)
+				g_archive.exit_stat = ((status >> 8) & 0xff);
+			else
+				g_archive.exit_stat = (status & 0xff) + 128;
 		}
 	}
 }

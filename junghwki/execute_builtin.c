@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/29 18:24:26 by junghwki          #+#    #+#             */
-/*   Updated: 2021/06/29 20:55:02 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/30 08:36:22 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ void		ft_execve(t_cmd *cmd, int pipe_flag)
 	else if (ft_strcmp(cmd->argv[0], "env") == 0)
 		env_lst_print();
 	else if (ft_strcmp(cmd->argv[0], "exit") == 0)
-		ft_exit(cmd);
+		ft_exit(cmd, pipe_flag);
 	else
 	{
 		envp = make_envp();
@@ -192,7 +192,7 @@ void		lets_fork(pid_t *pid, t_cmd *cmd, t_cmd *next_cmd, int idx)
 		else
 			dup2(cmd->fd[0], 0);
 		builtin(cmd, 1);
-		exit(0);
+		exit(g_archive.exit_stat);
 	}
 	else
 	{
@@ -209,6 +209,7 @@ void		execute_cmd(t_list *cmd_root)
 	int		idx;
 	int		pipe_cnt;
 	pid_t	*pid;
+	// int status;
 
 	idx = -1;
 	temp = cmd_root->next;
@@ -243,6 +244,14 @@ void		execute_cmd(t_list *cmd_root)
 				while (idx >= 0)
 				{
 					waitpid(pid[pipe_cnt - idx], &g_archive.exit_stat, 0);
+					// waitpid(pid[pipe_cnt - idx], &status, 0);
+					// if ((status & 0xff) == 0)
+					// 	g_archive.exit_stat = ((status >> 8) & 0xff);
+					// else
+					// 	g_archive.exit_stat = (status & 0xff) + 128;
+					// printf("%d\n",status);
+					// if (status >= 256)
+					// 	g_archive.exit_stat = status / 256;
 					idx--;
 				}
 			}

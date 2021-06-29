@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:07:54 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/29 20:55:40 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/30 08:55:33 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,17 +40,18 @@ int		get_input(char **input, t_dllist *h_list)
 {
 	struct termios	term;
 	struct termios	term_backup;
-	t_cursor		cursor;
+	t_cursor		*cursor;
 
+	cursor = get_cursor();
 	term_init(&term, &term_backup);
-	cursor_init(&cursor, h_list);
+	cursor_init(cursor, h_list);
 	init_input(h_list);
-	cursor.cur = h_list->tail->prev;
+	cursor->cur = h_list->tail->prev;
 	while (1)
 	{
-		cursor.buf = 0;
-		cursor.r_nbr = read(STDIN_FILENO, &cursor.buf, sizeof(cursor.buf));
-		if (!term_key_handler(&cursor, h_list, input))
+		cursor->buf = 0;
+		cursor->r_nbr = read(STDIN_FILENO, &cursor->buf, sizeof(cursor->buf));
+		if (!term_key_handler(cursor, h_list, input))
 		{
 			tcsetattr(STDIN_FILENO, TCSANOW, &term_backup);
 			return (READ_SUC);
@@ -73,9 +74,9 @@ int		main(int argc, char **argv, char **envv)
 		write(1, "minish $> ", 10);
 		if (get_input(&input, &history_lst) == READ_ERR)
 			printf("Error");
+		g_archive.buf = input;
 		if (parse_input(input) == ERROR)
 			parse_error_msg(SYNTAX_ERROR_MSG);
-		// system("leaks minishell");
 	}
 	return (0);
 }

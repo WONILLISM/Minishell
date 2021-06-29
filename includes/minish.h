@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/29 20:54:40 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/30 08:30:06 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,7 @@ t_archive				g_archive;
 /*
 ** ************ cursor.c ***********
 */
+t_cursor	*get_cursor(void);
 void	cursor_init(t_cursor *cursor, t_dllist *h_list);
 
 // history
@@ -209,7 +210,7 @@ void			free_array(char **array);
 void			child_process(t_cmd *cmd, char **envp);
 char			**make_envp(void);
 int			env_key_check(char *key);
-void		ft_exit(t_cmd *cmd);
+void		ft_exit(t_cmd *cmd, int pipe_flag);
 void		ft_error(int err_nbr, int exit_status);
 void		err_msg_print(char *str, int exit_stat);
 #endif
