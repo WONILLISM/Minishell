@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/28 21:34:54 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/29 20:49:43 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,7 +165,8 @@ void	free_cmd_lst(t_list *cmd_root);
 ** ************ parse_env.c **************
 */
 int		chk_question_mark(t_data *data, char *input);
-int		chk_var_name(t_data *data, char *input, int *len);
+int		chk_var_name(t_data *data, char *input);
+int		clensing_env_name(t_data *data, char *input, int len);
 /*
 ** ************ parse.c *************
 */

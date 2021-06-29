@@ -3,7 +3,7 @@
 void	init_cmd(t_data *data)
 {
 	data->cmd.argv = NULL;
-	data->cmd.flag = 0;
+	// data->cmd.flag = 0;
 	data->cmd.quote = 0;
 	data->cmd.fd[0] = 0;
 	data->cmd.fd[1] = 0;
@@ -15,6 +15,7 @@ void	parse_init(t_data *data, t_list **cmd_root, int input_size)
 
 	*cmd_root = ft_lstnew(NULL);
 	tmp_cmd = (t_cmd *)malloc(sizeof(t_cmd));
+	tmp_cmd->argv = NULL;
 	ft_lstadd_back(cmd_root, ft_lstnew(tmp_cmd));
 	tmp_cmd->rd_lst = ft_lstnew(NULL);
 	data->last_node = ft_lstlast(*cmd_root);

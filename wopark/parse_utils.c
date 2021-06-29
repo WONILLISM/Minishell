@@ -28,11 +28,16 @@ int		clensing_data_buf(t_data *data, t_list **cmd_root, int flag)
 	tmp_cmd = data->last_node->content;
 	tmp = ft_strltrim(data->buf, " ");
 	free(data->buf);
+	data->buf = NULL;
 	tmp_cmd->argv = ft_split(tmp, ' ');
 	free(tmp);
 	chk_space_flag(tmp_cmd->argv);
-	if (flag == -1)
+	if (flag == 0 ||flag == -1)
+	{
+		if (data->cmd.flag == 1)
+			return (ERROR);
 		flag = 0;
+	}
 	tmp_cmd->flag = flag;
 	tmp_cmd->fd[0] = 0;
 	tmp_cmd->fd[1] = 0;
@@ -50,15 +55,32 @@ void	new_cmdlst_addback(t_data *data, t_list **cmd_root)
 	tmp_cmd = (t_cmd *)malloc(sizeof(t_cmd));
 	ft_lstadd_back(cmd_root, ft_lstnew(tmp_cmd));
 	tmp_cmd->rd_lst = ft_lstnew(NULL);
+	tmp_cmd->argv = NULL;
 	data->last_node = ft_lstlast(*cmd_root);
 	data->last_node->next = NULL;
 }
 
+int		error_buf_free(t_data *data)
+{
+	free(data->rd_buf);
+	data->rd_buf = NULL;
+	free(data->buf);
+	data->buf = NULL;
+	return (ERROR);
+}
+
 int		lst_add_cmd(t_data *data, t_list **cmd_root, int flag)
 {
-	// 만약 ; | 일 때
 	if (flag == 0 || flag == 1 || flag == -1)
 	{
+		if (data->cmd.quote)
+			return (error_buf_free(data));
+		if (flag == 0 && *data->buf == 0)
+			return (error_buf_free(data));
+		if (flag == -1 && data->cmd.flag && *data->buf == 0)
+			return (error_buf_free(data));
+		if (flag == -1 && data->rd.sign && *data->rd_buf == 0)
+			return (error_buf_free(data));
 		if (data->rd.sign)
 			update_redir(data, cmd_root);
 		clensing_data_buf(data, cmd_root, flag);
@@ -69,8 +91,11 @@ int		lst_add_cmd(t_data *data, t_list **cmd_root, int flag)
 			data->buf_idx = 0;
 		}
 		else
+		{
+			if (data->buf)
+				free(data->buf);
 			free(data->rd_buf);
-		init_cmd(data);
+		}
 	}
 	return (SUCCESS);
 }
