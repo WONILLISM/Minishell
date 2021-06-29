@@ -6,7 +6,7 @@
 /*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/29 16:38:12 by junghwki         ###   ########.fr       */
+/*   Updated: 2021/06/29 19:11:30 by junghwki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,84 +46,84 @@
 /*
 **	double linked list
 */
-typedef struct	s_hisnode
+typedef struct			s_hisnode
 {
 	void				*pending;
 	void				*finished;
 	int					idx;
 	struct s_hisnode	*prev;
 	struct s_hisnode	*next;
-}				t_hisnode;
+}						t_hisnode;
 
-typedef struct	s_dllist
+typedef struct			s_dllist
 {
-	t_hisnode	*head;
-	t_hisnode	*tail;
-	int			length;
-}				t_dllist;
+	t_hisnode			*head;
+	t_hisnode			*tail;
+	int					length;
+}						t_dllist;
 
-t_hisnode	*ft_dll_newhisnode(void *pending, void *finished);
-void		ft_dll_init(t_dllist *list);
-void		ft_dll_addhisnode(t_dllist *list, void *pending, void *finished);
-void		ft_dll_delhisnode(t_dllist *list, t_hisnode *node, void (*del)(void *, void *));
+t_hisnode				*ft_dll_newhisnode(void *pending, void *finished);
+void					ft_dll_init(t_dllist *list);
+void					ft_dll_addhisnode(t_dllist *list, void *pending, void *finished);
+void					ft_dll_delhisnode(t_dllist *list, t_hisnode *node, void (*del)(void *, void *));
 // t_hisnode	*ft_dll_find_idx(t_dllist *list, int idx);
-void		ft_dll_viewlst(t_dllist *list);
+void					ft_dll_viewlst(t_dllist *list);
 // void		ft_dll_clear(t_dllist *list, void (*del)(void *));
 
-typedef struct	s_cursor
+typedef struct			s_cursor
 {
-	int		r_nbr;
-	int		idx;
-	int		buf;
-	int		key_pos;
-	int		len;
-	t_hisnode	*cur;
-}				t_cursor;
+	int					r_nbr;
+	int					idx;
+	int					buf;
+	int					key_pos;
+	int					len;
+	t_hisnode			*cur;
+}						t_cursor;
 
-typedef struct	s_redir
+typedef struct			s_redir
 {
-	int		sign;
-	char	*file_name;
-}				t_redir;
+	int					sign;
+	char				*file_name;
+}						t_redir;
 
-typedef struct	s_env
+typedef struct			s_env
 {
-	char		*key;
-	char		*value;
-}				t_env;
+	char				*key;
+	char				*value;
+}						t_env;
 
-typedef struct	s_cmd
+typedef struct			s_cmd
 {
-	char		**argv;		// 명령어 내용 NULL
-	int			flag;		// 0: ; or NULL	1: pipe
-	char		quote;		// stack for ' or "
-	int			fd[2];
-	int			rd_fd[2];
-	t_list		*rd_lst;
-}				t_cmd;
+	char				**argv;		// 명령어 내용 NULL
+	int					flag;		// 0: ; or NULL	1: pipe
+	char				quote;		// stack for ' or "
+	int					fd[2];
+	int					rd_fd[2];
+	t_list				*rd_lst;
+}						t_cmd;
 
-typedef struct	s_data
+typedef struct			s_data
 {
-	t_list		*last_node;
-	char		*buf;
-	char		*rd_buf;
-	t_cmd		cmd;
-	t_redir		rd;
-	int			buf_size;
-	int			input_idx;
-	int			buf_idx;
-	int			rd_buf_idx;
-}				t_data;
+	t_list				*last_node;
+	char				*buf;
+	char				*rd_buf;
+	t_cmd				cmd;
+	t_redir				rd;
+	int					buf_size;
+	int					input_idx;
+	int					buf_idx;
+	int					rd_buf_idx;
+}						t_data;
 
-typedef struct	s_archive
+typedef struct			s_archive
 {
-	t_list	*envv_lst;
-	char	*buf;
-	int		exit_stat;
-	int		parse_error;
-}				t_archive;
+	t_list				*envv_lst;
+	char				*buf;
+	int					exit_stat;
+	int					parse_error;
+}						t_archive;
 
-t_archive	g_archive;
+t_archive				g_archive;
 /*
 ** ************ wopark **************
 */
@@ -201,4 +201,5 @@ char			**make_envp(void);
 int			env_key_check(char *key);
 void		ft_exit(t_cmd *cmd);
 void		ft_error(int err_nbr, int exit_status);
+void		err_msg_print(char *str, int exit_stat);
 #endif
