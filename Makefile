@@ -42,6 +42,7 @@ JUNGHWKI_SRCS = \
 			ft_cd.c \
 			ft_echo.c \
 			ft_export.c \
+			ft_export_utils.c \
 			ft_pwd.c \
 			ft_unset.c \
 			ft_execve.c \
