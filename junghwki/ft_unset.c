@@ -27,7 +27,7 @@ void		ft_unset(t_cmd *cmd)
 	int		idx;
 
 	idx = 0;
-	del = envv_lst_del;
+	del = envv_content_del;
 	while (cmd->argv[idx])
 	{
 		if (env_key_check(cmd->argv[idx]) < 0)

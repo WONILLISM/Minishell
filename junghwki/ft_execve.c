@@ -35,25 +35,18 @@ void		run_in_current_path(t_cmd *cmd, char **envp)
 	else
 	{
 		if (cmd->argv[0][0] == '/')
-		{
-		printf("path : %s\n",cmd->argv[0]);
 			execve(cmd->argv[0], cmd->argv, envp);
-		}
 		else
 		{
-		free_me = path;
-		path = ft_strjoin(path, "/");
-		free(free_me);
-		free_me = path;
-		path = ft_strjoin(path, cmd->argv[0]);
-		free(free_me);
-		printf("path : %s\n",path);
-		execve(path, cmd->argv, envp);
+			free_me = path;
+			path = ft_strjoin(path, "/");
+			free(free_me);
+			free_me = path;
+			path = ft_strjoin(path, cmd->argv[0]);
+			free(free_me);
+			execve(path, cmd->argv, envp);
 		}
 	}
-	// printf("errno2 : %d\n",errno);
-	// execve(*cmd->argv, cmd->argv, envp);
-	// printf("errno3 : %d\n",errno);
 }
 
 void		child_process(t_cmd *cmd, char **envp)
@@ -83,11 +76,11 @@ void		child_process(t_cmd *cmd, char **envp)
 		}
 		free_array(path);
 	}
-	run_in_current_path(cmd, envp);
+	run_in_current_path(cmd, envp);		
 	g_archive.exit_stat = 127;
 	write(2, "minish: ", 8);
 	write(2, cmd->argv[0], ft_strlen(cmd->argv[0]));
-	if (temp)
+	if (temp && cmd->argv[0][0] != '/')
 		write(2, ": command not found\n", 20);
 	else
 		write(2, ": No such file or directory\n", 28);

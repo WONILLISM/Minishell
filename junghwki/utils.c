@@ -14,7 +14,7 @@ int			ft_strcmp(const char *s1, const char *s2)
 	return (0);
 }
 
-void		envv_lst_del(t_env *content)
+void		envv_content_del(t_env *content)
 {
 	free(content->key);
 	free(content->value);

@@ -55,6 +55,7 @@ t_env		*env_dup(t_env *content)
 		ret->value = ft_strdup(content->value); //free
 	else
 		ret->value = NULL;
+	// envv_content_del(content);
 	return (ret);
 }
 
@@ -87,7 +88,7 @@ t_list		*export_lst_make(void)
 	t_list	*export_head;
 	t_list	*temp;
 
-	export_head = ft_lstnew(0);
+	export_head = ft_lstnew(NULL);
 	temp = g_archive.envv_lst->next;
 	while (temp)
 	{
@@ -100,10 +101,12 @@ t_list		*export_lst_make(void)
 
 void		export_lst_print(void)
 {
+	void	(*del)();
 	t_list	*head;
 	t_list	*temp;
 	t_env	*temp_env;
 
+	del = envv_content_del;
 	head = export_lst_make();
 	export_lst_sort(&head);
 	temp = head->next;
@@ -122,26 +125,9 @@ void		export_lst_print(void)
 		write(1, "\n", 1);
 		temp = temp->next;
 	}
+	ft_lstclear(&head->next, del);
+	free(head);
 }
-
-// void		export_add_value(t_env *content)
-// {
-// 	t_env	*temp_content;
-// 	t_list	*temp;
-// 	// char	*free_me;
-
-// 	content->key[ft_strlen(content->key) - 1] = '\0';
-// 	temp = get_curr_envv_lst(content->key);
-// 	if (temp)
-// 	{
-// 		temp_content = temp->content;
-// 		temp_content->value = ft_strjoin(temp_content->value, content->value);
-// 	}
-// 	else
-// 	{
-// 		ft_lstadd_back(&g_archive.envv_lst, ft_lstnew(content)); //free
-// 	}
-// }
 
 void		export_add(t_cmd *cmd)
 {
