@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junghwki <junghwki@student.42.fr>          +#+  +:+       +#+        */
+/*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/29 18:24:35 by junghwki          #+#    #+#             */
-/*   Updated: 2021/06/29 18:24:36 by junghwki         ###   ########.fr       */
+/*   Updated: 2021/06/29 21:59:17 by junghwki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,12 +161,16 @@ void		export_add(t_cmd *cmd)
 				write(2, content->value, ft_strlen(content->value));
 			}
 			write(2, "': not a valid identifier\n", 26);
+			envv_content_del(content);
 		}
 		else
 		{
 			temp = get_curr_envv_lst(content->key);
 			if (temp)
+			{
+				envv_content_del(temp->content);
 				temp->content = content;
+			}
 			else
 				ft_lstadd_back(&g_archive.envv_lst, ft_lstnew(content));
 		}
