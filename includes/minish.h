@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minish.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
+/*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/29 20:54:40 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/30 08:55:14 by junghwki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,8 +131,8 @@ t_archive				g_archive;
 /*
 ** ************ cursor.c ***********
 */
+t_cursor	*get_cursor(void);
 void	cursor_init(t_cursor *cursor, t_dllist *h_list);
-
 // history
 int		find_prev_history(t_dllist *h_list, t_cursor *cursor);
 int		find_next_history(t_dllist *h_list, t_cursor *cursor);
@@ -197,6 +197,7 @@ void			env_swap(t_env *a, t_env *b);
 t_list			*get_curr_envv_lst(char *key_value);
 t_list			*get_prev_envv_lst(char *key_value);
 t_env			*envv_sep(char *envv);
+t_env			*env_dup(t_env *content);
 /*				utils			*/
 void			envv_content_del(t_env *content);
 void			execute_cmd(t_list *cmd_root);
@@ -208,8 +209,12 @@ void			other_command(t_cmd *cmd, char **envp);
 void			free_array(char **array);
 void			child_process(t_cmd *cmd, char **envp);
 char			**make_envp(void);
+/*				export_utils		*/
 int			env_key_check(char *key);
-void		ft_exit(t_cmd *cmd);
+int			env_lst_cmp(char *s1, char *s2);
+void		export_lst_sort(t_list **lst);
+/*				export_utils		*/
+void		ft_exit(t_cmd *cmd, int pipe_flag);
 void		ft_error(int err_nbr, int exit_status);
 void		err_msg_print(char *str, int exit_stat);
 #endif
