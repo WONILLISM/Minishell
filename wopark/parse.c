@@ -161,7 +161,7 @@ int		parse_input(char *input)
 		if (parse_error_check(&data) == ERROR)
 			return (ERROR);
 		else
-			execute_builtin(cmd_root);
+			execute_cmd(cmd_root);
 
 		// t_list	*tcmdl;
 		// int	j;
