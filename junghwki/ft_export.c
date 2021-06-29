@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_export.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: junghwki <junghwki@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/06/29 18:24:35 by junghwki          #+#    #+#             */
+/*   Updated: 2021/06/29 18:24:36 by junghwki         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/minish.h"
 
 void		env_value_print(char *str)
@@ -49,13 +61,12 @@ t_env		*env_dup(t_env *content)
 {
 	t_env	*ret;
 
-	ret = (t_env *)malloc(sizeof(t_env)); //free
-	ret->key = ft_strdup(content->key);	  //free
+	ret = (t_env *)malloc(sizeof(t_env));
+	ret->key = ft_strdup(content->key);
 	if (content->value)
-		ret->value = ft_strdup(content->value); //free
+		ret->value = ft_strdup(content->value);
 	else
 		ret->value = NULL;
-	// envv_content_del(content);
 	return (ret);
 }
 
@@ -93,7 +104,7 @@ t_list		*export_lst_make(void)
 	while (temp)
 	{
 		content = env_dup(temp->content);
-		ft_lstadd_back(&export_head, ft_lstnew(content)); //free
+		ft_lstadd_back(&export_head, ft_lstnew(content));
 		temp = temp->next;
 	}
 	return (export_head);
@@ -157,7 +168,7 @@ void		export_add(t_cmd *cmd)
 			if (temp)
 				temp->content = content;
 			else
-				ft_lstadd_back(&g_archive.envv_lst, ft_lstnew(content)); //free
+				ft_lstadd_back(&g_archive.envv_lst, ft_lstnew(content));
 		}
 		idx++;
 	}

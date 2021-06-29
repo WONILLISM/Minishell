@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   envv_lst.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: junghwki <junghwki@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/06/29 18:24:03 by junghwki          #+#    #+#             */
+/*   Updated: 2021/06/29 18:24:06 by junghwki         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/minish.h"
 
 void		env_swap(t_env *a, t_env *b)
@@ -15,13 +27,13 @@ t_env		*envv_sep(char *envv)
 	t_env	*ret;
 
 	idx = 0;
-	ret = (t_env *)malloc(sizeof(t_env)); //free
+	ret = (t_env *)malloc(sizeof(t_env));
 	while (envv[idx])
 	{
 		if (envv[idx] == '=')
 		{
-			ret->key = ft_substr(envv, 0, idx);		//free
-			ret->value = ft_strdup(&envv[idx + 1]); //free
+			ret->key = ft_substr(envv, 0, idx);
+			ret->value = ft_strdup(&envv[idx + 1]);
 			break ;
 		}
 		idx++;
@@ -44,7 +56,7 @@ void		envv_lst_make(char **envv)
 	while (envv[idx])
 	{
 		content = envv_sep(envv[idx]);
-		ft_lstadd_back(&g_archive.envv_lst, ft_lstnew(content)); //free
+		ft_lstadd_back(&g_archive.envv_lst, ft_lstnew(content));
 		idx++;
 	}
 }
