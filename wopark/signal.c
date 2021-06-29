@@ -26,13 +26,11 @@ void		signal_handler(int signo)
 	}
 	else if (signo == SIGQUIT)
 	{
-		// if (pid == -1)
-		// 	ft_putstr_fd("\b\b  \b\b\n", STDOUT);
-		// else
-		// {
-		g_archive.exit_stat = 131;
-		ft_putstr_fd("Quit: 3\n", STDOUT);
-		// }
+		if (pid != -1)
+		{
+			g_archive.exit_stat = 131;
+			ft_putstr_fd("Quit: 3\n", STDOUT);
+		}
 	}
 }
 

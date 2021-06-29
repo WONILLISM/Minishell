@@ -23,6 +23,8 @@ WOPARK_SRCS = \
 			parse.c \
 			parse_init.c \
 			parse_utils.c \
+			parse_env.c \
+			parse_free.c \
 			parse_error.c \
 			signal.c \
 			linkedlist.c \
