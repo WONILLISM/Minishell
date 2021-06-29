@@ -1,4 +1,30 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_execve.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/06/29 18:24:49 by junghwki          #+#    #+#             */
+/*   Updated: 2021/06/29 20:49:49 by junghwki         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/minish.h"
+
+void		run_execve(t_cmd *cmd, char *path, char **envp)
+{
+	char	*free_me;
+
+	free_me = path;
+	path = ft_strjoin(free_me, "/");
+	free(free_me);
+	free_me = path;
+	path = ft_strjoin(free_me, cmd->argv[0]);
+	free(free_me);
+	execve(path, cmd->argv, envp);
+	free(path);
+}
 
 char		**make_envp(void)
 {
@@ -27,7 +53,6 @@ char		**make_envp(void)
 void		run_in_current_path(t_cmd *cmd, char **envp)
 {
 	char	*path;
-	char	*free_me;
 
 	path = getcwd(NULL, 0);
 	if (path == NULL)
@@ -38,13 +63,7 @@ void		run_in_current_path(t_cmd *cmd, char **envp)
 			execve(cmd->argv[0], cmd->argv, envp);
 		else
 		{
-			free_me = path;
-			path = ft_strjoin(path, "/");
-			free(free_me);
-			free_me = path;
-			path = ft_strjoin(path, cmd->argv[0]);
-			free(free_me);
-			execve(path, cmd->argv, envp);
+			run_execve(cmd, path, envp);
 		}
 	}
 }
@@ -55,7 +74,6 @@ void		child_process(t_cmd *cmd, char **envp)
 	t_list	*temp;
 	t_env	*temp_env;
 	char	**path;
-	char	*free_me;
 
 	idx = 0;
 	temp = get_curr_envv_lst("PATH");
@@ -65,26 +83,18 @@ void		child_process(t_cmd *cmd, char **envp)
 		path = ft_split(temp_env->value, ':');
 		while (path[idx])
 		{
-			free_me = path[idx];
-			path[idx] = ft_strjoin(path[idx], "/");
-			free(free_me);
-			free_me = path[idx];
-			path[idx] = ft_strjoin(path[idx], cmd->argv[0]);
-			free(free_me);
-			execve(path[idx], cmd->argv, envp);
+			run_execve(cmd, path[idx], envp);
 			idx++;
 		}
-		free_array(path);
+		free(path);
 	}
-	run_in_current_path(cmd, envp);		
-	g_archive.exit_stat = 127;
+	run_in_current_path(cmd, envp);
 	write(2, "minish: ", 8);
 	write(2, cmd->argv[0], ft_strlen(cmd->argv[0]));
 	if (temp && cmd->argv[0][0] != '/')
-		write(2, ": command not found\n", 20);
+		err_msg_print(": command not found\n", 127);
 	else
-		write(2, ": No such file or directory\n", 28);
-	exit(g_archive.exit_stat);
+		err_msg_print(": No such file or directory\n", 127);
 }
 
 void		other_command(t_cmd *cmd, char **envp)
@@ -99,6 +109,7 @@ void		other_command(t_cmd *cmd, char **envp)
 	else if (pid == 0)
 	{
 		child_process(cmd, envp);
+		exit(g_archive.exit_stat);
 	}
 	else
 	{
