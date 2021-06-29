@@ -3,59 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   execute_builtin.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
+/*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/29 18:24:26 by junghwki          #+#    #+#             */
-/*   Updated: 2021/06/29 20:55:02 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/30 08:45:14 by junghwki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minish.h"
-
-void		print_cmd(t_cmd *cmd)
-{
-	int		idx;
-	t_list	*rd_lst;
-	t_redir	*rd;
-
-	idx = 0;
-	write(2, "+=========================+\n\n", 29);
-	while (cmd->argv[idx])
-	{
-		write(2, "      argv[", 11);
-		write(2, ft_itoa(idx), ft_strlen(ft_itoa(idx)));
-		write(2, "] : ", 4);
-		write(2, cmd->argv[idx], ft_strlen(cmd->argv[idx]));
-		write(2, "$\n", 2);
-		idx++;
-	}
-	write(2, "         flag", 13);
-	write(2, " : ", 3);
-	write(2, ft_itoa(cmd->flag), ft_strlen(ft_itoa(cmd->flag)));
-	write(2, "$\n\n", 3);
-	if (cmd->rd_lst)
-	{
-		rd_lst = cmd->rd_lst->next;
-		idx = 0;
-		while (rd_lst)
-		{
-			rd = rd_lst->content;
-			write(2, "    rd[", 7);
-			write(2, ft_itoa(idx), ft_strlen(ft_itoa(idx)));
-			write(2, "]sign : ", 8);
-			write(2, ft_itoa(rd->sign), ft_strlen(ft_itoa(rd->sign)));
-			write(2, "$\n", 2);
-			write(2, "    rd[", 7);
-			write(2, ft_itoa(idx), ft_strlen(ft_itoa(idx)));
-			write(2, "]name : ", 8);
-			write(2, rd->file_name, ft_strlen(rd->file_name));
-			write(2, "$\n\n", 3);
-			idx++;
-			rd_lst = rd_lst->next;
-		}
-	}
-	write(2, "+=========================+\n", 28);
-}
 
 int			count_pipe(t_list *list)
 {
@@ -96,7 +51,7 @@ void		ft_execve(t_cmd *cmd, int pipe_flag)
 	else if (ft_strcmp(cmd->argv[0], "env") == 0)
 		env_lst_print();
 	else if (ft_strcmp(cmd->argv[0], "exit") == 0)
-		ft_exit(cmd);
+		ft_exit(cmd, pipe_flag);
 	else
 	{
 		envp = make_envp();
@@ -192,7 +147,7 @@ void		lets_fork(pid_t *pid, t_cmd *cmd, t_cmd *next_cmd, int idx)
 		else
 			dup2(cmd->fd[0], 0);
 		builtin(cmd, 1);
-		exit(0);
+		exit(g_archive.exit_stat);
 	}
 	else
 	{
@@ -243,6 +198,8 @@ void		execute_cmd(t_list *cmd_root)
 				while (idx >= 0)
 				{
 					waitpid(pid[pipe_cnt - idx], &g_archive.exit_stat, 0);
+					if (g_archive.exit_stat >= 256)
+						g_archive.exit_stat = g_archive.exit_stat / 256;
 					idx--;
 				}
 			}

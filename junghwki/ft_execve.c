@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_execve.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
+/*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/29 18:24:49 by junghwki          #+#    #+#             */
-/*   Updated: 2021/06/29 20:55:21 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/30 08:44:17 by junghwki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,7 @@ void		other_command(t_cmd *cmd, char **envp)
 	else
 	{
 		waitpid(pid, &g_archive.exit_stat, 0);
-		g_archive.exit_stat /= 256;
+		if (g_archive.exit_stat >= 256)
+			g_archive.exit_stat = g_archive.exit_stat / 256;
 	}
 }
