@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/30 14:21:55 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/30 15:06:04 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,19 +165,23 @@ int		error_buf_free(t_data *data);
 int		chk_question_mark(t_data *data, char *input);
 int		chk_var_name(t_data *data, char *input);
 int		clensing_env_name(t_data *data, char *input, int len);
+
 /*
 ** ************ parse.c *************
 */
 void	parse_init(t_data *data, t_list **cmd_root, int input_size);
 int		parse_input(char *input);
 
-void	chk_redir_sign(char *input, t_data *data, t_list **cmd_root);
+/*
+** *********** redirection.c **************
+*/
+void	update_redir(t_data *data);
+int		chk_redir_sign(char *input, t_data *data);
+
 void	init_redir(t_data *data);
-void	update_redir(t_data *data, t_list **cmd_root);
 void	init_cmd(t_data *data);
 void	init_data(t_data *data, t_list **cmd_root, int input_size);
 void	init_redir(t_data *data);
-void	redir_list_view(t_list *lst);
 char	*realloc_input(char *ptr, size_t size);
 
 

@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 13:45:26 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/30 14:00:47 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/30 15:06:47 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ int		lst_add_cmd(t_data *data, t_list **cmd_root, int flag)
 		if (check_final_flag(data, flag) == ERROR)
 			return (ERROR);
 		if (data->rd.sign)
-			update_redir(data, cmd_root);
+			update_redir(data);
 		clensing_data_buf(data, cmd_root, flag);
 		if (flag == 0 || flag == 1)
 		{

@@ -2,8 +2,8 @@
 
 void	print_prompt(void)
 {
-	tputs(tgetstr("im", NULL), 1, ft_putchar); // enter insert mode
-	tputs(tgetstr("ic", NULL), 1, ft_putchar); // insert character
+	tputs(tgetstr("im", NULL), 1, ft_putchar);
+	tputs(tgetstr("ic", NULL), 1, ft_putchar);
 	ft_putchar('m');
 	ft_putchar('i');
 	ft_putchar('n');
@@ -14,8 +14,8 @@ void	print_prompt(void)
 	ft_putchar('$');
 	ft_putchar('>');
 	ft_putchar(' ');
-	tputs(tgetstr("ip", NULL), 1, ft_putchar); // insert padding after inserted character
-	tputs(tgetstr("ei", NULL), 1, ft_putchar); // exit insert mode
+	tputs(tgetstr("ip", NULL), 1, ft_putchar);
+	tputs(tgetstr("ei", NULL), 1, ft_putchar);
 }
 
 void	term_del_line(t_cursor *cursor, t_dllist *h_list)
@@ -29,7 +29,7 @@ void	term_del_line(t_cursor *cursor, t_dllist *h_list)
 	len = tgetnum("co");
 	// tputs(tgetstr("ll", NULL), 1, ft_putchar);
 	while (len--)
-		tputs(tgetstr("le", NULL), 1, ft_putchar); // move left one space
+		tputs(tgetstr("le", NULL), 1, ft_putchar);
 	cursor_init(cursor, h_list);
 }
 

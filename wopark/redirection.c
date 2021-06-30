@@ -1,33 +1,26 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   redirection.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/06/30 14:59:29 by wopark            #+#    #+#             */
+/*   Updated: 2021/06/30 15:05:28 by wopark           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/minish.h"
 
-void	redir_list_view(t_list *lst)
-{
-	t_redir *tmp;
-
-	lst = lst->next;
-	while (lst)
-	{
-		tmp = lst->content;
-		printf("sign : %d, filename: %s\n", tmp->sign, tmp->file_name);
-		lst = lst->next;
-	}
-}
-
-void	update_redir(t_data *data, t_list **cmd_root)
+void	update_redir(t_data *data)
 {
 	t_cmd	*tmp_cmd;
 	t_redir	*tmp_rd;
 	int		i;
 
-	(void)cmd_root;
 	tmp_cmd = data->last_node->content;
 	tmp_rd = (t_redir *)malloc(sizeof(t_redir));
 	tmp_rd->sign = data->rd.sign;
-	// if (data->rd.sign && data->rd_buf[0] == 0)
-	// {
-	// 	g_archive.parse_error = ERROR;
-	// 	return ;
-	// }
 	tmp_rd->file_name = ft_strtrim(data->rd_buf, " ");
 	free(data->rd_buf);
 	i = 0;
@@ -45,42 +38,51 @@ void	update_redir(t_data *data, t_list **cmd_root)
 	data->rd.sign = 0;
 }
 
-void	chk_redir_sign(char *input, t_data *data, t_list **cmd_root)
+int		left_redir_sign(t_data *data)
 {
-	if (input[data->input_idx] == '>')
-	{
-		if (data->rd.sign == 0 || (data->rd.sign == 1 && !*data->rd_buf))
+	if (data->rd.sign == 0 || (data->rd.sign == 1 && !*data->rd_buf))
 			data->rd.sign++;
-		else if ((data->rd.sign == 2 || data->rd.sign == 1) && *data->rd_buf)
-		{
-			update_redir(data, cmd_root);
-			data->input_idx--;
-		}
-		else if (data->rd.sign == -1 && *data->rd_buf)
-		{
-			update_redir(data, cmd_root);
-			data->input_idx--;
-		}
-		else
-			printf("ERROR\n");
-	}
-	else if (input[data->input_idx] == '<')
+	else if ((data->rd.sign == 2 || data->rd.sign == 1) && *data->rd_buf)
 	{
-		if (data->rd.sign == 0)
-			data->rd.sign--;
-		else if ((data->rd.sign == 2 || data->rd.sign == 1) && *data->rd_buf)
-		{
-			update_redir(data, cmd_root);
-			data->input_idx--;
-		}
-		else if (data->rd.sign == -1 && *data->rd_buf)
-		{
-			update_redir(data, cmd_root);
-			data->input_idx--;
-		}
-		else
-			printf("ERROR\n");
+		update_redir(data);
+		data->input_idx--;
+	}
+	else if (data->rd.sign == -1 && *data->rd_buf)
+	{
+		update_redir(data);
+		data->input_idx--;
 	}
 	else
-		printf("error\n");
+		return (ERROR);
+	return (SUCCESS);
+}
+
+int		right_redir_sign(t_data *data)
+{
+	if (data->rd.sign == 0)
+		data->rd.sign--;
+	else if ((data->rd.sign == 2 || data->rd.sign == 1) && *data->rd_buf)
+	{
+		update_redir(data);
+		data->input_idx--;
+	}
+	else if (data->rd.sign == -1 && *data->rd_buf)
+	{
+		update_redir(data);
+		data->input_idx--;
+	}
+	else
+		return (ERROR);
+	return (SUCCESS);
+}
+
+int		chk_redir_sign(char *input, t_data *data)
+{
+	if (input[data->input_idx] == '>')
+		return (left_redir_sign(data));
+	else if (input[data->input_idx] == '<')
+		return (right_redir_sign(data));
+	else
+		return (ERROR);
+	return (SUCCESS);
 }

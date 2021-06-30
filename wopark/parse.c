@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/28 21:31:59 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/30 13:43:51 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/30 15:06:27 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int		parse_get_data(char *input, t_data *data, t_list **cmd_root)
 		data->cmd.quote = 0;
 	else if (data->cmd.quote == 0
 		&& *data->rd_buf != 0 && input[data->input_idx] == ' ')
-		update_redir(data, cmd_root);
+		update_redir(data);
 	else if (data->cmd.quote == 0 && input[data->input_idx] == '\"')
 		data->cmd.quote = input[data->input_idx];
 	else if (data->cmd.quote == 0 && input[data->input_idx] == '\'')
@@ -64,7 +64,7 @@ int		parse_get_data(char *input, t_data *data, t_list **cmd_root)
 	else if (data->cmd.quote != '\'' && input[data->input_idx] == '$')
 		return (parse_envv_handler(data, input));
 	else if (data->cmd.quote == 0 && ft_strchr("><", input[data->input_idx]))
-		chk_redir_sign(input, data, cmd_root);
+		chk_redir_sign(input, data);
 	else
 		parse_get_data2(input, data);
 	return (0);
