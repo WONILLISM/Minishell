@@ -82,7 +82,6 @@ int		set_printable_key(t_dllist *h_list, t_cursor *cursor, char **input)
 			}
 			else if (pending && finished == NULL)
 			{
-				// init last history node when pending node finished
 				pending[cursor->key_pos] = 0;
 				cursor->cur->finished = ft_strdup(cursor->cur->pending);
 				free(cursor->cur->pending);

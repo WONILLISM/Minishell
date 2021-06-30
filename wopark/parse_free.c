@@ -1,5 +1,14 @@
 #include "../includes/minish.h"
 
+int		error_buf_free(t_data *data)
+{
+	free(data->rd_buf);
+	data->rd_buf = NULL;
+	free(data->buf);
+	data->buf = NULL;
+	return (ERROR);
+}
+
 void	free_rd_lst(t_list *rdlst)
 {
 	t_list	*tmp1;

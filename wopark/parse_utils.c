@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_utils.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/06/30 13:45:26 by wopark            #+#    #+#             */
+/*   Updated: 2021/06/30 14:00:47 by wopark           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/minish.h"
 
 void	chk_space_flag(char **strs)
@@ -32,7 +44,7 @@ int		clensing_data_buf(t_data *data, t_list **cmd_root, int flag)
 	tmp_cmd->argv = ft_split(tmp, ' ');
 	free(tmp);
 	chk_space_flag(tmp_cmd->argv);
-	if (flag == 0 ||flag == -1)
+	if (flag == 0 || flag == -1)
 	{
 		if (data->cmd.flag == 1)
 			return (ERROR);
@@ -60,33 +72,34 @@ void	new_cmdlst_addback(t_data *data, t_list **cmd_root)
 	data->last_node->next = NULL;
 }
 
-int		error_buf_free(t_data *data)
+int		check_final_flag(t_data *data, int flag)
 {
-	free(data->rd_buf);
-	data->rd_buf = NULL;
-	free(data->buf);
-	data->buf = NULL;
-	return (ERROR);
+	if (data->cmd.quote)
+		return (error_buf_free(data));
+	if (flag == 0 && *data->buf == 0)
+		return (error_buf_free(data));
+	if (flag == 1 && *data->buf == 0)
+		return (error_buf_free(data));
+	if ((flag == -1 || flag == 0) && data->cmd.flag && *data->buf == 0)
+		return (error_buf_free(data));
+	if ((flag == -1 || flag == 0) && data->rd.sign && *data->rd_buf == 0)
+		return (error_buf_free(data));
+	return (SUCCESS);
 }
 
 int		lst_add_cmd(t_data *data, t_list **cmd_root, int flag)
 {
 	if (flag == 0 || flag == 1 || flag == -1)
 	{
-		if (data->cmd.quote)
-			return (error_buf_free(data));
-		if (flag == 0 && *data->buf == 0)
-			return (error_buf_free(data));
-		if (flag == -1 && data->cmd.flag && *data->buf == 0)
-			return (error_buf_free(data));
-		if (flag == -1 && data->rd.sign && *data->rd_buf == 0)
-			return (error_buf_free(data));
+		if (check_final_flag(data, flag) == ERROR)
+			return (ERROR);
 		if (data->rd.sign)
 			update_redir(data, cmd_root);
 		clensing_data_buf(data, cmd_root, flag);
 		if (flag == 0 || flag == 1)
 		{
 			new_cmdlst_addback(data, cmd_root);
+			data->cmd.flag = 0;
 			data->buf = ft_calloc(data->buf_size, sizeof(char));
 			data->buf_idx = 0;
 		}
