@@ -1,9 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_init.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/06/30 14:46:01 by wopark            #+#    #+#             */
+/*   Updated: 2021/06/30 14:46:26 by wopark           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/minish.h"
 
 void	init_cmd(t_data *data)
 {
 	data->cmd.argv = NULL;
-	// data->cmd.flag = 0;
 	data->cmd.quote = 0;
 	data->cmd.fd[0] = 0;
 	data->cmd.fd[1] = 0;
@@ -33,4 +44,3 @@ void	parse_init(t_data *data, t_list **cmd_root, int input_size)
 	data->rd.sign = 0;
 	data->rd_buf_idx = 0;
 }
-
