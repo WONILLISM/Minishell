@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 13:45:26 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/30 15:06:47 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/30 15:58:55 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ int		clensing_data_buf(t_data *data, t_list **cmd_root, int flag)
 	t_cmd	*tmp_cmd;
 	char	*tmp;
 
-	(void)cmd_root;
 	tmp_cmd = data->last_node->content;
 	tmp = ft_strltrim(data->buf, " ");
 	free(data->buf);
