@@ -27,6 +27,7 @@ void	term_del_line(t_cursor *cursor, t_dllist *h_list)
 	tputs(tgetstr("dl", NULL), 1, ft_putchar);
 	tputs(tgetstr("ed", NULL), 1, ft_putchar);
 	len = tgetnum("co");
+	// tputs(tgetstr("ll", NULL), 1, ft_putchar);
 	while (len--)
 		tputs(tgetstr("le", NULL), 1, ft_putchar); // move left one space
 	cursor_init(cursor, h_list);

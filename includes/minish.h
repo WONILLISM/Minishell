@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/30 08:30:06 by wopark           ###   ########.fr       */
+/*   Updated: 2021/06/30 13:44:45 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,6 +161,7 @@ int		term_key_handler(t_cursor *cursor, t_dllist *h_list, char **input);
 ** ************ parse_free.c **************
 */
 void	free_cmd_lst(t_list *cmd_root);
+int		error_buf_free(t_data *data);
 
 /*
 ** ************ parse_env.c **************
