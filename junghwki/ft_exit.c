@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/29 18:24:17 by junghwki          #+#    #+#             */
-/*   Updated: 2021/06/29 19:29:52 by junghwki         ###   ########.fr       */
+/*   Updated: 2021/06/30 09:09:58 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,42 +46,38 @@ int				char_cmp(char a, char b)
 int				arg_check(char *str)
 {
 	char		*long_long_max;
-	int			str_idx;
-	int			idx;
 	int			check_ret;
 
 	long_long_max = "9223372036854775807";
-	str_idx = 0;
-	idx = 0;
-	if (str[str_idx] == '+' || str[str_idx] == '-')
-		str_idx++;
-	if (ft_strlen(&str[str_idx]) > 19)
+	if (*str == '+' || *str == '-')
+		str++;
+	if (ft_strlen(str) > 19)
 		return (-1);
-	else if (ft_strlen(&str[str_idx]) == 19)
-		while (str[str_idx])
+	else if (ft_strlen(str) == 19)
+		while (*str)
 		{
-			check_ret = char_cmp(long_long_max[idx], str[str_idx]);
+			check_ret = char_cmp(*long_long_max, *str);
 			if (check_ret == -1)
 				return (-1);
 			else if (check_ret == 0)
 				return (1);
 			else if (check_ret == 1)
 			{
-				idx++;
-				str_idx++;
+				long_long_max++;
+				str++;
 			}
 		}
 	return (1);
 }
 
-void			ft_exit(t_cmd *cmd)
+void			ft_exit(t_cmd *cmd, int pipe_flag)
 {
 	int			idx;
 
 	idx = 0;
 	if (!(cmd->argv[1]))
 	{
-		if (!cmd->flag)
+		if (!pipe_flag)
 			write(2, "exit\n", 5);
 		exit(g_archive.exit_stat);
 	}
@@ -95,7 +91,6 @@ void			ft_exit(t_cmd *cmd)
 		{
 			if (!ft_isdigit(cmd->argv[1][idx]) || (arg_check(cmd->argv[1]) < 0))
 			{
-				g_archive.exit_stat = 255;
 				write(2, "minish: exit: ", 14);
 				write(2, cmd->argv[1], ft_strlen(cmd->argv[1]));
 				err_msg_print(": numeric argument required\n", 255);
@@ -104,7 +99,8 @@ void			ft_exit(t_cmd *cmd)
 			idx++;
 		}
 		g_archive.exit_stat = ft_atoll(cmd->argv[1]);
-		write(1, "exit\n", 5);
+		if (!pipe_flag)
+			write(2, "exit\n", 5);
 		exit(g_archive.exit_stat);
 	}
 }
