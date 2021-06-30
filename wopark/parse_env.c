@@ -24,17 +24,14 @@ int		chk_var_name(t_data *data, char *input)
 	len = 0;
 	c = *(input + data->input_idx);
 	if (len == 0 && ft_isdigit(c))
-		return (0);
+		return (1);
 	while (c == '_' || ft_isalnum(c))
 	{
-		(len)++;
+		len++;
 		c = *(input + data->input_idx + len);
 	}
 	if (len == 0)
-	{
-		data->buf[data->buf_idx++] = input[data->input_idx - 1];
-		return (-1);
-	}
+		data->buf[data->buf_idx++] = input[--data->input_idx];
 	return (len);
 }
 

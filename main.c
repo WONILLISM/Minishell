@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:07:54 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/30 08:21:49 by junghwki         ###   ########.fr       */
+/*   Updated: 2021/06/30 09:02:45 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,9 +74,9 @@ int		main(int argc, char **argv, char **envv)
 		write(1, "minish $> ", 10);
 		if (get_input(&input, &history_lst) == READ_ERR)
 			printf("Error");
+		g_archive.buf = input;
 		if (parse_input(input) == ERROR)
 			parse_error_msg(SYNTAX_ERROR_MSG);
-		// system("leaks minishell");
 	}
 	return (0);
 }

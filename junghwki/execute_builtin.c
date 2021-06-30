@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_builtin.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/29 18:24:26 by junghwki          #+#    #+#             */
-/*   Updated: 2021/06/30 08:45:14 by junghwki         ###   ########.fr       */
+/*   Updated: 2021/06/30 09:01:36 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,6 +164,7 @@ void		execute_cmd(t_list *cmd_root)
 	int		idx;
 	int		pipe_cnt;
 	pid_t	*pid;
+	// int status;
 
 	idx = -1;
 	temp = cmd_root->next;

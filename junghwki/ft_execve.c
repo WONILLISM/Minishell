@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_execve.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/29 18:24:49 by junghwki          #+#    #+#             */
-/*   Updated: 2021/06/30 08:44:17 by junghwki         ###   ########.fr       */
+/*   Updated: 2021/06/30 09:01:42 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ void		child_process(t_cmd *cmd, char **envp)
 void		other_command(t_cmd *cmd, char **envp)
 {
 	pid_t	pid;
+	// int		status;
 
 	pid = fork();
 	if (pid < 0)
