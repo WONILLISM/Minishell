@@ -6,7 +6,7 @@
 /*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/29 18:24:17 by junghwki          #+#    #+#             */
-/*   Updated: 2021/06/30 08:38:27 by junghwki         ###   ########.fr       */
+/*   Updated: 2021/06/30 11:29:12 by junghwki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,50 +33,77 @@ long long		ft_atoll(const char *str)
 	return (ret);
 }
 
-int				char_cmp(char a, char b)
+int				ft_isdigit_str(char *str)
 {
-	if (a == b)
-		return (1);
-	else if (a > b)
-		return (0);
-	else
-		return (-1);
+	while (*str)
+	{
+		if (!ft_isdigit(*str))
+			return (-1);
+		str++;
+	}
+	return (0);
 }
 
 int				arg_check(char *str)
 {
 	char		*long_long_max;
-	int			check_ret;
 
 	long_long_max = "9223372036854775807";
 	if (*str == '+' || *str == '-')
 		str++;
+	if (ft_isdigit_str(str) < 0)
+		return (-1);
 	if (ft_strlen(str) > 19)
 		return (-1);
 	else if (ft_strlen(str) == 19)
+	{
 		while (*str)
 		{
-			check_ret = char_cmp(*long_long_max, *str);
-			if (check_ret == -1)
-				return (-1);
-			else if (check_ret == 0)
-				return (1);
-			else if (check_ret == 1)
+			if (*long_long_max == *str)
 			{
 				long_long_max++;
 				str++;
 			}
+			else if (*long_long_max > *str)
+				return (1);
+			else if (*long_long_max < *str)
+				return (-1);
 		}
+	}
 	return (1);
 }
 
-// void			exit_errmsg(char *str)
-// {
-// 	write(2, "minish: exit: ", 14);
-// 	write(2, str, ft_strlen(str));
-// 	err_msg_print(": numeric argument required\n", 255);
-// 	exit(g_archive.exit_stat);
-// }
+void		numeric_err(char *str)
+{
+	write(2, "minish: exit: ", 14);
+	write(2, str, ft_strlen(str));
+	err_msg_print(": numeric argument required\n", 255);
+	exit(g_archive.exit_stat);	
+}
+
+void			ft_exit(t_cmd *cmd, int pipe_flag)
+{
+	if (!(cmd->argv[1]))
+	{
+		if (!pipe_flag)
+			write(2, "exit\n", 5);
+		exit(g_archive.exit_stat);
+	}
+	if (cmd->argv[2])
+		if (ft_isdigit_str(cmd->argv[1]) < 0)
+			numeric_err(cmd->argv[1]);
+		else
+			err_msg_print("minish: exit: too many arguments\n", 1);
+	else
+	{
+		if (arg_check(cmd->argv[1]) < 0)
+			numeric_err(cmd->argv[1]);
+		g_archive.exit_stat = ft_atoll(cmd->argv[1]);
+		if (!pipe_flag)
+			write(2, "exit\n", 5);
+		exit(g_archive.exit_stat);
+	}
+}
 
 // void			ft_exit(t_cmd *cmd, int pipe_flag)
 // {
@@ -93,14 +120,17 @@ int				arg_check(char *str)
 // 		err_msg_print("minish: exit: too many arguments\n", 1);
 // 	else
 // 	{
-// 		if (arg_check(cmd->argv[1]) < 0)
-// 			exit_errmsg(cmd->argv[1]);
 // 		if (cmd->argv[1][idx] == '+' || cmd->argv[1][idx] == '-')
 // 			idx++;
 // 		while (cmd->argv[1][idx])
 // 		{
-// 			if (!ft_isdigit(cmd->argv[1][idx]))
-// 				exit_errmsg(cmd->argv[1]);
+// 			if (!ft_isdigit(cmd->argv[1][idx]) || (arg_check(cmd->argv[1]) < 0))
+// 			{
+// 				write(2, "minish: exit: ", 14);
+// 				write(2, cmd->argv[1], ft_strlen(cmd->argv[1]));
+// 				err_msg_print(": numeric argument required\n", 255);
+// 				exit(g_archive.exit_stat);
+// 			}
 // 			idx++;
 // 		}
 // 		g_archive.exit_stat = ft_atoll(cmd->argv[1]);
@@ -109,37 +139,3 @@ int				arg_check(char *str)
 // 		exit(g_archive.exit_stat);
 // 	}
 // }
-void			ft_exit(t_cmd *cmd, int pipe_flag)
-{
-	int			idx;
-
-	idx = 0;
-	if (!(cmd->argv[1]))
-	{
-		if (!pipe_flag)
-			write(2, "exit\n", 5);
-		exit(g_archive.exit_stat);
-	}
-	if (cmd->argv[2])
-		err_msg_print("minish: exit: too many arguments\n", 1);
-	else
-	{
-		if (cmd->argv[1][idx] == '+' || cmd->argv[1][idx] == '-')
-			idx++;
-		while (cmd->argv[1][idx])
-		{
-			if (!ft_isdigit(cmd->argv[1][idx]) || (arg_check(cmd->argv[1]) < 0))
-			{
-				write(2, "minish: exit: ", 14);
-				write(2, cmd->argv[1], ft_strlen(cmd->argv[1]));
-				err_msg_print(": numeric argument required\n", 255);
-				exit(g_archive.exit_stat);
-			}
-			idx++;
-		}
-		g_archive.exit_stat = ft_atoll(cmd->argv[1]);
-		if (!pipe_flag)
-			write(2, "exit\n", 5);
-		exit(g_archive.exit_stat);
-	}
-}
