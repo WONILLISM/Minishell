@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_env.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/06/30 14:25:24 by wopark            #+#    #+#             */
+/*   Updated: 2021/06/30 14:25:26 by wopark           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/minish.h"
 
 int		chk_question_mark(t_data *data, char *input)
@@ -61,23 +73,3 @@ int		clensing_env_name(t_data *data, char *input, int len)
 	data->buf_idx = ft_strlen(buf_tmp);
 	return (0);
 }
-
-// t_list	*tcmdl;
-		// int	j;
-
-		// tcmdl = cmd_root->next;
-		// j = 0;
-		// while (tcmdl)
-		// {
-		// 	t_cmd *tcmd = tcmdl->content;
-		// 	t_list *trdl = tcmd->rd_lst;
-		// 	if (tcmd->argv){
-		// 		printf("-------idx %d-------\n", j);
-		// 		printf("flag : %d\n", tcmd->flag);
-		// 		for (int i = 0; tcmd->argv[i]; i++)
-		// 			printf("argv[%d] : %s\n", i, tcmd->argv[i]);
-		// 	}
-		// 	redir_list_view(trdl);
-		// 	j++;
-		// 	tcmdl = tcmdl->next;
-		// }
