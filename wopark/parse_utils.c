@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 13:45:26 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/30 15:58:55 by wopark           ###   ########.fr       */
+/*   Updated: 2021/07/01 17:13:57 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	chk_space_flag(char **strs)
 	}
 }
 
-int		clensing_data_buf(t_data *data, t_list **cmd_root, int flag)
+int		clensing_data_buf(t_data *data, int flag)
 {
 	t_cmd	*tmp_cmd;
 	char	*tmp;
@@ -94,7 +94,7 @@ int		lst_add_cmd(t_data *data, t_list **cmd_root, int flag)
 			return (ERROR);
 		if (data->rd.sign)
 			update_redir(data);
-		clensing_data_buf(data, cmd_root, flag);
+		clensing_data_buf(data, flag);
 		if (flag == 0 || flag == 1)
 		{
 			new_cmdlst_addback(data, cmd_root);

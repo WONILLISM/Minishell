@@ -4,16 +4,7 @@ void	print_prompt(void)
 {
 	tputs(tgetstr("im", NULL), 1, ft_putchar);
 	tputs(tgetstr("ic", NULL), 1, ft_putchar);
-	ft_putchar('m');
-	ft_putchar('i');
-	ft_putchar('n');
-	ft_putchar('i');
-	ft_putchar('s');
-	ft_putchar('h');
-	ft_putchar(' ');
-	ft_putchar('$');
-	ft_putchar('>');
-	ft_putchar(' ');
+	ft_putstr_fd("minish $> ", 1);
 	tputs(tgetstr("ip", NULL), 1, ft_putchar);
 	tputs(tgetstr("ei", NULL), 1, ft_putchar);
 }
@@ -21,13 +12,20 @@ void	print_prompt(void)
 void	term_del_line(t_cursor *cursor, t_dllist *h_list)
 {
 	int			len;
+	int			row;
 
+	len = tgetnum("co");
+	row = (cursor->len + 10) / len + 1;
+	// row = 1;
 	tputs(tgetstr("le", NULL), 1, ft_putchar);
 	tputs(tgetstr("dm", NULL), 1, ft_putchar);
-	tputs(tgetstr("dl", NULL), 1, ft_putchar);
+	while (row--)
+	{
+		tputs(tgetstr("dl", NULL), 1, ft_putchar);
+		if (row)
+			tputs(tgetstr("up", NULL), 1, ft_putchar);
+	}
 	tputs(tgetstr("ed", NULL), 1, ft_putchar);
-	len = tgetnum("co");
-	// tputs(tgetstr("ll", NULL), 1, ft_putchar);
 	while (len--)
 		tputs(tgetstr("le", NULL), 1, ft_putchar);
 	cursor_init(cursor, h_list);

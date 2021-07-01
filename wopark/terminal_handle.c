@@ -1,4 +1,5 @@
 #include "../includes/minish.h"
+#include <sys/ioctl.h>
 
 void	term_init(struct termios *term, struct termios *backup)
 {
@@ -35,6 +36,7 @@ void	input_term(int buf)
 	tputs(tgetstr("ip", NULL), 1, ft_putchar); // insert padding after inserted character
 	tputs(tgetstr("ei", NULL), 1, ft_putchar); // exit insert mode
 }
+
 void	ft_freehistory(void *pending, void *finished)
 {
 	if (pending != NULL)
@@ -99,7 +101,6 @@ int		set_printable_key(t_dllist *h_list, t_cursor *cursor, char **input)
 	return (1);
 }
 
-
 int		term_key_handler(t_cursor *cursor, t_dllist *h_list, char **input)
 {
 	char	*pending;
@@ -114,7 +115,7 @@ int		term_key_handler(t_cursor *cursor, t_dllist *h_list, char **input)
 		return set_printable_key(h_list, cursor, input);
 	else if (cursor->buf == CTRL_D)
 	{
-		pending = h_list->tail->prev->pending;
+		pending = cursor->cur->pending;
 		if (pending && *pending != 0)
 			return (1);
 		else
