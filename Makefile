@@ -31,9 +31,8 @@ WOPARK_SRCS = \
 			cursor.c \
 			redirection.c \
 			history.c \
-			terminal_handle.c
-			# ft_exit.c
-			# execute_proc.c
+			terminal_handle.c \
+			terminal_utils.c
 
 JUNGHWKI_DIR =	./junghwki/
 JUNGHWKI_SRCS = \

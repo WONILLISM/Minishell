@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/30 15:06:04 by wopark           ###   ########.fr       */
+/*   Updated: 2021/07/02 16:36:14 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,8 @@ typedef struct			s_cursor
 	int					buf;
 	int					key_pos;
 	int					len;
+	char				*pending;
+	char				*finished;
 	t_hisnode			*cur;
 }						t_cursor;
 
@@ -139,7 +141,6 @@ int		find_next_history(t_dllist *h_list, t_cursor *cursor);
 void	chk_space_flag(char **strs);
 int		lst_add_cmd(t_data *data, t_list **cmd_root, int flag);
 
-int		parse_error_check(t_data *data);
 int		parse_error_msg(char *msg);
 
 void	signal_init(int argc, char **argv);
@@ -147,17 +148,20 @@ void	signal_init(int argc, char **argv);
 /*
 ** ************ terminal_handle.c ******************
 */
-void	ft_freehistory(void *pending, void *finished);
-void	get_cursor_position(int *col, int *rows);
-void	term_init(struct termios *term, struct termios *backup);
 int		term_key_handler(t_cursor *cursor, t_dllist *h_list, char **input);
 
+/*
+** ************ terminal_utils.c ********************
+*/
+void	ft_freehistory(void *pending, void *finished);
+void	term_init(struct termios *term, struct termios *backup);
 
 /*
 ** ************ parse_free.c **************
 */
 void	free_cmd_lst(t_list *cmd_root);
 int		error_buf_free(t_data *data);
+void	input_term(int buf);
 
 /*
 ** ************ parse_env.c **************

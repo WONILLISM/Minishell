@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 14:59:29 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/30 15:05:28 by wopark           ###   ########.fr       */
+/*   Updated: 2021/07/02 16:32:22 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	update_redir(t_data *data)
 int		left_redir_sign(t_data *data)
 {
 	if (data->rd.sign == 0 || (data->rd.sign == 1 && !*data->rd_buf))
-			data->rd.sign++;
+		data->rd.sign++;
 	else if ((data->rd.sign == 2 || data->rd.sign == 1) && *data->rd_buf)
 	{
 		update_redir(data);

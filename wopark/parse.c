@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/28 21:31:59 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/30 15:06:27 by wopark           ###   ########.fr       */
+/*   Updated: 2021/07/02 16:34:16 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ int		parse_input(char *input)
 			return (ERROR);
 		if (g_archive.parse_error != -1)
 			g_archive.parse_error = lst_add_cmd(&data, &cmd_root, -1);
-		if (parse_error_check(&data) == ERROR)
+		if (g_archive.parse_error == -1)
 		{
 			free_cmd_lst(cmd_root);
 			return (ERROR);
