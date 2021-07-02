@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_free.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/06/30 14:26:13 by wopark            #+#    #+#             */
+/*   Updated: 2021/06/30 14:27:00 by wopark           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/minish.h"
 
 int		error_buf_free(t_data *data)
@@ -40,14 +52,11 @@ void	free_cmd_lst(t_list *cmd_root)
 	while (tmp1)
 	{
 		tmp_cmd = tmp1->content;
-		i = 0;
+		i = -1;
 		if (tmp_cmd->argv)
 		{
-			while (tmp_cmd->argv[i])
-			{
+			while (tmp_cmd->argv[++i])
 				free(tmp_cmd->argv[i]);
-				i++;
-			}
 			free(tmp_cmd->argv);
 		}
 		free_rd_lst(tmp_cmd->rd_lst);

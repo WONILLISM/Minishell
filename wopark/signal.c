@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   signal.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/06/30 15:15:09 by wopark            #+#    #+#             */
+/*   Updated: 2021/06/30 15:59:04 by wopark           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/minish.h"
 
 int			new_line(void)
@@ -11,6 +23,26 @@ int			new_line(void)
 	cursor->len = cursor->key_pos;
 	ft_putstr_fd("minish $> ", STDOUT);
 	return (SUCCESS);
+}
+
+void		signal_multi_process(int signo, int status)
+{
+	if (signo == SIGINT)
+	{
+		ft_putchar_fd('\n', STDOUT);
+		if ((status & 0xff) == 0)
+			g_archive.exit_stat = ((status >> 8) & 0xff);
+		else
+			g_archive.exit_stat = (status & 0xff) + 128;
+	}
+	else if (signo == SIGQUIT)
+	{
+		ft_putstr_fd("Quit: 3\n", STDOUT);
+		if ((status & 0xff) == 0)
+			g_archive.exit_stat = ((status >> 8) & 0xff);
+		else
+			g_archive.exit_stat = (status & 0xff) + 128;
+	}
 }
 
 void		signal_handler(int signo)
@@ -27,28 +59,10 @@ void		signal_handler(int signo)
 			g_archive.exit_stat = 1;
 		}
 		else
-		{
-			ft_putchar_fd('\n', STDOUT);
-			if ((status & 0xff) == 0)
-				g_archive.exit_stat = ((status >> 8) & 0xff);
-			else
-				g_archive.exit_stat = (status & 0xff) + 128;
-		}
+			signal_multi_process(signo, status);
 	}
 	else if (signo == SIGQUIT)
-	{
-		// if (pid == -1)
-			// ft_putstr_fd("\b\b  \b\b\n", STDOUT);
-		// else
-		if (pid != -1)
-		{
-			ft_putstr_fd("Quit: 3\n", STDOUT);
-			if ((status & 0xff) == 0)
-				g_archive.exit_stat = ((status >> 8) & 0xff);
-			else
-				g_archive.exit_stat = (status & 0xff) + 128;
-		}
-	}
+		signal_multi_process(signo, status);
 }
 
 void		signal_init(int argc, char **argv)
