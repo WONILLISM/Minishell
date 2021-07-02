@@ -6,7 +6,7 @@
 /*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:09:44 by wopark            #+#    #+#             */
-/*   Updated: 2021/07/02 20:09:58 by junghwki         ###   ########.fr       */
+/*   Updated: 2021/07/02 20:55:18 by junghwki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,6 @@ typedef struct			s_archive
 {
 	t_list				*envv_lst;
 	int					exit_stat;
-	int					parse_error;
 }						t_archive;
 
 t_archive				g_archive;
