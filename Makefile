@@ -38,6 +38,7 @@ JUNGHWKI_DIR =	./junghwki/
 JUNGHWKI_SRCS = \
 			envv_lst.c \
 			execute_builtin.c \
+			execute_builtin_utils.c \
 			ft_cd.c \
 			ft_echo.c \
 			ft_export.c \

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
+/*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 15:15:09 by wopark            #+#    #+#             */
-/*   Updated: 2021/06/30 15:59:04 by wopark           ###   ########.fr       */
+/*   Updated: 2021/07/02 18:34:57 by junghwki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void		signal_handler(int signo)
 		else
 			signal_multi_process(signo, status);
 	}
-	else if (signo == SIGQUIT)
+	else if (signo == SIGQUIT && pid != -1)
 		signal_multi_process(signo, status);
 }
 
