@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
+/*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/07 13:07:54 by wopark            #+#    #+#             */
-/*   Updated: 2021/07/01 21:56:23 by wopark           ###   ########.fr       */
+/*   Updated: 2021/07/02 18:13:28 by junghwki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minish.h"
 
-char	*realloc_input(char *ptr, size_t size)
+char				*realloc_input(char *ptr, size_t size)
 {
-	char	*ret;
+	char			*ret;
 
 	ret = (char *)malloc(size);
 	if (!ret)
@@ -24,7 +24,7 @@ char	*realloc_input(char *ptr, size_t size)
 	return (ret);
 }
 
-void	init_input(t_dllist *h_list)
+void				init_input(t_dllist *h_list)
 {
 	char			*pending;
 	char			*finished;
@@ -36,7 +36,7 @@ void	init_input(t_dllist *h_list)
 	free(pending);
 }
 
-int		get_input(char **input, t_dllist *h_list)
+int					get_input(char **input, t_dllist *h_list)
 {
 	struct termios	term;
 	struct termios	term_backup;
@@ -61,10 +61,10 @@ int		get_input(char **input, t_dllist *h_list)
 	return (READ_ERR);
 }
 
-int		main(int argc, char **argv, char **envv)
+int					main(int argc, char **argv, char **envv)
 {
-	t_dllist	history_lst;
-	char		*input;
+	t_dllist		history_lst;
+	char			*input;
 
 	ft_dll_init(&history_lst);
 	signal_init(argc, argv);
@@ -74,10 +74,8 @@ int		main(int argc, char **argv, char **envv)
 		write(1, "minish $> ", 10);
 		if (get_input(&input, &history_lst) == READ_ERR)
 			printf("Error");
-		g_archive.buf = input;
 		if (parse_input(input) == ERROR)
 			parse_error_msg(SYNTAX_ERROR_MSG);
-		// system("leaks minishell");
 	}
 	return (0);
 }
