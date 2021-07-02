@@ -6,7 +6,7 @@
 /*   By: junghwki <junghwki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/29 18:24:35 by junghwki          #+#    #+#             */
-/*   Updated: 2021/07/02 19:15:21 by junghwki         ###   ########.fr       */
+/*   Updated: 2021/07/02 20:29:04 by junghwki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,8 @@ void		export_add(t_cmd *cmd)
 			}
 			else if (!temp)
 				ft_lstadd_back(&g_archive.envv_lst, ft_lstnew(content));
+			else
+				envv_content_del(content);
 		}
 		idx++;
 	}
