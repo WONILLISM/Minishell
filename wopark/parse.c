@@ -6,7 +6,7 @@
 /*   By: wopark <wopark@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/28 21:31:59 by wopark            #+#    #+#             */
-/*   Updated: 2021/07/02 20:15:49 by wopark           ###   ########.fr       */
+/*   Updated: 2021/07/04 15:54:03 by wopark           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,8 @@ int		parse_get_data(char *input, t_data *data, t_list **cmd_root)
 	return (0);
 }
 
-int		parse_loop(char *input, t_data *data, t_list **cmd_root)
+int		parse_loop(
+	char *input, t_data *data, t_list **cmd_root, int *parse_error)
 {
 	char	*input_tmp;
 
@@ -78,8 +79,8 @@ int		parse_loop(char *input, t_data *data, t_list **cmd_root)
 	parse_init(data, cmd_root, ft_strlen(input));
 	while (input_tmp[++data->input_idx])
 	{
-		g_archive.parse_error = parse_get_data(input_tmp, data, cmd_root);
-		if (g_archive.parse_error == ERROR)
+		*parse_error = parse_get_data(input_tmp, data, cmd_root);
+		if (*parse_error == ERROR)
 		{
 			free_cmd_lst(*cmd_root);
 			free(input_tmp);
@@ -94,15 +95,16 @@ int		parse_input(char *input)
 {
 	t_data	data;
 	t_list	*cmd_root;
+	int		parse_error;
 
-	g_archive.parse_error = 1;
+	parse_error = 1;
 	if (input)
 	{
-		if (parse_loop(input, &data, &cmd_root) == ERROR)
+		if (parse_loop(input, &data, &cmd_root, &parse_error) == ERROR)
 			return (ERROR);
-		if (g_archive.parse_error != -1)
-			g_archive.parse_error = lst_add_cmd(&data, &cmd_root, -1);
-		if (g_archive.parse_error == -1)
+		if (parse_error != -1)
+			parse_error = lst_add_cmd(&data, &cmd_root, -1);
+		if (parse_error == -1)
 		{
 			free_cmd_lst(cmd_root);
 			return (ERROR);
